@@ -4,7 +4,7 @@ import styled from "styled-components/native"
 import store from "./store"
 import { Provider } from "react-redux"
 import MenuItem from "./components/MenuItem"
-import SimonSaysLogo from "./components/SimonSaysLogo"
+import SimonSaysLogo from "./components/shared/SimonSaysLogo"
 
 const Container = styled.View`
     justify-content: space-around;
