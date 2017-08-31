@@ -1,4 +1,4 @@
-import authorizationReducer from "./redux/Auth"
+import { default as authorizationReducer} from "./redux/Auth"
 
 export default {
     authorizationReducer
