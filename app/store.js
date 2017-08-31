@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux"
 import { routerReducer, routerMiddleware } from "react-router-redux"
 import createSagaMiddleware from "redux-saga"
 import { composeWithDevTools } from "redux-devtools-extension"
+import { reducer as form } from "redux-form"
 import rootSaga from "./rootSaga"
 import reducers from "./rootReducer"
 
@@ -10,7 +11,7 @@ const reduxRouterMiddleware = routerMiddleware()
 const middlewares = [sagaMiddleware, reduxRouterMiddleware]
 
 let store = createStore(combineReducers(
-    {...reducers, router: routerReducer}),
+    {...reducers, router: routerReducer, form}),
     composeWithDevTools(applyMiddleware(...middlewares))
 )
 
