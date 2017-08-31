@@ -4,18 +4,20 @@
  * @flow
  */
 
-import React, { Component } from 'react'
-import {
-    AppRegistry
-} from 'react-native'
+// import React, { Component } from 'react'
+// import {
+//     AppRegistry
+// } from 'react-native'
+// import App from "./app/app.js"
+
+// export default class Online extends Component {
+//     render() {
+//         return (
+//             <App />
+//         )
+//     }
+// }
+
+// AppRegistry.registerComponent('Online', () => Online)
+
 import App from "./app/app.js"
-
-export default class Online extends Component {
-    render() {
-        return (
-            <App />
-        )
-    }
-}
-
-AppRegistry.registerComponent('Online', () => Online)

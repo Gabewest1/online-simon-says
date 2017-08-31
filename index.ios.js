@@ -1,22 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+// import startApp from "./app/app.js"
 
-import React, { Component } from 'react'
-import {
-    AppRegistry
-} from 'react-native'
+// startApp()
+
 import App from "./app/app.js"
-
-export default class Online extends Component {
-    render() {
-        return (
-            <App />
-        )
-    }
-}
-
-AppRegistry.registerComponent('Online', () => Online)
-
