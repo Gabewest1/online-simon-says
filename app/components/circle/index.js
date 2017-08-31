@@ -4,7 +4,6 @@ import PropTypes from "prop-types"
 
 export default class Circle extends React.Component {
     render() {
-        console.log(this.props.style)
         let {
             left, top, color, radius, style
         } = this.props
@@ -26,7 +25,6 @@ const CircleView = styled.View`
     border-radius: ${({ radius }) => radius / 2};
     backgroundColor: ${props => props.color};
     ${({ top, left }) => {
-        console.log(top, left)
         return `top: ${top}; left: ${left};`
     }
     }

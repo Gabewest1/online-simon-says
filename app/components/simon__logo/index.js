@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components/native"
-import Circle from "../Circle"
+import Circle from "../circle"
 
 const Container = styled.View`
     flex-direction: row;
