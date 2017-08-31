@@ -10,7 +10,6 @@ import { actions as authActions } from "../../redux/Auth"
 const Container = styled.View`
 
 `
-
 const InputField = styled.TextInput`
 
 `
@@ -50,7 +49,7 @@ class SignUpScreen extends React.Component {
         )
     }
     render() {
-        let { handleSubmit } = this.props
+        let { handleSubmit, navigator } = this.props
 
         return (
             <Container>
@@ -75,6 +74,7 @@ class SignUpScreen extends React.Component {
                     component={ this.renderInput }
                     placeholder="re-password" />
                 <SubmitButton onPress={ handleSubmit(this.validate) } title="Submit" />
+                <SubmitButton onPress={ () => navigator.push({screen: "LoginScreen", title: "Login", animated: true, animationType: 'slide-horizontal'}) } title="Submit" />
             </Container>
         )
     }
