@@ -2,6 +2,7 @@ import React from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from  "styled-components/native"
+import PropTypes from "prop-types"
 
 import ListItem from "../../components/list-item--circle"
 import SimonSaysLogo from "../../components/simon__logo"
@@ -19,17 +20,19 @@ const List = styled.View`
 
 class StartingScreen extends React.Component {
     render() {
+        let { navigator } = this.props
+
         return (
             <Container>
                 <SimonSaysLogo />
                 <List>
-                    <ListItem color={ "red" }>
+                    <ListItem onPress={ () => navigator.push({screen: "SignUpScreen", title: "SignUp", animated: true, animationType: 'slide-horizontal'}) }color={ "red" }>
                         Sign-up
                     </ListItem>
-                    <ListItem color={ "blue" }>
+                    <ListItem onPress={ () => navigator.push({screen: "LoginScreen", title: "Login", animated: true, animationType: 'slide-horizontal'}) }color={ "blue" }>
                         Login
                     </ListItem>
-                    <ListItem color={ "green" }>
+                    <ListItem onPress={ () => navigator.push({screen: "SelectGameMode", title: "Play", animated: true, animationType: 'slide-horizontal'}) } color={ "green" }>
                         Play as a guest
                     </ListItem>
                 </List>
@@ -44,6 +47,10 @@ function mapStateToProps() {
 
 function mapDispatchToProps() {
     return {}
+}
+
+StartingScreen.propTypes = {
+    navigator: PropTypes.object.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StartingScreen)
