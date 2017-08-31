@@ -1,15 +1,18 @@
 import React from "react"
-import { Container, Item } from "./styles"
+import { Container, Item, ListItemWithCircle } from "./styles"
 import Circle from "../circle"
 
-export const ListItemWithCircleView = ({ color, children }) => {
+export const ListItemWithCircleView = ({ color, children, onPress }) => {
     return (
-        <Container>
-            <Circle color={ color } radius={ 50 } />
-            <Item
-                color={ color }
-                placeholder={ children }
-                underlineColorAndroid="transparent" />
-        </Container>
+        <ListItemWithCircle color={ color } onPress={ onPress }>
+            <Container>
+                <Circle color={ "white" } radius={ 50 } />
+                <Item
+                    color={ color }
+                    underlineColorAndroid="transparent">
+                    { children }
+                </Item>
+            </Container>
+        </ListItemWithCircle>
     )
 }
