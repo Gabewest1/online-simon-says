@@ -7,6 +7,7 @@ import StartingScreen from "./screens/StartingScreen"
 import SignUpScreen from "./screens/SignUpScreen"
 import LoginScreen from "./screens/LoginScreen"
 import SelectGameMode from "./screens/SelectGameMode"
+import SimonGameScreen from "./screens/SimonGameScreen"
 
 console.log("STARTING UP MY APP")
 
@@ -14,6 +15,7 @@ Navigation.registerComponent("StartingScreen", () => StartingScreen, store, Prov
 Navigation.registerComponent("SignUpScreen", () => SignUpScreen, store, Provider)
 Navigation.registerComponent("LoginScreen", () => LoginScreen, store, Provider)
 Navigation.registerComponent("SelectGameMode", () => SelectGameMode, store, Provider)
+Navigation.registerComponent("SimonGameScreen", () => SimonGameScreen, store, Provider)
 
 Navigation.startSingleScreenApp({
     screen: {

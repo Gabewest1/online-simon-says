@@ -25,13 +25,36 @@ class StartingScreen extends React.Component {
         return (
             <Container>
                 <List>
-                    <ListItem onPress={ () => navigator.push({screen: "SignUpScreen", title: "SignUp", animated: true, animationType: 'slide-horizontal'}) }color={ "red" }>
+                    <ListItem
+                        onPress={ () => navigator.push({
+                            screen: "SimonGameScreen",
+                            title: "",
+                            animated: true,
+                            animationType: 'slide-horizontal',
+                            passProps: { mode: "single" }
+                        }) }
+                        color={ "red" }>
                         Single Player
                     </ListItem>
-                    <ListItem onPress={ () => navigator.push({screen: "LoginScreen", title: "Login", animated: true, animationType: 'slide-horizontal'}) }color={ "blue" }>
+                    <ListItem
+                        onPress={ () => navigator.push({
+                            screen: "SimonGameScreen",
+                            title: "",
+                            animated: true,
+                            animationType: 'slide-horizontal',
+                            passProps: { mode: "multi" }
+                        }) }
+                        color={ "blue" }>
                         Online
                     </ListItem>
-                    <ListItem onPress={ () => navigator.push({screen: "StartingScreen", title: "Home", animated: true, animationType: 'slide-horizontal'}) }color={ "blue" } color={ "green" }>
+                    <ListItem
+                        onPress={ () => navigator.push({
+                            screen: "StartingScreen",
+                            title: "Leaderboards",
+                            animated: true,
+                            animationType: 'slide-horiontal'
+                        }) }
+                        color={ "green" }>
                         Leaderboards
                     </ListItem>
                 </List>
