@@ -16,13 +16,25 @@ class SimonGame extends React.Component {
     render() {
         return (
             <SimonGameContainer>
-                <SimonBoardPiece source={ require("../../assets/images/simon-pad-yellow.png") } />
-                <SimonBoardPiece source={ require("../../assets/images/simon-pad-green.png") } />
-                <SimonBoardPiece source={ require("../../assets/images/simon-pad-red.png") } />
-                <SimonBoardPiece source={ require("../../assets/images/simon-pad-blue.png") } />
+                <SimonBoardPiece
+                    source={ require("../../assets/images/simon-pad-yellow.png") }
+                    onPress={ this.props.onPress } />
+                <SimonBoardPiece
+                    source={ require("../../assets/images/simon-pad-green.png") }
+                    onPress={ this.props.onPress } />
+                <SimonBoardPiece
+                    source={ require("../../assets/images/simon-pad-red.png") }
+                    onPress={ this.props.onPress } />
+                <SimonBoardPiece
+                    source={ require("../../assets/images/simon-pad-blue.png") }
+                    onPress={ this.props.onPress } />
             </SimonGameContainer>
         )
     }
+}
+
+SimonGame.propTypes = {
+    onPress: PropTypes.func.isRequired
 }
 
 export default SimonGame
