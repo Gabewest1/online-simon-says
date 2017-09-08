@@ -8,12 +8,12 @@ const root = function* () {
     ]
 }
 
-const watchLogin = function* () {
+export const watchLogin = function* () {
     console.log("Watching login")
     yield takeEvery(actions.login, login)
 }
 
-const login = function* (action) {
+export const login = function* (action) {
     console.log("Entered the login function", action)
     yield delay(2000)
 }
