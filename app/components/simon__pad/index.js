@@ -11,12 +11,8 @@ const PadView = styled.Image`
 
 class Pad extends React.Component {
     render() {
-        let { source } = this.props
-
-        console.log("Source:", source)
-
         return (
-            <PadView source={ source } />
+            <PadView { ...this.props } />
         )
     }
 }
