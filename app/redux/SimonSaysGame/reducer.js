@@ -58,7 +58,7 @@ const movesReducer = handleActions({
 
 const playersReducer = handleActions({
 
-}, { players: [], playerPerforming: 0 })
+}, { players: [], eliminatedPlayers: [], playerPerforming: 0 })
 
 const gameReducer = handleActions({
     [addNextMove]: (state, { payload }) => ({ ...state, moves: [...state.moves, payload] })
