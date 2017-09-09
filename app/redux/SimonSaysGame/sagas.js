@@ -1,4 +1,5 @@
-import { call, put, take, takeEvery } from "redux-saga/effects"
+import { takeEvery } from "redux-saga"
+import { call, put, take } from "redux-saga/effects"
 import { actions } from "./index"
 
 const root = function* () {
@@ -7,18 +8,17 @@ const root = function* () {
     ]
 }
 
-const watchGamePadClick = function* () {
-    console.log("Watching for game pad clicks")
-    takeEvery(actions.simonPadClicked, handleGamePadClick)
+export const watchGamePadClick = function* () {
+    yield* takeEvery(actions.simonPadClicked, handleGamePadClick)
 }
 
-const handleGamePadClick = function* (action) {
+export const handleGamePadClick = function* (action) {
     let { pad } = action.payload
 
     yield animateSimonPad(pad)
 }
 
-const animateSimonPad = function* (pad) {
+export const animateSimonPad = function* (pad) {
     console.log("Animating Simon Pad!!:", pad)
     yield put(actions.animateSimonPad(pad))
 }
