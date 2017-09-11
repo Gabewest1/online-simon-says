@@ -1,5 +1,6 @@
 import React from "react"
 import sinon from "sinon"
+import sagaHelper from "redux-saga-testing"
 import { shallow } from "enzyme"
 import { expect } from "chai"
 import { Reducer } from 'redux-testkit';
@@ -73,7 +74,7 @@ describe("Simon says reducers", () => {
             Reducer(movesReducer).expect(actions.addNextMove("0")).toReturnState(newState)
         })
 
-        it("shouldn retain all previous moves when adding a new move", () => {
+        it("should retain all previous moves when adding a new move", () => {
             let state = { ...initialState, moves: ["2", "3", "0", "1", "2", "1"]}
             let newState = { ...state, moves: [ ...state.moves, "3"] }
             Reducer(movesReducer).withState(state).expect(actions.addNextMove("3")).toReturnState(newState)
@@ -91,30 +92,84 @@ describe("Simon says reducers", () => {
     })
 
     describe("players reducer", () => {
-        const initialState = {
-            players: [],
-            eliminatedPlayers: [],
-            playerPerforming: 0
-        }
+        const initialState = []
+        let player1
+        let player2
+
+        beforeEach(() => {
+            player1 = {
+                id: 0,
+                name: "Gabe W.",
+                isEliminated: false,
+                isMyTurn: false
+            }
+            player2 = {
+                id: 0,
+                name: "Simon S.",
+                isEliminated: false,
+                isMyTurn: true
+            }
+        })
 
         it("should return initial state", () => {
             Reducer(playersReducer).expect({}).toReturnState(initialState)
         })
+
+        it("should add a player", () => {
+            let nextState = [player1]
+            Reducer(playersReducer).expect(actions.addPlayer(player1)).toReturnState(nextState)
+        })
+
+        it("should remove a player", () => {
+            let currentState = [player1, player2]
+            let nextState = [player2]
+            Reducer(playersReducer)
+                .withState(currentState)
+                .expect(actions.removePlayer(player1))
+                .toReturnState(nextState)
+        })
+
+        it("should eliminate a player", () => {
+            let currentState = [player1]
+            let nextState = [{ ...player1, isEliminated: true }]
+            Reducer(playersReducer)
+                .withState(currentState)
+                .expect(actions.eliminatePlayer(player1))
+                .toReturnState(nextState)
+        })
+
+        it("should set a players isMyTurn flag to true", () => {
+            let currentState = [player1]
+            let nextState = [{ ...player1, isMyTurn: true }]
+            Reducer(playersReducer)
+                .withState(currentState)
+                .expect(actions.setPlayersTurn(player1))
+                .toReturnState(nextState)
+        })
+
+        it("should set a players isMyTurn flag to false", () => {
+            let currentState = [player1, player2]
+            let nextState = [{ ...player1, isMyTurn: true }, { ...player2, isMyTurn: false }]
+            Reducer(playersReducer)
+                .withState(currentState)
+                .expect(actions.setPlayersTurn(player1))
+                .toReturnState(nextState)
+        })
     })
     describe("pads reducer", () => {
-        const initialState = {
-            0: { isAnimating: false, isValid: undefined },
-            1: { isAnimating: false, isValid: undefined },
-            2: { isAnimating: false, isValid: undefined },
-            3: { isAnimating: false, isValid: undefined }
-        }
+        const initialState = [
+            { isAnimating: false, isValid: undefined },
+            { isAnimating: false, isValid: undefined },
+            { isAnimating: false, isValid: undefined },
+            { isAnimating: false, isValid: undefined }
+        ]
 
         it("should return initial state", () => {
             Reducer(padsReducer).expect({}).toReturnState(initialState)
         })
 
         it("should animate the pads successfully", () => {
-            let nextState = pad => ({
+            const nextState = pad => ({
                 ...initialState,
                 [pad]: {
                     isAnimating: true,
@@ -136,7 +191,7 @@ describe("Simon says reducers", () => {
         })
 
         it("should animate the pads unsuccessfully", () => {
-            let nextState = pad => ({
+            const nextState = pad => ({
                 ...initialState,
                 [pad]: {
                     isAnimating: true,
@@ -163,10 +218,23 @@ describe("Simon says reducers", () => {
     Tests for the sagas
 */
 describe("Simon says game sagas", () => {
-    it("should capture a game pad click event", () => {
-        let generator = watchGamePadClick()
-        let actualYield = generator.next().value;
-        let expectedYield = take(actions.simonPadClicked);
-        expect(actualYield).to.deep.equal(expectedYield);
+    describe("watch game pad click saga", () => {
+        const it = sagaHelper(watchGamePadClick())
+
+        it("should capture game pad click events", result => {
+            expect(result).to.deep.equal(take(actions.simonPadClicked))
+            return "Hello"
+        })
+        
+        it("should validate if the move was correct or incorrect", result => {
+            console.dir(result)
+            expect(result).to.equal(22)
+            return "World"
+        })
+
+        it("should animate the simon pad", result => {
+            console.dir(result)
+            
+        })
     })
 })

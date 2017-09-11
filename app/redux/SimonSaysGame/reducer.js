@@ -11,7 +11,10 @@ const {
     restartGame,
     addNextMove,
     increaseMoveCounter,
-    resetMoveCounter
+    resetMoveCounter,
+    addPlayer,
+    removePlayer,
+    setPlayersTurn
 } = createActions(
     "SIMON_PAD_CLICKED",
     "ANIMATE_SIMON_PAD",
@@ -23,7 +26,10 @@ const {
     "RESTART_GAME",
     "ADD_NEXT_MOVE",
     "INCREASE_MOVE_COUNTER",
-    "RESET_MOVE_COUNTER"
+    "RESET_MOVE_COUNTER",
+    "ADD_PLAYER",
+    "REMOVE_PLAYER",
+    "SET_PLAYERS_TURN"
 )
 
 export const actions = {
@@ -37,18 +43,21 @@ export const actions = {
     restartGame,
     addNextMove,
     increaseMoveCounter,
-    resetMoveCounter
+    resetMoveCounter,
+    addPlayer,
+    removePlayer,
+    setPlayersTurn
 }
 
 const padsReducer = handleActions({
     [animateSimonPad]: (state, { payload: { pad, isValid } }) =>
         ({ ...state, [pad]: { ...state[pad], isAnimating: true, isValid }})
-}, {
-    0: { isAnimating: false, isValid: undefined },
-    1: { isAnimating: false, isValid: undefined },
-    2: { isAnimating: false, isValid: undefined },
-    3: { isAnimating: false, isValid: undefined }
-})
+}, [
+    { isAnimating: false, isValid: undefined },
+    { isAnimating: false, isValid: undefined },
+    { isAnimating: false, isValid: undefined },
+    { isAnimating: false, isValid: undefined }
+])
 
 const movesReducer = handleActions({
     [addNextMove]: (state, { payload }) => ({ ...state, moves: [...state.moves, payload] }),
@@ -57,8 +66,11 @@ const movesReducer = handleActions({
 }, { moves: [], moveCounter: 0 })
 
 const playersReducer = handleActions({
-
-}, { players: [], eliminatedPlayers: [], playerPerforming: 0 })
+    [addPlayer]: (state, { payload }) => state.concat(payload),
+    [removePlayer]: (state, { payload }) => state.filter(player => player !== payload ),
+    [eliminatePlayer]: (state, { payload }) => state.map(player => player === payload ? { ...player, isEliminated: true } : player),
+    [setPlayersTurn]: (state, { payload }) => state.map(player => player === payload ? { ...player, isMyTurn: true } : { ...player, isMyTurn: false })
+}, [])
 
 const gameReducer = handleActions({
     [addNextMove]: (state, { payload }) => ({ ...state, moves: [...state.moves, payload] })
