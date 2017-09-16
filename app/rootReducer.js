@@ -1,5 +1,7 @@
-import { default as authorizationReducer} from "./redux/Auth"
+import { default as authorization} from "./redux/Auth"
+import { default as simonSays } from "./redux/SimonSaysGame"
 
 export default {
-    authorizationReducer
+    authorization,
+    simonSays
 }

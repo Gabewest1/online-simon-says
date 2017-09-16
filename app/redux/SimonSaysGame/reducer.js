@@ -1,8 +1,10 @@
 import { createActions, handleActions } from "redux-actions"
+import { combineReducers } from "redux"
 
 const {
     simonPadClicked,
     animateSimonPad,
+    startGame,
     gameOver,
     startTurn,
     endTurn,
@@ -18,6 +20,7 @@ const {
 } = createActions(
     "SIMON_PAD_CLICKED",
     "ANIMATE_SIMON_PAD",
+    "START_GAME",
     "GAME_OVER",
     "START_TURN",
     "END_TURN",
@@ -35,6 +38,7 @@ const {
 export const actions = {
     simonPadClicked,
     animateSimonPad,
+    startGame,
     gameOver,
     startTurn,
     endTurn,
@@ -49,9 +53,9 @@ export const actions = {
     setPlayersTurn
 }
 
-const padsReducer = handleActions({
+export const padsReducer = handleActions({
     [animateSimonPad]: (state, { payload: { pad, isValid } }) =>
-        ({ ...state, [pad]: { ...state[pad], isAnimating: true, isValid }})
+        state.map((x, i) => pad == i ? { ...x, isAnimating: !x.isAnimating, isValid } : x)
 }, [
     { isAnimating: false, isValid: undefined },
     { isAnimating: false, isValid: undefined },
@@ -59,26 +63,26 @@ const padsReducer = handleActions({
     { isAnimating: false, isValid: undefined }
 ])
 
-const movesReducer = handleActions({
-    [addNextMove]: (state, { payload }) => ({ ...state, moves: [...state.moves, payload] }),
+export const movesReducer = handleActions({
+    [addNextMove]: (state, { payload }) => [...state, payload],
     [increaseMoveCounter]: state => ({ ...state, moveCounter: state.moveCounter + 1 }),
     [resetMoveCounter]: state => ({ ...state, moveCounter: 0 })
-}, { moves: [], moveCounter: 0 })
+}, [])
 
-const playersReducer = handleActions({
+export const playersReducer = handleActions({
     [addPlayer]: (state, { payload }) => state.concat(payload),
     [removePlayer]: (state, { payload }) => state.filter(player => player !== payload ),
     [eliminatePlayer]: (state, { payload }) => state.map(player => player === payload ? { ...player, isEliminated: true } : player),
     [setPlayersTurn]: (state, { payload }) => state.map(player => player === payload ? { ...player, isMyTurn: true } : { ...player, isMyTurn: false })
 }, [])
 
-const gameReducer = handleActions({
-    [addNextMove]: (state, { payload }) => ({ ...state, moves: [...state.moves, payload] })
+export const gameReducer = handleActions({
+
 }, { round: 0, isGameOver: false, winner: undefined })
 
-export default {
+export default combineReducers({
     pads: padsReducer,
     moves: movesReducer,
     players: playersReducer,
     game: gameReducer
-}
+})
