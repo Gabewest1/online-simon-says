@@ -26,7 +26,7 @@ export const simonGameSaga = function* () {
         yield call(setNextMove)
         yield call(displayMovesToPerform)
         yield call(performPlayersTurn, playerPerforming)
-        yield call()
+        yield call(endTurn)
         isGameOver = true
     }
 }
@@ -77,12 +77,13 @@ export const performPlayersTurn = function* (player) {
     }
 }
 
-export const savePlayersStats() {
+export const savePlayersStats = function* () {
     
 }
 
-export const endTurn() {
-
+export const endTurn = function* () {
+    console.log("ENDING THE GAME")
+    yield put(actions.gameOver())
 }
 
 export const animateSimonPad = function* ({ pad, isValid }) {

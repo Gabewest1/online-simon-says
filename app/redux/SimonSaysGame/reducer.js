@@ -77,7 +77,7 @@ export const playersReducer = handleActions({
 }, [])
 
 export const gameReducer = handleActions({
-
+    [gameOver]: (state, action) => ({ ...state, isGameOver: true })
 }, { round: 0, isGameOver: false, winner: undefined })
 
 export default combineReducers({
