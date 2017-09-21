@@ -60,5 +60,5 @@ module.exports = {
     port: PORT,
     socket: io,
     server,
-    gameRoomManager
+    // gameRoomManager
 }
