@@ -38,7 +38,7 @@ export const displayMovesToPerform = function* () {
 
     for (let move of movesToPerform) {
         yield call(animateSimonPad, { pad: move, isValid: true })
-        yield delay(500)    //Wait half a second between each move
+        yield call(delay, 500)    //Wait half a second between each move
     }
 }
 

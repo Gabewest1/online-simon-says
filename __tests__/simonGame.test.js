@@ -1,6 +1,7 @@
 import React from "react"
 import sinon from "sinon"
 import { expectSaga, testSaga } from "redux-saga-test-plan"
+import * as matchers from 'redux-saga-test-plan/matchers'
 import { delay } from "redux-saga"
 import { call, race, select, take } from "redux-saga/effects"
 import { shallow } from "enzyme"
@@ -13,9 +14,10 @@ import { gameReducer, movesReducer, playersReducer, padsReducer } from "../app/r
 import {
     ANIMATION_DURATION,
     animateSimonPad,
-    setNextMove,
+    endTurn,
+    displayMovesToPerform,
     performPlayersTurn,
-    displayMovesToPerform
+    setNextMove
 } from "../app/redux/SimonSaysGame/sagas"
 
 /*
@@ -239,35 +241,20 @@ describe("Single player game flow", () => {
 
             .select(selectors.getMoves)
             .next([0, 1, 2, 3])
-
+            
             .call(delay, 1000)
-            .next()
 
-            .call(animateSimonPad, { pad: 0, isValid: true })
-            .next()
-
-            .call(delay, ANIMATION_DURATION)
-            .next()
+            .next().call(animateSimonPad, { pad: 0, isValid: true })
+            .next().call(delay, 500)
             
-            .call(animateSimonPad, { pad: 1, isValid: true })
-            .next()
+            .next().call(animateSimonPad, { pad: 1, isValid: true })
+            .next().call(delay, 500)
 
-            .call(delay, ANIMATION_DURATION)
-            .next()
+            .next().call(animateSimonPad, { pad: 2, isValid: true })
+            .next().call(delay, 500)
 
-            .call(animateSimonPad, { pad: 2, isValid: true })
-            .next()
-
-            .call(delay, ANIMATION_DURATION)
-            .next()
-
-            .call(animateSimonPad, { pad: 3, isValid: true })
-            .next()
-
-            .call(delay, ANIMATION_DURATION)
-            .next()
-            
-            .isDone()
+            .next().call(animateSimonPad, { pad: 3, isValid: true })
+            .next().call(delay, 500)
     })
 
     describe("should perform a players turn", () => {
@@ -304,7 +291,7 @@ describe("Single player game flow", () => {
                 })
                 .next({ playersMove: actions.simonPadClicked(0)})
 
-                .call(animateSimonPad, { pad: 0, isValid: true })
+                .fork(animateSimonPad, { pad: 0, isValid: true })
                 .next()
 
                 .race({
@@ -313,7 +300,7 @@ describe("Single player game flow", () => {
                 })
                 .next({ playersMove: actions.simonPadClicked(1)})
 
-                .call(animateSimonPad, { pad: 1, isValid: true })
+                .fork(animateSimonPad, { pad: 1, isValid: true })
                 .next()
 
                 .race({
@@ -322,7 +309,7 @@ describe("Single player game flow", () => {
                 })
                 .next({ playersMove: actions.simonPadClicked(3)})
 
-                .call(animateSimonPad, { pad: 3, isValid: true })
+                .fork(animateSimonPad, { pad: 3, isValid: true })
                 .next()
 
                 .race({
@@ -331,7 +318,7 @@ describe("Single player game flow", () => {
                 })
                 .next({ playersMove: actions.simonPadClicked(2)})
 
-                .call(animateSimonPad, { pad: 2, isValid: true })
+                .fork(animateSimonPad, { pad: 2, isValid: true })
         })
 
         it("Case #2: player performs first move wrong and is eliminated", () => {
@@ -363,7 +350,7 @@ describe("Single player game flow", () => {
                 })
                 .next({ playersMove: actions.simonPadClicked(0)})
 
-                .call(animateSimonPad, { pad: 0, isValid: true })
+                .fork(animateSimonPad, { pad: 0, isValid: true })
                 .next()
 
                 .race({
@@ -372,7 +359,7 @@ describe("Single player game flow", () => {
                 })
                 .next({ playersMove: actions.simonPadClicked(1)})
 
-                .call(animateSimonPad, { pad: 1, isValid: true })
+                .fork(animateSimonPad, { pad: 1, isValid: true })
                 .next()
 
                 .race({
@@ -410,7 +397,8 @@ describe("Single player game flow", () => {
                         timedout: call(delay, 1000)
                     }), { timedout: true }]
                 ])
-                .call(animateSimonPad, { pad: 0, isValid: true })
+                .dispatch(actions.simonPadClicked(0))
+                .fork(animateSimonPad, { pad: 0, isValid: true })
                 .put(actions.eliminatePlayer(player1))
                 .run()
         })
@@ -431,11 +419,17 @@ describe("Single player game flow", () => {
             it("should increase the round counter", () => {
                 testSaga(endTurn)
                     .next()
+                    
+                    .select(selectors.getPlayers)
+                    .next([{ isEliminated: false }])
 
-                    .put(actions.increaseMoveCounter())
+                    .put(actions.increaseRoundCounter())
             })
         })
 
     })
+})
+
+describe("multiplayer game flow", () => {
 
 })
