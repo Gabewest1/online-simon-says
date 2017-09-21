@@ -1,5 +1,5 @@
 import { delay, takeEvery } from "redux-saga"
-import { all, call, put, race, select, take } from "redux-saga/effects"
+import { all, call, fork, put, race, select, take } from "redux-saga/effects"
 import { actions, selectors } from "./index"
 
 export const ANIMATION_DURATION = 200
@@ -27,7 +27,8 @@ export const simonGameSaga = function* () {
         yield call(displayMovesToPerform)
         yield call(performPlayersTurn, playerPerforming)
         yield call(endTurn)
-        isGameOver = true
+        isGameOver = yield select(selectors.isGameOver)
+        console.log("IS GAME OVER:", isGameOver)
     }
 }
 
@@ -37,7 +38,7 @@ export const displayMovesToPerform = function* () {
 
     for (let move of movesToPerform) {
         yield call(animateSimonPad, { pad: move, isValid: true })
-        yield call(delay, ANIMATION_DURATION)
+        yield delay(500)    //Wait half a second between each move
     }
 }
 
@@ -49,15 +50,17 @@ export const setNextMove = function* () {
 
 export const performPlayersTurn = function* (player) {
     const movesToPerform = yield select(selectors.getMoves)
-    // console.log("MOVES TO PERFORM:", movesToPerform)
     let movesPerformed = 0
 
     while (movesPerformed < movesToPerform.length) {
+        console.log("WAITING FOR YOU TO MAKE A MOVE")
+    
         let { playersMove, timedout } = yield race({
             playersMove: take(actions.simonPadClicked),
             timedout: call(delay, 1000)
         })
 
+        console.log("MOVE:", playersMove, timedout)
         if (timedout) {
             yield put(actions.eliminatePlayer(player))
             break
@@ -71,7 +74,7 @@ export const performPlayersTurn = function* (player) {
         }
 
         const pad = { pad: playersMove.payload, isValid: isValidMove }
-        yield call(animateSimonPad, pad)
+        yield fork(animateSimonPad, pad)
 
         movesPerformed++
     }
@@ -83,7 +86,18 @@ export const savePlayersStats = function* () {
 
 export const endTurn = function* () {
     console.log("ENDING THE GAME")
-    yield put(actions.gameOver())
+    const players = yield select(selectors.getPlayers)
+    console.log("players:", players)
+    const playersStillPlaying = players.filter(player => player.isEliminated === false)
+
+    console.log("PLAYERS STILL PLAYING:", playersStillPlaying)
+
+    if (playersStillPlaying.length === 0) {
+        yield put(actions.gameOver())
+    } else {
+        console.log("PASSED THE ROUND :D")
+        yield put(actions.increaseRoundCounter())
+    }
 }
 
 export const animateSimonPad = function* ({ pad, isValid }) {
