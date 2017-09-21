@@ -7,12 +7,6 @@ const PadView = styled.Image`
     max-height: 100%;
     height: ${320 / 2};
     width: ${320 / 2};
-    ${({ isAnimating }) => {
-        if (isAnimating) {
-            console.log("I SHOULD BE ANIMATING")
-        }
-        return isAnimating && "border-width: 5px; border-color: black;"
-    }}
 `
 
 const Touchable = styled.TouchableOpacity`
@@ -24,7 +18,7 @@ const Touchable = styled.TouchableOpacity`
 class Pad extends React.Component {
     render() {
         return (
-            <Touchable style={ this.props.style } onPress={ this.props.onPress }>
+            <Touchable style={ this.props.style } onPress={ this.props.onPress } activeOpacity={ 1 } >
                 <PadView { ...this.props } />
             </Touchable>
         )
