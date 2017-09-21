@@ -16,14 +16,19 @@ const Container = styled.View`
     justify-content: center;
     align-items: center;
 `
-
 class SimonGameScreen extends React.Component {
     componentDidMount() {
+        this.props.addPlayer({
+            id: 0,
+            name: "Gabe W.",
+            isEliminated: false,
+            isMyTurn: false
+        })
         this.props.startGame()
     }
-    handlePadClick = (e) => {
-        console.log("PAD CLICKED")
-        this.props.simonPadClicked(0)
+    handlePadClick = (pad) => {
+        console.log("PAD CLICKED", pad)
+        this.props.simonPadClicked(pad)
     }
     renderGame() {
         return (
@@ -54,7 +59,8 @@ class SimonGameScreen extends React.Component {
 function mapStateToProps(state) {
     return {
         pads: simonGameSelectors.getPads(state),
-        isGameOver: simonGameSelectors.isGameOver(state)
+        isGameOver: simonGameSelectors.isGameOver(state),
+        round: simonGameSelectors.getCurrentRound(state)
     }
 }
 
@@ -64,7 +70,8 @@ function mapDispatchToProps(dispatch) {
 
 SimonGameScreen.propTypes = {
     pads: PropTypes.array.isRequired,
-    isGameOver: PropTypes.bool.isRequired
+    isGameOver: PropTypes.bool.isRequired,
+    round: PropTypes.number.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SimonGameScreen)
