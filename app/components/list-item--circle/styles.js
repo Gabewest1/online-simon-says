@@ -1,6 +1,6 @@
 import styled from "styled-components/native"
 
-export const ListItemWithCircle = styled.TouchableHighlight`
+export const ListItemWithCircle = styled.TouchableOpacity`
     background-color: ${props => props.color};
     margin-bottom: 20px;
     width: 100%;
