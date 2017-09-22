@@ -18,7 +18,7 @@ const List = styled.View`
     padding-bottom: 100px;
 `
 
-class StartingScreen extends React.Component {
+class SelectGameMode extends React.Component {
     render() {
         let { navigator } = this.props
 
@@ -38,18 +38,17 @@ class StartingScreen extends React.Component {
                     </ListItem>
                     <ListItem
                         onPress={ () => navigator.push({
-                            screen: "SimonGameScreen",
+                            screen: "SelectOnlineGameMode",
                             title: "",
                             animated: true,
-                            animationType: 'slide-horizontal',
-                            passProps: { mode: "multi" }
+                            animationType: 'slide-horizontal'
                         }) }
                         color={ "blue" }>
                         Online
                     </ListItem>
                     <ListItem
                         onPress={ () => navigator.push({
-                            screen: "StartingScreen",
+                            screen: "Leaderboards",
                             title: "Leaderboards",
                             animated: true,
                             animationType: 'slide-horiontal'
@@ -71,8 +70,8 @@ function mapDispatchToProps() {
     return {}
 }
 
-StartingScreen.propTypes = {
+SelectGameMode.propTypes = {
     navigator: PropTypes.object.isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(StartingScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(SelectGameMode)
