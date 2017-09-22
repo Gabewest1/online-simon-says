@@ -54,6 +54,7 @@ describe("Simon says reducers", () => {
 
     describe("game reducer", () => {
         const initialState = {
+            hasFoundMatch: false,
             round: 0,
             isGameOver: false,
             winner: undefined

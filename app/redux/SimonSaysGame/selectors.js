@@ -4,3 +4,4 @@ export const getPads = state => state.simonSays.pads
 export const selectPerformingPlayer = state => state.simonSays.players[0]
 export const isGameOver = state => state.simonSays.game.isGameOver
 export const getCurrentRound = state => state.simonSays.game.round
+export const hasFoundMatch = state => state.simonSays.game.hasFoundMatch

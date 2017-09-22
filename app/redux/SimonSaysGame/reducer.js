@@ -17,7 +17,9 @@ const {
     addPlayer,
     removePlayer,
     setPlayersTurn,
-    increaseRoundCounter
+    increaseRoundCounter,
+    findMatch,
+    foundMatch
 } = createActions(
     "SIMON_PAD_CLICKED",
     "ANIMATE_SIMON_PAD",
@@ -34,7 +36,9 @@ const {
     "ADD_PLAYER",
     "REMOVE_PLAYER",
     "SET_PLAYERS_TURN",
-    "INCREASE_ROUND_COUNTER"
+    "INCREASE_ROUND_COUNTER",
+    "FIND_MATCH",
+    "FOUND_MATCH"
 )
 
 export const actions = {
@@ -53,7 +57,9 @@ export const actions = {
     addPlayer,
     removePlayer,
     setPlayersTurn,
-    increaseRoundCounter
+    increaseRoundCounter,
+    findMatch,
+    foundMatch
 }
 
 export const padsReducer = handleActions({
@@ -81,8 +87,9 @@ export const playersReducer = handleActions({
 
 export const gameReducer = handleActions({
     [gameOver]: (state, action) => ({ ...state, isGameOver: true }),
-    [increaseRoundCounter]: (state, action) => ({ ...state, round: state.round + 1})
-}, { round: 0, isGameOver: false, winner: undefined })
+    [increaseRoundCounter]: (state, action) => ({ ...state, round: state.round + 1}),
+    [foundMatch]: (state, action) => ({ ...state, hasFoundMatch: true })
+}, { hasFoundMatch: false, round: 0, isGameOver: false, winner: undefined })
 
 export default combineReducers({
     pads: padsReducer,
