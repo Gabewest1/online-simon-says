@@ -15,7 +15,22 @@ export const watchSimonGameSaga = function* () {
     yield takeEvery(actions.startGame, simonGameSaga)
 }
 
-export const simonGameSaga = function* () {
+export const simonGameSaga = function* (action) {
+    const gameMode = action.payload
+
+    if (gameMode === "single") {
+        yield call(singlePlayerGame)
+    } else if (gameMode === "multiplayer") {
+        // yield call(multiplayerGame)
+    }
+
+}
+
+export const multiplayerGame = function* () {
+
+}
+
+export const singlePlayerGame = function* () {
     const state = yield select()
     console.log("STATE:", state)
     const players = yield select(selectors.getPlayers)
@@ -31,6 +46,7 @@ export const simonGameSaga = function* () {
         console.log("IS GAME OVER:", isGameOver)
     }
 }
+
 
 export const displayMovesToPerform = function* () {
     let movesToPerform = yield select(selectors.getMoves)
