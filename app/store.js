@@ -1,15 +1,16 @@
-import io from "socket.io-client"
-import { Platform } from 'react-native';
 import { createStore, combineReducers, compose, applyMiddleware } from "redux"
 import { routerReducer, routerMiddleware } from "react-router-redux"
 import createSagaMiddleware from "redux-saga"
 import createSocketIoMiddleware from 'redux-socket.io'
-import { composeWithDevTools } from "remote-redux-devtools"
 import { reducer as form } from "redux-form"
 import rootSaga from "./rootSaga"
 import reducers from "./rootReducer"
 
-const socket = io('http://localhost:3000');
+import io from "react-native-socket.io-client/socket.io"
+
+const PORT = "192.168.1.91:3000"
+const socket = io(PORT, { jsonp: false, transports: ['websocket'] })
+console.log("CONNECTING TO PORT:", PORT, socket)
 const socketIoMiddleware = createSocketIoMiddleware(socket, "server/")
 
 const sagaMiddleware = createSagaMiddleware()
@@ -18,9 +19,7 @@ const middlewares = [socketIoMiddleware, sagaMiddleware, reduxRouterMiddleware]
 
 let store = createStore(
     combineReducers({...reducers, router: routerReducer, form}),
-    composeWithDevTools(
-        applyMiddleware(...middlewares),
-    )
+    applyMiddleware(...middlewares)
 )
 
 //create store

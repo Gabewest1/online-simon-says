@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest",
-    "postinstall": "remotedev-debugger [options]"
+    "test": "jest"
   },
   "dependencies": {
     "chai": "^4.1.2",
@@ -13,14 +12,15 @@
     "react": "^15.6.1",
     "react-native": "0.42.0",
     "react-native-controllers": "^2.1.4",
-    "react-native-navigation": "^1.1.213",
+    "react-native-navigation": "^1.1.228",
     "sinon": "^3.2.1",
-    "uws": "^8.14.1"
+    "socket.io-client": "^2.0.3"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
     "babel-jest": "20.0.3",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "babel-preset-react-native": "3.0.1",
     "eslint": "^4.5.0",
     "eslint-plugin-react": "^7.3.0",
@@ -28,6 +28,7 @@
     "prop-types": "^15.5.10",
     "react-dom": "^15.6.1",
     "react-native-mock": "^0.3.1",
+    "react-native-socket.io-client": "^1.4.8",
     "react-redux": "^5.0.6",
     "react-router-redux": "^4.0.8",
     "react-test-renderer": "^15.5.4",
@@ -40,9 +41,8 @@
     "redux-saga-testing": "^1.0.5",
     "redux-socket.io": "^1.4.0",
     "redux-testkit": "^1.0.6",
-    "remote-redux-devtools": "^0.5.0",
-    "remotedev-rn-debugger": "^0.8.2",
     "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3",
     "styled-components": "^2.1.2"
   },
   "jest": {
