@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import styled from  "styled-components/native"
+import styled from "styled-components/native"
 import PropTypes from "prop-types"
 
 import ListItem from "../../components/list-item--circle"
@@ -18,6 +18,8 @@ const List = styled.View`
     padding-bottom: 100px;
 `
 
+const SINGLE_PLAYER_GAME = 1
+
 class SelectGameMode extends React.Component {
     render() {
         let { navigator } = this.props
@@ -31,7 +33,7 @@ class SelectGameMode extends React.Component {
                             title: "",
                             animated: true,
                             animationType: 'slide-horizontal',
-                            passProps: { mode: "single" }
+                            passProps: { gameMode: SINGLE_PLAYER_GAME }
                         }) }
                         color={ "red" }>
                         Single Player

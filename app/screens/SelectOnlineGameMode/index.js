@@ -17,6 +17,9 @@ const List = styled.View`
     width: 80%;
     padding-bottom: 100px;
 `
+const TWO_PLAYER_GAME = 2
+const THREE_PLAYER_GAME = 3
+const FOUR_PLAYER_GAME = 4
 
 class SelectOnlineGameMode extends React.Component {
     render() {
@@ -31,7 +34,7 @@ class SelectOnlineGameMode extends React.Component {
                             title: "",
                             animated: true,
                             animationType: 'slide-horizontal',
-                            passProps: { gameMode: "two" }
+                            passProps: { gameMode: TWO_PLAYER_GAME }
                         }) }
                         color={ "red" }>
                         Two Player
@@ -42,7 +45,7 @@ class SelectOnlineGameMode extends React.Component {
                             title: "",
                             animated: true,
                             animationType: 'slide-horizontal',
-                            passProps: { gameMode: "three" }
+                            passProps: { gameMode: THREE_PLAYER_GAME }
                         }) }
                         color={ "blue" }>
                         Three Player
@@ -53,7 +56,7 @@ class SelectOnlineGameMode extends React.Component {
                             title: "",
                             animated: true,
                             animationType: 'slide-horiontal',
-                            passProps: { gameMode: "four" }
+                            passProps: { gameMode: FOUR_PLAYER_GAME }
                         }) }
                         color={ "green" }>
                         Four Player
