@@ -1,75 +1,81 @@
+const TWO_PLAYER_GAME = 2
+const THREE_PLAYER_GAME = 3
+const FOUR_PLAYER_GAME = 4
+
 class GameRoomManager {
     constructor(serverSocket) {
-        this.gameRooms = []
+        this.gameRooms = {
+            [TWO_PLAYER_GAME]: [],
+            [THREE_PLAYER_GAME]: [],
+            [FOUR_PLAYER_GAME]: []
+        }
         this.gameRoomCounter = 0
         this.socket = serverSocket
     }
-    addPlayer(player) {
-        let gameRoom = this.getOpenGame()
+
+    cancelSearch(player) {
+        const playersGameRoom = this.findPlayersGameRoom(player)
+
+        playersGameRoom.players = playersGameRoom.players.filter(person => person !== player)
+    }
+
+    findMatch(player, gameMode) {
+        let gameRoom = this.getOpenGame(gameMode)
         gameRoom.players.push(player)
         this.isGameRoomReady(gameRoom)
     }
-    addSpectator(spectator) {
-        let gameRoom = this.getOpenGame()
-        gameRoom.spectators.push(spectator)
-    }
-    createGameRoom() {
-        let newGameRoom = {
+
+    createGameRoom(gameMode) {
+        const newGameRoom = {
             id: this.gameRoomCounter++,
+            gameStarted: false,
             players: [],
-            spectators: [],
-            rockPaperScissors: []
+            playersNeededToStart: gameMode
         }
 
-        this.gameRooms.push(newGameRoom)
+        this.gameRooms[gameMode].push(newGameRoom)
 
         return newGameRoom
     }
+
     endGameRoom(gameRoom) {
         gameRoom.players.forEach(player => player.disconnect())
         gameRoom.spectators.forEach(spectator => spectator.disconnect())
         this.gameRooms = this.gameRooms.filter(room => room.id !== gameRoom.id)
     }
+
     isGameRoomReady(gameRoom) {
-        if (gameRoom.players.length === 2) {
-            this.messageGameRoom(gameRoom, "action", {type: "FOUND_OPPONENT", payload: true})
+        if (gameRoom.players.length === gameRoom.playersNeededToStart) {
+            this.messageGameRoom(gameRoom, "action", {type: "FOUND_MATCH", payload: true})
         }
     }
+
     messageGameRoom(gameRoom, eventName, data) {
         gameRoom.players.forEach(player => player.emit(eventName, data))
-        gameRoom.spectators.forEach(player => player.emit(eventName, data))
     }
-    getOpenGame() {
-        for (let i = 0; i < this.gameRooms.length; i++) {
-            let currentGameRoom = this.gameRooms[i]
 
-            if (currentGameRoom.players.length < 2) {
-                return currentGameRoom
-            }
-        }
+    getOpenGame(gameMode) {
+        const gameRooms = this.gameRooms[gameMode]
+        const openGameRoom = gameRooms.find(room => room.players.length < room.playersNeededToStart && !room.gameStarted)
 
-        return this.createGameRoom()
+        return openGameRoom || this.createGameRoom(gameMode)
     }
+
     removePlayer(player) {
         let gameRoom = this.findPlayersGameRoom(player)
-        let isPlayer = gameRoom.players.indexOf(player) !== -1 
-        let isSpectator = gameRoom.spectators.indexOf(player) !== -1
 
-        if (isPlayer) {
-            gameRoom.players = gameRoom.players.filter(person => person !== player)
-        }
-
-        if (isSpectator) {
-            gameRoom.spectators = gameRoom.spectators.filter(person => person !== player)
-        }
+        gameRoom.players = gameRoom.players.filter(person => person !== player)
     }
+
     findPlayersGameRoom(player) {
-        let gameRoom
-        for (let i = 0; i < this.gameRooms.length; i++) {
-            let currentRoom = this.gameRooms[i]
-            if (currentRoom.players.indexOf(player) >= 0 || currentRoom.spectators.indexOf(player) >= 0) {
-                gameRoom = currentRoom
-            }
+        let gameRoom = this.gameRooms[TWO_PLAYER_GAME].find(room => room.players.indexOf(player) >= 0)
+
+        if (!gameRoom) {
+            gameRoom = this.gameRooms[THREE_PLAYER_GAME].find(room => room.players.indexOf(player) >= 0)
+        }
+
+        if (!gameRoom) {
+            gameRoom = this.gameRooms[FOUR_PLAYER_GAME].find(room => room.players.indexOf(player) >= 0)
         }
 
         return gameRoom
