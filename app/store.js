@@ -6,9 +6,12 @@ import { reducer as form } from "redux-form"
 import rootSaga from "./rootSaga"
 import reducers from "./rootReducer"
 
-import io from "react-native-socket.io-client/socket.io"
+if (!window.navigator.userAgent) {
+    window.navigator.userAgent = "react-native"
+}
+const io = require("react-native-socket.io-client/socket.io")
 
-const PORT = "192.168.1.91:3000"
+const PORT = "ws://192.168.1.91:3000"
 const socket = io(PORT, { jsonp: false, transports: ['websocket'] })
 console.log("CONNECTING TO PORT:", PORT, socket)
 const socketIoMiddleware = createSocketIoMiddleware(socket, "server/")
