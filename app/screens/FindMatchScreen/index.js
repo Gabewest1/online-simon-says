@@ -20,6 +20,11 @@ const Text = styled.Text`
 `
 
 class FindMatchScreen extends React.Component {
+    componentDidMount() {
+        const { findMatch, gameMode } = this.props
+
+        findMatch(gameMode)
+    }
     render() {
         const { hasFoundMatch } = this.props
 
@@ -44,7 +49,7 @@ function mapDispatchToProps(dispatch) {
 FindMatchScreen.propTypes = {
     findMatch: PropTypes.func.isRequired,
     hasFoundMatch: PropTypes.bool.isRequired,
-    gameMode: PropTypes.string.isRequired
+    gameMode: PropTypes.number.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FindMatchScreen)
