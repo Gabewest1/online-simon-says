@@ -16,6 +16,24 @@ const Container = styled.View`
     justify-content: center;
     align-items: center;
 `
+const TintedBG = styled.View`
+    width: 100%;
+    height: 100%;
+    backgroundColor: rgba(0,0,0,.5);
+    position: absolute;
+    ${({ show }) => {
+        if (show) {
+            return `
+                opacity: 1;
+            `
+        } else {
+            return `
+                z-index: -1;
+                opacity: 0;
+            `
+        }
+    }}
+`
 class SimonGameScreen extends React.Component {
     componentDidMount() {
         this.props.addPlayer({
@@ -24,16 +42,18 @@ class SimonGameScreen extends React.Component {
             isEliminated: false,
             isMyTurn: false
         })
-        this.props.startGame()
+
+        this.props.startGame(this.props.gameMode)
     }
-    handlePadClick = (pad) => {
+    handlePadClick(pad) {
         console.log("PAD CLICKED", pad)
         this.props.simonPadClicked(pad)
     }
     renderGame() {
         return (
             <Container>
-                <SimonGame { ...this.props } onPress={ this.handlePadClick } />
+                <SimonGame { ...this.props } onPress={ this.handlePadClick.bind(this) } />
+                <TintedBG show={ this.props.isDisplayingMoves } />
             </Container>
         )
     }
@@ -45,9 +65,11 @@ class SimonGameScreen extends React.Component {
             passProps: {}, // simple serializable object that will pass as props to the modal (optional)
             navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
             animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
-          });
+        })
     }
     render() {
+        //rendering the game over screen requires the regular game screen to be 
+        //rendered first. Then the game over screen can be pushed onto the screen.
         if (this.props.isGameOver) {
             setTimeout(() => this.renderGameOver(), 1)
         }
@@ -59,6 +81,7 @@ class SimonGameScreen extends React.Component {
 function mapStateToProps(state) {
     return {
         pads: simonGameSelectors.getPads(state),
+        isDisplayingMoves: simonGameSelectors.isDisplayingMoves(state),
         isGameOver: simonGameSelectors.isGameOver(state),
         round: simonGameSelectors.getCurrentRound(state)
     }
@@ -69,9 +92,11 @@ function mapDispatchToProps(dispatch) {
 }
 
 SimonGameScreen.propTypes = {
-    pads: PropTypes.array.isRequired,
+    gameMode: PropTypes.number.isRequired,
     isGameOver: PropTypes.bool.isRequired,
-    round: PropTypes.number.isRequired
+    pads: PropTypes.array.isRequired,
+    round: PropTypes.number.isRequired,
+    isDisplayingMoves: PropTypes.bool.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SimonGameScreen)

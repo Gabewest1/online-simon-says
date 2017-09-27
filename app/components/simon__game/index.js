@@ -30,21 +30,44 @@ const Center = styled.View`
     position: absolute;
     align-items: center;
     justify-content: center;
-    z-index: 3;
+    z-index: 8;
 `
 const Round = styled.Text`
     color: white;
 `
+const TintedBG = styled.View`
+    backgroundColor: rgba(0,0,0,.5);
+    border-radius: ${SIMON_GAME_DIAMETER / 2};    
+    height: ${SIMON_GAME_DIAMETER}px;
+    position: absolute;
+    width: ${SIMON_GAME_DIAMETER}px;
+
+    ${({ show }) => {
+        if (show) {
+            return `
+                z-index: 1;
+                opacity: 1;
+            `
+        } else {
+            return `
+                z-index: -1;
+                opacity: 0;
+            `
+        }
+    }}
+`
 class SimonGame extends React.Component {
     render() {
-        const { pads } = this.props
+        const { pads, isDisplayingMoves } = this.props
 
         return (
             <BlackContainer>
                 <SimonGameContainer>
+
                     <Center>
                         <Round>{ this.props.round }</Round>
                     </Center>
+
                     <SimonPad
                         style={{top: 0, left: 0}}
                         source={ pads[0].isAnimating ?
@@ -77,6 +100,8 @@ class SimonGame extends React.Component {
                         }
                         isAnimating={ pads[3].isAnimating }
                         onPress={ () => this.props.onPress(3) } />
+
+                    <TintedBG show={ isDisplayingMoves } />
                 </SimonGameContainer>
             </BlackContainer>
         )
@@ -84,8 +109,10 @@ class SimonGame extends React.Component {
 }
 
 SimonGame.propTypes = {
+    isDisplayingMoves: PropTypes.bool.isRequired,
     onPress: PropTypes.func.isRequired,
-    pads: PropTypes.array.isRequired
+    pads: PropTypes.array.isRequired,
+    round: PropTypes.number.isRequired
 }
 
 export default SimonGame
