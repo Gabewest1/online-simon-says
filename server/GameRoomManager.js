@@ -30,6 +30,7 @@ class GameRoomManager {
             id: this.gameRoomCounter++,
             gameStarted: false,
             players: [],
+            playersReady: [],
             playersNeededToStart: gameMode
         }
 
