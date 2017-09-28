@@ -11,7 +11,7 @@ if (!window.navigator.userAgent) {
 }
 const io = require("react-native-socket.io-client/socket.io")
 
-const PORT = "ws://192.168.1.91:3000"
+const PORT = "https://simon-says-online.herokuapp.com/"
 const socket = io(PORT, { jsonp: false, transports: ['websocket'] })
 console.log("CONNECTING TO PORT:", PORT, socket)
 const socketIoMiddleware = createSocketIoMiddleware(socket, "server/")
