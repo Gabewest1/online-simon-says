@@ -90,21 +90,56 @@ export const setNextMove = function* () {
     yield put(actions.addNextMove(nextMove))
 }
 
+export const startTimer = function* () {
+    let timeTillPlayerTimesout = yield select(selectors.getTimer)
+
+    while (timeTillPlayerTimesout > 0) {
+        yield put(actions.decreaseTimer())
+        timeTillPlayerTimesout--
+
+        let { playersMove, timedout } = yield race({
+            playersMove: take(actions.simonPadClicked),
+            timedout: call(delay, 1000)
+        })
+
+        if (playersMove) {
+            return { playersMove, timedout: false }
+        } else if (timeTillPlayerTimesout === 0) {
+            return { playersMove: false, timedout: true }
+        }
+    }
+}
+
+export const getPlayersMove = function* (isFirstMove) {
+    if (isFirstMove) {
+        let { playersMove, timedout } = yield call(startTimer)
+
+        return { playersMove, timedout }
+    } else {
+        let { playersMove, timedout } = yield race({
+            playersMove: take(actions.simonPadClicked),
+            timedout: call(delay, 1000)
+        })
+
+        return { playersMove, timedout }
+    }
+
+}
+
 export const performPlayersTurn = function* (player) {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
 
     while (movesPerformed < movesToPerform.length) {
         console.log("WAITING FOR YOU TO MAKE A MOVE")
-    
-        let { playersMove, timedout } = yield race({
-            playersMove: take(actions.simonPadClicked),
-            timedout: call(delay, 1000)
-        })
+        let isPlayersFirstMove = movesPerformed === 0
+
+        let { playersMove, timedout } = yield call(getPlayersMove, isPlayersFirstMove)
 
         console.log("MOVE:", playersMove, timedout)
         if (timedout) {
             yield put(actions.eliminatePlayer(player))
+            
             return false
         }
 
@@ -112,6 +147,7 @@ export const performPlayersTurn = function* (player) {
 
         if (!isValidMove) {
             yield put(actions.eliminatePlayer(player))
+            
             return false
         }
 
@@ -140,6 +176,7 @@ export const endTurn = function* () {
         yield put(actions.gameOver())
     } else {
         console.log("PASSED THE ROUND :D")
+        yield put(actions.resetTimer())
         yield put(actions.increaseRoundCounter())
     }
 }

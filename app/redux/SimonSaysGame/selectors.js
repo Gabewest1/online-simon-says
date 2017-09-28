@@ -6,3 +6,4 @@ export const isGameOver = state => state.simonSays.game.isGameOver
 export const getCurrentRound = state => state.simonSays.game.round
 export const hasFoundMatch = state => state.simonSays.game.hasFoundMatch
 export const isDisplayingMoves = state => state.simonSays.game.isDisplayingMoves
+export const getTimer = state => state.simonSays.game.timer

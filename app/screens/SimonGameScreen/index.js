@@ -34,6 +34,11 @@ const TintedBG = styled.View`
         }
     }}
 `
+const Timer = styled.Text`
+    width: 100%;
+    text-align: center;
+    color: black;
+`
 class SimonGameScreen extends React.Component {
     componentDidMount() {
         this.props.addPlayer({
@@ -52,6 +57,7 @@ class SimonGameScreen extends React.Component {
     renderGame() {
         return (
             <Container>
+                <Timer>{ this.props.timer }</Timer>
                 <SimonGame { ...this.props } onPress={ this.handlePadClick.bind(this) } />
                 <TintedBG show={ this.props.isDisplayingMoves } />
             </Container>
@@ -83,7 +89,8 @@ function mapStateToProps(state) {
         pads: simonGameSelectors.getPads(state),
         isDisplayingMoves: simonGameSelectors.isDisplayingMoves(state),
         isGameOver: simonGameSelectors.isGameOver(state),
-        round: simonGameSelectors.getCurrentRound(state)
+        round: simonGameSelectors.getCurrentRound(state),
+        timer: simonGameSelectors.getTimer(state)
     }
 }
 
@@ -96,7 +103,8 @@ SimonGameScreen.propTypes = {
     isGameOver: PropTypes.bool.isRequired,
     pads: PropTypes.array.isRequired,
     round: PropTypes.number.isRequired,
-    isDisplayingMoves: PropTypes.bool.isRequired
+    isDisplayingMoves: PropTypes.bool.isRequired,
+    timer: PropTypes.number.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SimonGameScreen)
