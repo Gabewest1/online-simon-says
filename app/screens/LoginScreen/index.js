@@ -35,7 +35,7 @@ class LoginScreen extends React.Component {
             throw new SubmissionError(errors)
         }
     }
-    renderInput = ({ meta, placeholder, type, input: { onChange, ...restInput }}) => {
+    renderInput({ meta, placeholder, type, input: { onChange, ...restInput }}) {
         let shouldHideText = type === "password" && !meta.error
 
         return (
@@ -54,12 +54,12 @@ class LoginScreen extends React.Component {
                 <Field
                     name="username"
                     type="text"
-                    component={ this.renderInput }
+                    component={ this.renderInput.bind(this) }
                     placeholder="username or email" />
                 <Field
                     name="password"
                     type="password"
-                    component={ this.renderInput }
+                    component={ this.renderInput.bind(this) }
                     placeholder="password" />
                 <SubmitButton onPress={ handleSubmit(this.validate) } title="Submit" />
             </Container>
