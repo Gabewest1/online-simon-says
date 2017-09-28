@@ -22,42 +22,32 @@ const THREE_PLAYER_GAME = 3
 const FOUR_PLAYER_GAME = 4
 
 class SelectOnlineGameMode extends React.Component {
+    gotoGameScreen(gameMode) {
+        this.props.navigator.push({
+            screen: "FindMatchScreen",
+            title: "",
+            animated: true,
+            animationType: 'slide-horizontal',
+            passProps: { gameMode },
+            overrideBackPress: true
+        })
+    }
     render() {
-        let { navigator } = this.props
-
         return (
             <Container>
                 <List>
                     <ListItem
-                        onPress={ () => navigator.push({
-                            screen: "FindMatchScreen",
-                            title: "",
-                            animated: true,
-                            animationType: 'slide-horizontal',
-                            passProps: { gameMode: TWO_PLAYER_GAME }
-                        }) }
+                        onPress={ () => this.gotoGameScreen(TWO_PLAYER_GAME) }
                         color={ "red" }>
                         Two Player
                     </ListItem>
                     <ListItem
-                        onPress={ () => navigator.push({
-                            screen: "FindMatchScreen",
-                            title: "",
-                            animated: true,
-                            animationType: 'slide-horizontal',
-                            passProps: { gameMode: THREE_PLAYER_GAME }
-                        }) }
+                        onPress={ () => this.gotoGameScreen(THREE_PLAYER_GAME) }
                         color={ "blue" }>
                         Three Player
                     </ListItem>
                     <ListItem
-                        onPress={ () => navigator.push({
-                            screen: "FindMatchScreen",
-                            title: "",
-                            animated: true,
-                            animationType: 'slide-horiontal',
-                            passProps: { gameMode: FOUR_PLAYER_GAME }
-                        }) }
+                        onPress={ () => this.gotoGameScreen(FOUR_PLAYER_GAME) }
                         color={ "green" }>
                         Four Player
                     </ListItem>
