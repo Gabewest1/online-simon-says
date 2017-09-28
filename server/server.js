@@ -5,6 +5,10 @@ const app = express()
 
 const PORT = process.env.PORT || 3000
 
+app.get("/", (req, res) => {
+    res.send("Ello Mate")
+})
+
 const server = app.listen(PORT, () => console.log(`running on port ${PORT}`))
 
 const io = socket(server)
