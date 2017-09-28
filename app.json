@@ -1,4 +1,6 @@
 {
   "name": "Online",
-  "displayName": "Online"
+  "displayName": "Online",
+  "description": "Online game of simon says made with react-native",
+  "repository": "https://github.com/Gabewest1/online-simon-says"
 }

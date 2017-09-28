@@ -45,6 +45,9 @@
     "socket.io-client": "^2.0.3",
     "styled-components": "^2.1.2"
   },
+  "engines": {
+    "node": "6.11.3"
+  },
   "jest": {
     "preset": "react-native"
   }
