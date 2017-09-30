@@ -20,17 +20,44 @@ const Text = styled.Text`
 `
 
 class FindMatchScreen extends React.Component {
-    componentDidMount() {
-        const { findMatch, gameMode } = this.props
+    constructor(props) {
+        super(props)
 
-        findMatch(gameMode)
+        this.handleBack = this.handleBack.bind(this)
+        this.props.navigator.setOnNavigatorEvent(this.handleBack)
+    }
+    componentDidMount() {
+        this.props.findMatch(this.props.gameMode)
+    }
+    handleBack({ id }) {
+        if (id === "backPress") {
+            this.props.cancelSearch()
+            this.props.navigator.pop()
+        }
+
+        return true
+    }
+    transitionToGameScreenInOneSecond() {
+        setTimeout(() => {
+            this.props.navigator.push({
+                screen: "SimonGameScreen",
+                title: "",
+                animated: true,
+                animationType: 'slide-horizontal',
+                passProps: { gameMode: this.props.gameMode },
+                overrideBackPress: true,
+                backButtonHidden: true
+            })
+        }, 1000)
     }
     render() {
-        const { hasFoundMatch } = this.props
+        if (this.props.hasFoundMatch) {
+            this.transitionToGameScreenInOneSecond()
+        }
 
         return (
             <Container>
-                <Text>{hasFoundMatch ? "Found Match!" : "Looking for Match..."}</Text>
+                <Text>{this.props.hasFoundMatch ? "Found Match!" : "Looking for Match..."}</Text>
             </Container>
         )
     }
@@ -47,6 +74,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 FindMatchScreen.propTypes = {
+    cancelSearch: PropTypes.func.isRequired,
     findMatch: PropTypes.func.isRequired,
     hasFoundMatch: PropTypes.bool.isRequired,
     gameMode: PropTypes.number.isRequired
