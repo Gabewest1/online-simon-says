@@ -14,9 +14,24 @@ const root = function* () {
 export const watchFindMatch = function* () {
     while (true) {
         const { payload: gameMode } = yield take(actions.findMatch)
+
         yield put({ type: "server/FIND_MATCH", gameMode })
+
+        const { foundMatch, cancelSearch } = yield race({
+            foundMatch: take(actions.foundMatch),
+            cancelSearch: take(actions.cancelSearch)
+        })
+
+        //I'm passing in the gameMode as a payload even though on the server my
+        //GameRoomManager doesn't use a gameMode to cancel a search. But, passing
+        //in the gameMode could be used a performance boost for finding the players
+        //game room and canceling their search.
+        if (cancelSearch) {
+            yield put({ type: "server/CANCEL_SEARCH", payload: gameMode })
+        }
     }
 }
+
 export const watchSimonGameSaga = function* () {
     console.log("S")
     yield takeEvery(actions.startGame, simonGameSaga)

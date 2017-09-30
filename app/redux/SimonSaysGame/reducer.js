@@ -20,6 +20,7 @@ const {
     increaseRoundCounter,
     findMatch,
     foundMatch,
+    cancelSearch,
     setIsDisplayingMoves,
     decreaseTimer,
     resetTimer
@@ -42,6 +43,7 @@ const {
     "INCREASE_ROUND_COUNTER",
     "FIND_MATCH",
     "FOUND_MATCH",
+    "CANCEL_SEARCH",
     "SET_IS_DISPLAYING_MOVES",
     "DECREASE_TIMER",
     "RESET_TIMER"
@@ -66,6 +68,7 @@ export const actions = {
     increaseRoundCounter,
     findMatch,
     foundMatch,
+    cancelSearch,
     setIsDisplayingMoves,
     decreaseTimer,
     resetTimer
