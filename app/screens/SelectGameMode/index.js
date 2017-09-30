@@ -33,7 +33,9 @@ class SelectGameMode extends React.Component {
                             title: "",
                             animated: true,
                             animationType: 'slide-horizontal',
-                            passProps: { gameMode: SINGLE_PLAYER_GAME }
+                            passProps: { gameMode: SINGLE_PLAYER_GAME },
+                            overrideBackPress: true,
+                            backButtonHidden: true
                         }) }
                         color={ "red" }>
                         Single Player
