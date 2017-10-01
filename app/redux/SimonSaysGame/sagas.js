@@ -81,18 +81,11 @@ export const multiplayerGame = function* () {
 }
 
 export const singlePlayerGame = function* () {
-    const state = yield select()
-    console.log("STATE:", state)
-    let playerPerforming = yield select(selectors.selectPerformingPlayer)
-    let isGameOver = yield select(selectors.isGameOver)
-
-    while (!isGameOver) {
+    while (!(isGameOver = yield select(selectors.isGameOver))) {
         yield call(setNextMove)
         yield call(displayMovesToPerform)
         yield call(performPlayersTurn, playerPerforming)
         yield call(endTurn)
-        isGameOver = yield select(selectors.isGameOver)
-        console.log("IS GAME OVER:", isGameOver)
     }
 }
 
