@@ -8,6 +8,7 @@
     "postinstall": "node Remove_Babelrc_files.js"
   },
   "dependencies": {
+    "express": "^4.16.1",
     "react": "16.0.0-alpha.12",
     "react-native": "0.48.4",
     "react-native-navigation": "^1.1.233",
@@ -19,6 +20,7 @@
     "redux-form": "^7.0.4",
     "redux-saga": "^0.15.6",
     "redux-socket.io": "^1.4.0",
+    "socket.io": "^2.0.3",
     "styled-components": "^2.2.0"
   },
   "devDependencies": {
