@@ -21,7 +21,7 @@ const {
     findMatch,
     foundMatch,
     cancelSearch,
-    setIsDisplayingMoves,
+    setIsScreenDarkened,
     decreaseTimer,
     resetTimer
 } = createActions(
@@ -44,7 +44,7 @@ const {
     "FIND_MATCH",
     "FOUND_MATCH",
     "CANCEL_SEARCH",
-    "SET_IS_DISPLAYING_MOVES",
+    "SET_IS_SCREEN_DARKENED",
     "DECREASE_TIMER",
     "RESET_TIMER"
 )
@@ -69,7 +69,7 @@ export const actions = {
     findMatch,
     foundMatch,
     cancelSearch,
-    setIsDisplayingMoves,
+    setIsScreenDarkened,
     decreaseTimer,
     resetTimer
 }
@@ -102,15 +102,15 @@ const gameReducerInitialState = {
     round: 0,
     isGameOver: false,
     winner: undefined,
-    isDisplayingMoves: false,
-    timer: 15
+    isScreenDarkened: false,
+    timer: 15   //seconds
 }
 
 export const gameReducer = handleActions({
     [gameOver]: (state, action) => ({ ...state, isGameOver: true }),
     [increaseRoundCounter]: (state, action) => ({ ...state, round: state.round + 1}),
     [foundMatch]: (state, action) => ({ ...state, hasFoundMatch: true }),
-    [setIsDisplayingMoves]: (state, action) => ({ ...state, isDisplayingMoves: action.payload }),
+    [setIsScreenDarkened]: (state, action) => ({ ...state, isScreenDarkened: action.payload }),
     [decreaseTimer]: (state, action) => ({ ...state, timer: state.timer - 1 }),
     [resetTimer]: (state, action) => ({ ...state, timer: 15 })
 }, gameReducerInitialState)

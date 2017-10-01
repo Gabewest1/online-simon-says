@@ -59,7 +59,7 @@ class SimonGameScreen extends React.Component {
             <Container>
                 <Timer>{ this.props.timer }</Timer>
                 <SimonGame { ...this.props } onPress={ this.handlePadClick.bind(this) } />
-                <TintedBG show={ this.props.isDisplayingMoves } />
+                <TintedBG show={ this.props.isScreenDarkened } />
             </Container>
         )
     }
@@ -87,7 +87,7 @@ class SimonGameScreen extends React.Component {
 function mapStateToProps(state) {
     return {
         pads: simonGameSelectors.getPads(state),
-        isDisplayingMoves: simonGameSelectors.isDisplayingMoves(state),
+        isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
         isGameOver: simonGameSelectors.isGameOver(state),
         round: simonGameSelectors.getCurrentRound(state),
         timer: simonGameSelectors.getTimer(state)
@@ -103,7 +103,7 @@ SimonGameScreen.propTypes = {
     isGameOver: PropTypes.bool.isRequired,
     pads: PropTypes.array.isRequired,
     round: PropTypes.number.isRequired,
-    isDisplayingMoves: PropTypes.bool.isRequired,
+    isScreenDarkened: PropTypes.bool.isRequired,
     timer: PropTypes.number.isRequired
 }
 

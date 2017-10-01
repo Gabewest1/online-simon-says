@@ -3,6 +3,10 @@ import { all, call, fork, put, race, select, take } from "redux-saga/effects"
 import { actions, selectors } from "./index"
 
 export const ANIMATION_DURATION = 200
+const ONLINE_GAME = 0
+const LOCAL_GAME = 1
+
+let GAME_MODE 
 
 const root = function* () {
     yield [
@@ -42,8 +46,10 @@ export const simonGameSaga = function* (action) {
 
     if (gameMode === 1) {
         yield call(singlePlayerGame)
+        GAME_MODE = LOCAL_GAME
     } else if (gameMode === "multiplayer") {
-        // yield call(multiplayerGame)
+        yield call(multiplayerGame)
+        GAME_MODE = ONLINE_GAME
     }
 
 }
@@ -51,13 +57,18 @@ export const simonGameSaga = function* (action) {
 export const multiplayerGame = function* () {
     const state = yield select()
     console.log("STATE:", state)
-    let isGameOver = yield select(selectors.isGameOver)
+    let isGameOver = selectors.isGameOver(state)
     let playerPerforming
 
     while (!isGameOver) {
         playerPerforming = yield select(selectors.selectPerformingPlayer)
         
-        const playerPassed = yield call(performPlayersTurn, playerPerforming)
+        if (/* its my turn */false) {
+            const playerPassed = yield call(performPlayersTurn, playerPerforming)
+        } else {
+            //wait for player to perform their turn. Need to know if the player
+            //performed their turn successfully or not.
+        }
 
         if (playerPassed) {
             yield call(setNextMove)
@@ -88,7 +99,7 @@ export const singlePlayerGame = function* () {
 
 export const displayMovesToPerform = function* () {
     let movesToPerform = yield select(selectors.getMoves)
-    yield put(actions.setIsDisplayingMoves(true))
+    yield put(actions.setIsScreenDarkened(true))
     yield call(delay, 1000)
 
     for (let move of movesToPerform) {
@@ -96,7 +107,7 @@ export const displayMovesToPerform = function* () {
         yield call(delay, 500)    //Wait half a second between each move
     }
 
-    yield put(actions.setIsDisplayingMoves(false))
+    yield put(actions.setIsScreenDarkened(false))
 }
 
 export const setNextMove = function* () {
@@ -141,6 +152,10 @@ export const getPlayersMove = function* (isFirstMove) {
 
 }
 
+export const eliminatePlayer = function* (player) {
+
+}
+
 export const performPlayersTurn = function* (player) {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
@@ -159,15 +174,14 @@ export const performPlayersTurn = function* (player) {
         }
 
         const isValidMove = playersMove.payload === movesToPerform[movesPerformed]
+        const pad = { pad: playersMove.payload, isValid: isValidMove }
+        yield fork(animateSimonPad, pad)
 
         if (!isValidMove) {
             yield put(actions.eliminatePlayer(player))
             
             return false
         }
-
-        const pad = { pad: playersMove.payload, isValid: isValidMove }
-        yield fork(animateSimonPad, pad)
 
         movesPerformed++
     }
@@ -183,10 +197,12 @@ export const endTurn = function* () {
     console.log("ENDING THE GAME")
     const players = yield select(selectors.getPlayers)
     console.log("players:", players)
+    //This line should be a selector
     const playersStillPlaying = players.filter(player => player.isEliminated === false)
 
     console.log("PLAYERS STILL PLAYING:", playersStillPlaying)
-
+    //if its a single player game then the length should be 0.
+    //if its a multiplayer game then the length should be 1.
     if (playersStillPlaying.length === 0) {
         yield put(actions.gameOver())
     } else {

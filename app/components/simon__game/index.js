@@ -58,7 +58,7 @@ const TintedBG = styled.View`
 `
 class SimonGame extends React.Component {
     render() {
-        const { pads, isDisplayingMoves } = this.props
+        const { pads, isScreenDarkened } = this.props
 
         return (
             <BlackContainer>
@@ -101,7 +101,7 @@ class SimonGame extends React.Component {
                         isAnimating={ pads[3].isAnimating }
                         onPress={ () => this.props.onPress(3) } />
 
-                    <TintedBG show={ isDisplayingMoves } />
+                    <TintedBG show={ isScreenDarkened } />
                 </SimonGameContainer>
             </BlackContainer>
         )
@@ -109,7 +109,7 @@ class SimonGame extends React.Component {
 }
 
 SimonGame.propTypes = {
-    isDisplayingMoves: PropTypes.bool.isRequired,
+    isScreenDarkened: PropTypes.bool.isRequired,
     onPress: PropTypes.func.isRequired,
     pads: PropTypes.array.isRequired,
     round: PropTypes.number.isRequired
