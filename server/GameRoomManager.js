@@ -22,6 +22,7 @@ class GameRoomManager {
     findMatch(player, gameMode) {
         let gameRoom = this.getOpenGame(gameMode)
         gameRoom.players.push(player)
+        console.log("ROOMS:", this.gameRooms)
         this.isGameRoomReady(gameRoom)
     }
 

@@ -17,11 +17,11 @@ io.on("connection", socket => {
     socket.on("disconnect", () => {
         console.log(`${socket.id} disconnected`)
 
-        // let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+        let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
-        // if (gameRoom) {
-        //     gameRoomManager.removePlayer(socket)
-        // }
+        if (gameRoom) {
+            gameRoomManager.cancelSearch(socket)
+        }
 
     })
 
