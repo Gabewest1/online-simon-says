@@ -17,6 +17,7 @@ class GameRoomManager {
         const playersGameRoom = this.findPlayersGameRoom(player)
 
         playersGameRoom.players = playersGameRoom.players.filter(person => person !== player)
+        console.log("ROOMS:", this.gameRooms)        
     }
 
     findMatch(player, gameMode) {

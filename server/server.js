@@ -14,8 +14,8 @@ const gameRoomManager = new (require("./GameRoomManager"))(io)
 io.on("connection", socket => {
     console.log(`${socket.id} connected to the game`)
     console.log("sockets:", Object.keys(io.sockets.sockets))
-    socket.on("disconnect", () => {
-        console.log(`${socket.id} disconnected`)
+    socket.on("disconnect", (reason) => {
+        console.log(`${socket.id} disconnected bc: ${reason}`)
 
         let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
