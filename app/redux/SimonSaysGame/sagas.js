@@ -1,12 +1,13 @@
 import { delay, takeEvery } from "redux-saga"
 import { all, call, fork, put, race, select, take } from "redux-saga/effects"
 import { actions, selectors } from "./index"
+import { selectors as userSelectors } from "../Auth"
 
 export const ANIMATION_DURATION = 200
-const ONLINE_GAME = 0
-const LOCAL_GAME = 1
-
 let GAME_MODE 
+const MULTIPLAYER_GAME = 0
+const SINGLE_PLAYER = 1
+
 
 const root = function* () {
     yield [
@@ -45,50 +46,59 @@ export const simonGameSaga = function* (action) {
     const gameMode = action.payload
 
     if (gameMode === 1) {
-        yield call(singlePlayerGame)
-        GAME_MODE = LOCAL_GAME
-    } else if (gameMode === "multiplayer") {
-        yield call(multiplayerGame)
-        GAME_MODE = ONLINE_GAME
+        GAME_MODE = SINGLE_PLAYER
+        yield put(actions.addPlayer({
+            username: yield select(userSelectors.getUsername),
+            isEliminated: false
+        }))
+        yield call(singlePlayerGameSaga)
+    } else {
+        GAME_MODE = MULTIPLAYER_GAME
+        yield call(multiplayerGameSaga)
     }
 
 }
 
-export const multiplayerGame = function* () {
-    const state = yield select()
-    console.log("STATE:", state)
-    let isGameOver = selectors.isGameOver(state)
+export const multiplayerGameSaga = function* () {
     let playerPerforming
+    let isItMyTurn
 
-    while (!isGameOver) {
+    while (!(yield select(selectors.isGameOver))) {
         playerPerforming = yield select(selectors.selectPerformingPlayer)
-        
-        if (/* its my turn */false) {
+        isItMyTurn = yield select(selectors.isItMyTurn)
+
+        if (isItMyTurn) {
+            yield put(actions.setIsScreenDarkened(false))
             const playerPassed = yield call(performPlayersTurn, playerPerforming)
         } else {
             //wait for player to perform their turn. Need to know if the player
             //performed their turn successfully or not.
+            yield put(actions.setIsScreenDarkened(true))
+            const { payload: playerPassed} = yield take(actions.opponentFinishedTurn)
         }
 
         if (playerPassed) {
-            yield call(setNextMove)
+            if (isItMyTurn) {
+                yield call(setNextMove)
+            } else {
+                yield take(actions.setNextMove)
+            }
         }
 
         yield call(endTurn)
-        isGameOver = yield select(selectors.isGameOver)
-        console.log("IS GAME OVER:", isGameOver)
     }
 }
 
-export const singlePlayerGame = function* () {
-    while (!(isGameOver = yield select(selectors.isGameOver))) {
+export const singlePlayerGameSaga = function* () {
+    const [ playerPerforming ] = yield select(selectors.getPlayers)
+
+    while (!(yield select(selectors.isGameOver))) {
         yield call(setNextMove)
         yield call(displayMovesToPerform)
         yield call(performPlayersTurn, playerPerforming)
         yield call(endTurn)
     }
 }
-
 
 export const displayMovesToPerform = function* () {
     let movesToPerform = yield select(selectors.getMoves)
@@ -104,9 +114,14 @@ export const displayMovesToPerform = function* () {
 }
 
 export const setNextMove = function* () {
-    //Moves are numbers 0-3 representing the index of the pad
-    let nextMove = Math.floor(Math.random() * 4)
-    yield put(actions.addNextMove(nextMove))
+    if (GAME_MODE === SINGLE_PLAYER) {
+        //Moves are numbers 0-3 representing the index of the pad
+        let nextMove = Math.floor(Math.random() * 4)
+        yield put(actions.addNextMove(nextMove))
+    } else {
+        let nextMove = yield take(actions.simonPadClicked)
+        yield put(actions.setNextMove(nextMove.pad))
+    }
 }
 
 export const startTimer = function* () {
@@ -161,25 +176,52 @@ export const performPlayersTurn = function* (player) {
 
         console.log("MOVE:", playersMove, timedout)
         if (timedout) {
-            yield put(actions.eliminatePlayer(player))
+            if (GAME_MODE === SINGLE_PLAYER) {
+                yield put(actions.eliminatePlayer(player))
+
+                break
+            } else if (GAME_MODE === MULTIPLAYER_GAME) {
+                yield put({ type: "server/ELIMINATE_PLAYER", payload: player })
+                yield put({ type: "server/OPPONENT_FINISHED_TURN", payload: false })
+
+                return false
+            }
             
-            return false
         }
 
         const isValidMove = playersMove.payload === movesToPerform[movesPerformed]
         const pad = { pad: playersMove.payload, isValid: isValidMove }
-        yield fork(animateSimonPad, pad)
+
+        if (GAME_MODE === SINGLE_PLAYER) {
+            yield fork(animateSimonPad, pad)
+        } else if (GAME_MODE === MULTIPLAYER_GAME) {
+            yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
+
+            return false
+        }
 
         if (!isValidMove) {
-            yield put(actions.eliminatePlayer(player))
+            if (GAME_MODE === SINGLE_PLAYER) {
+                yield put(actions.eliminatePlayer(player))
+
+                break
+            } else if (GAME_MODE === MULTIPLAYER_GAME) {
+                yield put({ type: "server/ELIMINATE_PLAYER", payload: player })
+                yield put({ type: "server/OPPONENT_FINISHED_TURN", payload: false })
+
+                return false
+            }
             
-            return false
         }
 
         movesPerformed++
     }
 
-    return true
+    if (GAME_MODE === MULTIPLAYER_GAME) {
+        yield put({ type: "server/OPPONENT_FINISHED_TURN", payload: true })        
+
+        return true
+    }
 }
 
 export const savePlayersStats = function* () {
@@ -188,21 +230,47 @@ export const savePlayersStats = function* () {
 
 export const endTurn = function* () {
     console.log("ENDING THE GAME")
+
     const players = yield select(selectors.getPlayers)
-    console.log("players:", players)
+    const performingPlayer = yield select(selectors.selectPerformingPlayer)
+
+    console.log("players:", players, performingPlayer)
     //This line should be a selector
     const playersStillPlaying = players.filter(player => player.isEliminated === false)
 
     console.log("PLAYERS STILL PLAYING:", playersStillPlaying)
+
     //if its a single player game then the length should be 0.
     //if its a multiplayer game then the length should be 1.
-    if (playersStillPlaying.length === 0) {
-        yield put(actions.gameOver())
-    } else {
-        console.log("PASSED THE ROUND :D")
-        yield put(actions.resetTimer())
-        yield put(actions.increaseRoundCounter())
+    if (GAME_MODE === SINGLE_PLAYER) {
+        if (playersStillPlaying.length === 0) {
+            yield put(actions.gameOver())
+        } else {
+            console.log("PASSED THE ROUND :D")
+            yield put(actions.resetTimer())
+            yield put(actions.increaseRoundCounter())
+        }
+    } else if (GAME_MODE === MULTIPLAYER_GAME) {
+        if (playersStillPlaying.length === 1) {
+            yield put(actions.setWinner(playersStillPlaying[0]))
+            yield put(actions.gameOver())
+        } else {
+            let currentPlayersIndex = players.indexOf(performingPlayer)
+            let counter = 1
+            let nextPlayerToPerform = players[currentPlayersIndex + counter]
+
+            while (!nextPlayerToPerform.isEliminated) {
+                nextPlayerToPerform = players[currentPlayersIndex + counter]
+                counter++
+            }
+
+            console.log("PASSED THE ROUND :D")
+            yield put(actions.setPerformingPlayer(nextPlayerToPerform))
+            yield put(actions.resetTimer())
+            yield put(actions.increaseRoundCounter())
+        }
     }
+    
 }
 
 export const animateSimonPad = function* ({ pad, isValid }) {
