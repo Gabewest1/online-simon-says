@@ -20,7 +20,7 @@ const Touchable = styled.TouchableOpacity`
 class Pad extends React.Component {
     render() {
         return (
-            <Touchable { ...this.props } style={ this.props.style } onPress={ this.props.onPress } activeOpacity={ 1 } >
+            <Touchable { ...this.props } style={ this.props.style } onPressIn={ this.props.onPressIn } activeOpacity={ 1 } >
                 <PadView { ...this.props } />
             </Touchable>
         )
@@ -29,7 +29,7 @@ class Pad extends React.Component {
 
 Pad.propTypes = {
     source: PropTypes.any.isRequired,
-    onPress: PropTypes.func.isRequired
+    onPressIn: PropTypes.func.isRequired
 }
 
 export default Pad

@@ -11,6 +11,8 @@ import {
     selectors as simonGameSelectors
 } from "../../redux/SimonSaysGame"
 
+import { SINGLE_PLAYER_GAME } from "../../gameModeConstants"
+
 const Container = styled.View`
     height: 100%;
     justify-content: center;
@@ -41,25 +43,27 @@ const Timer = styled.Text`
 `
 class SimonGameScreen extends React.Component {
     componentDidMount() {
-        this.props.addPlayer({
-            id: 0,
-            name: "Gabe W.",
-            isEliminated: false,
-            isMyTurn: false
-        })
-
         this.props.startGame(this.props.gameMode)
     }
     handlePadClick(pad) {
         console.log("PAD CLICKED", pad)
         this.props.simonPadClicked(pad)
+        // if (this.props.gameMode === SINGLE_PLAYER_GAME) {
+        //     console.log("I GOT CLICKED")
+        //     this.props.animateSimonPad({ pad, isValid: true })
+        //     setTimeout(() => {
+        //         this.props.animateSimonPad({ pad, isValid: true })
+        //     }, 50)
+        // } else {
+        //     this.props.simonPadClicked(pad)
+        // }
     }
     renderGame() {
         return (
             <Container>
-                <Timer>{ this.props.timer }</Timer>
-                <SimonGame { ...this.props } onPress={ this.handlePadClick.bind(this) } />
                 <TintedBG show={ this.props.isScreenDarkened } />
+                <Timer>{ this.props.timer }</Timer>
+                <SimonGame { ...this.props } onPressIn={ this.handlePadClick.bind(this) } />
             </Container>
         )
     }
@@ -90,7 +94,9 @@ function mapStateToProps(state) {
         isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
         isGameOver: simonGameSelectors.isGameOver(state),
         round: simonGameSelectors.getCurrentRound(state),
-        timer: simonGameSelectors.getTimer(state)
+        timer: simonGameSelectors.getTimer(state),
+        players: simonGameSelectors.getPlayers(state),
+        isItMyTurn: simonGameSelectors.isItMyTurn(state)
     }
 }
 
@@ -104,7 +110,11 @@ SimonGameScreen.propTypes = {
     pads: PropTypes.array.isRequired,
     round: PropTypes.number.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
-    timer: PropTypes.number.isRequired
+    timer: PropTypes.number.isRequired,
+    players: PropTypes.array.isRequired,
+    isItMyTurn: PropTypes.bool.isRequired,
+    simonPadClicked: PropTypes.func.isRequired,
+    animateSimonPad: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SimonGameScreen)

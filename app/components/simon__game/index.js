@@ -75,7 +75,7 @@ class SimonGame extends React.Component {
                             require("../../assets/images/game-pad-red.png")
                         }
                         isAnimating={ pads[0].isAnimating }
-                        onPress={ () => this.props.onPress(0) } />
+                        onPressIn={ () => this.props.onPressIn(0) } />
                     <SimonPad
                         style={{top: 0, right: 0}}
                         source={ pads[1].isAnimating ?
@@ -83,7 +83,7 @@ class SimonGame extends React.Component {
                             require("../../assets/images/game-pad-green.png")
                         }
                         isAnimating={ pads[1].isAnimating }
-                        onPress={ () => this.props.onPress(1) } />
+                        onPressIn={ () => this.props.onPressIn(1) } />
                     <SimonPad
                         style={{bottom: 0, left: 0}}
                         source={ pads[2].isAnimating ?
@@ -91,7 +91,7 @@ class SimonGame extends React.Component {
                             require("../../assets/images/game-pad-yellow.png")
                         }
                         isAnimating={ pads[2].isAnimating }
-                        onPress={ () => this.props.onPress(2) } />
+                        onPressIn={ () => this.props.onPressIn(2) } />
                     <SimonPad
                         style={{bottom: 0, right: 0}}
                         source={ pads[3].isAnimating ?
@@ -99,7 +99,7 @@ class SimonGame extends React.Component {
                             require("../../assets/images/game-pad-blue.png")
                         }
                         isAnimating={ pads[3].isAnimating }
-                        onPress={ () => this.props.onPress(3) } />
+                        onPressIn={ () => this.props.onPressIn(3) } />
 
                     <TintedBG show={ isScreenDarkened } />
                 </SimonGameContainer>
@@ -110,7 +110,7 @@ class SimonGame extends React.Component {
 
 SimonGame.propTypes = {
     isScreenDarkened: PropTypes.bool.isRequired,
-    onPress: PropTypes.func.isRequired,
+    onPressIn: PropTypes.func.isRequired,
     pads: PropTypes.array.isRequired,
     round: PropTypes.number.isRequired
 }
