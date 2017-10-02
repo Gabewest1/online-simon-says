@@ -45,17 +45,23 @@ io.on("connection", socket => {
                 break
             }
             case "server/ELIMINATE_PLAYER": {
-                gameRoomManager.messageGameRoom(gameRoom, "action", { ...action, type: "ELIMINATE_PLAYER" })
+                let nextAction = Object.assign(action, {type: "ELIMINATE_PLAYER"})
+
+                gameRoomManager.messageGameRoom(gameRoom, "action", nextAction)
                 break
             }
             case "server/OPPONENT_FINISHED_TURN": {
-                gameRoomManager.messageGameRoom(gameRoom, "action", { ...action, type: "OPPONENT_FINISHED_TURN" })                
+                let nextAction = Object.assign(action, {type: "OPPONENT_FINISHED_TURN"})
+
+                gameRoomManager.messageGameRoom(gameRoom, "action", nextAction)                
                 break
             }
             case "server/ANIMATE_SIMON_PAD": {
+                let nextAction = Object.assign(action, {type: "ANIMATE_SIMON_PAD"})
+
                 gameRoom.players.forEach(player => {
                     if (player !== socket) {
-                        player.emit("action", { ...action, type: "ANIMATE_SIMON_PAD" })
+                        player.emit("action", nextAction)
                     }
                 })
 
