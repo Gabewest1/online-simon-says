@@ -39,6 +39,23 @@ io.on("connection", socket => {
                 gameRoomManager.cancelSearch(socket)
                 break
             }
+            case "server/ELIMINATE_PLAYER": {
+                gameRoomManager.messageGameRoom(gameRoom, "action", { ...action, type: "ELIMINATE_PLAYER" })
+                break
+            }
+            case "server/OPPONENT_FINISHED_TURN": {
+                gameRoomManager.messageGameRoom(gameRoom, "action", { ...action, type: "OPPONENT_FINISHED_TURN" })                
+                break
+            }
+            case "server/ANIMATE_SIMON_PAD": {
+                gameRoom.players.forEach(player => {
+                    if (player !== socket) {
+                        player.emit("action", { ...action, type: "ANIMATE_SIMON_PAD" })
+                    }
+                })
+
+                break
+            }
             // case "server/SET_PLAYER": {
             //     let { player, team, isPlayersTurn } = action
             //     let actionForReducer = {type:"SET_PLAYER", player, team, name: socket.id, isPlayersTurn}
@@ -57,6 +74,7 @@ io.on("connection", socket => {
         }
     })
 })
+
 
 module.exports = {
     port: PORT,
