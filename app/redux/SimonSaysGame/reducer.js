@@ -85,25 +85,25 @@ export const padsReducer = handleActions({
 ])
 
 export const movesReducer = handleActions({
+    [startGame]: () => [],
     [addNextMove]: (state, { payload }) => [...state, payload],
-    [increaseMoveCounter]: state => ({ ...state, moveCounter: state.moveCounter + 1 }),
-    [resetMoveCounter]: state => ({ ...state, moveCounter: 0 })
 }, [])
 
 export const playersReducer = handleActions({
+    [foundMatch]: (state, action) => action.payload,
     [addPlayer]: (state, { payload }) => state.concat(payload),
     [removePlayer]: (state, { payload }) => state.filter(player => player !== payload ),
     [eliminatePlayer]: (state, { payload }) => state.map(player => player === payload ? { ...player, isEliminated: true } : player),
-    [setPlayersTurn]: (state, { payload }) => state.map(player => player === payload ? { ...player, isMyTurn: true } : { ...player, isMyTurn: false })
 }, [])
 
 const gameReducerInitialState = {
     hasFoundMatch: false,
-    round: 0,
     isGameOver: false,
-    winner: undefined,
     isScreenDarkened: false,
-    timer: 15   //seconds
+    performingPlayer: undefined,
+    round: 0,
+    timer: 15,   //seconds
+    winner: undefined
 }
 
 export const gameReducer = handleActions({
@@ -112,7 +112,8 @@ export const gameReducer = handleActions({
     [foundMatch]: (state, action) => ({ ...state, hasFoundMatch: true }),
     [setIsScreenDarkened]: (state, action) => ({ ...state, isScreenDarkened: action.payload }),
     [decreaseTimer]: (state, action) => ({ ...state, timer: state.timer - 1 }),
-    [resetTimer]: (state, action) => ({ ...state, timer: 15 })
+    [resetTimer]: (state, action) => ({ ...state, timer: 15 }),
+    [startGame]: (state, action) => ({ ...gameReducerInitialState, hasFoundMatch: state.hasFoundMatch })
 }, gameReducerInitialState)
 
 export default combineReducers({
