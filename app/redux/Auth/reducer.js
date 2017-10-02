@@ -3,17 +3,20 @@ import { createActions, handleActions } from "redux-actions"
 const {
     login,
     loginError,
-    loginSuccess
+    loginSuccess,
+    playAsGuest
 } = createActions(
     "LOGIN",
     "LOGIN_ERROR",
-    "LOGIN_SUCCESS"
+    "LOGIN_SUCCESS",
+    "PLAY_AS_GUEST"
 )
 
 export const actions = {
     login,
     loginError,
-    loginSuccess
+    loginSuccess,
+    playAsGuest
 }
 
 
@@ -23,6 +26,13 @@ const initialState = {
     token: null,
     info: {},
     error: null
+}
+
+function createGuest() {
+    return {
+        username: `Guest${Math.floor(Math.random() * 1000000)}`,
+        xp: 0
+    }
 }
 
 export default handleActions({
@@ -38,6 +48,7 @@ export default handleActions({
         ...state,
         isLoading: false,
         error: action.error
-    })
+    }),
+    [playAsGuest]: (state, action) => ({ ...state, info: createGuest() })
 }, initialState)
 

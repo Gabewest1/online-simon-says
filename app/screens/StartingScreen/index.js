@@ -7,6 +7,8 @@ import PropTypes from "prop-types"
 import ListItem from "../../components/list-item--circle"
 import SimonSaysLogo from "../../components/simon__logo"
 
+import { actions as userActions } from "../../redux/Auth"
+
 const Container = styled.View`
     height: 100%;
     justify-content: space-around;
@@ -32,8 +34,13 @@ class StartingScreen extends React.Component {
                     <ListItem onPress={ () => navigator.push({screen: "LoginScreen", title: "Login", animated: true, animationType: 'slide-horizontal'}) }color={ "blue" }>
                         Login
                     </ListItem>
-                    <ListItem onPress={ () => navigator.push({screen: "SelectGameMode", title: "Play", animated: true, animationType: 'slide-horizontal'}) } color={ "green" }>
-                        Play as a guest
+                    <ListItem 
+                        onPress={ () => {
+                            this.props.playAsGuest()
+                            navigator.push({screen: "SelectGameMode", title: "Play", animated: true, animationType: 'slide-horizontal'}) 
+                        }} 
+                        color={ "green" }>
+                            Play as a guest
                     </ListItem>
                 </List>
             </Container>
@@ -45,8 +52,8 @@ function mapStateToProps() {
     return {}
 }
 
-function mapDispatchToProps() {
-    return {}
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ ...userActions }, dispatch)
 }
 
 StartingScreen.propTypes = {
