@@ -7,6 +7,8 @@ import PropTypes from "prop-types"
 import ListItem from "../../components/list-item--circle"
 import SimonSaysLogo from "../../components/simon__logo"
 
+import { SINGLE_PLAYER_GAME } from "../../gameModeConstants"
+
 const Container = styled.View`
     height: 100%;
     justify-content: space-around;
@@ -17,8 +19,6 @@ const List = styled.View`
     width: 80%;
     padding-bottom: 100px;
 `
-
-const SINGLE_PLAYER_GAME = 1
 
 class SelectGameMode extends React.Component {
     render() {
