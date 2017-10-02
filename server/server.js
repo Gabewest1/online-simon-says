@@ -34,6 +34,8 @@ io.on("connection", socket => {
                 socket.username = action.payload.username
                 socket.xp = action.payload.xp
                 socket.isEliminated = false
+
+                break
             }
             case "server/FIND_MATCH": {
                 const { gameMode } = action
