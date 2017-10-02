@@ -19,7 +19,6 @@ export const actions = {
     playAsGuest
 }
 
-
 const initialState = {
     isLoggedIn: false,
     isLoading: false,
@@ -28,27 +27,19 @@ const initialState = {
     error: null
 }
 
-function createGuest() {
-    return {
-        username: `Guest${Math.floor(Math.random() * 1000000)}`,
-        xp: 0
-    }
-}
-
 export default handleActions({
     [login]: (state, action) => ({ ...state, isLoading: true }),
     [loginSuccess]: (state, action) => ({
         ...state,
         isLoggedIn: true,
         isLoading: false,
-        token: action.token,
-        info: action.user
+        token: action.payload.token,
+        info: action.payload.user
     }),
     [loginError]: (state, action) => ({
         ...state,
         isLoading: false,
         error: action.error
     }),
-    [playAsGuest]: (state, action) => ({ ...state, info: createGuest() })
 }, initialState)
 

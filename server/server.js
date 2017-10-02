@@ -30,6 +30,11 @@ io.on("connection", socket => {
         let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
         switch (action.type) {
+            case "server/PLAY_AS_GUEST": {
+                socket.username = action.payload.info.username
+                socket.xp = action.payload.info.xp
+                socket.isEliminated = false
+            }
             case "server/FIND_MATCH": {
                 const { gameMode } = action
                 gameRoomManager.findMatch(socket, gameMode)
