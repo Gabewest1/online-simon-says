@@ -49,7 +49,7 @@ class GameRoomManager {
 
     isGameRoomReady(gameRoom) {
         if (gameRoom.players.length === gameRoom.playersNeededToStart) {
-            this.messageGameRoom(gameRoom, "action", {type: "FOUND_MATCH", payload: true})
+            this.messageGameRoom(gameRoom, "action", { type: "FOUND_MATCH", payload: gameRoom.players })
         }
     }
 
