@@ -120,7 +120,7 @@ export const setNextMove = function* () {
         yield put(actions.addNextMove(nextMove))
     } else {
         let nextMove = yield take(actions.simonPadClicked)
-        yield put(actions.setNextMove(nextMove.pad))
+        yield put({ type: "server/ADD_NEXT_MOVE", payload: nextMove })
     }
 }
 

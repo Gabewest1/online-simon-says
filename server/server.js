@@ -67,21 +67,15 @@ io.on("connection", socket => {
 
                 break
             }
-            // case "server/SET_PLAYER": {
-            //     let { player, team, isPlayersTurn } = action
-            //     let actionForReducer = {type:"SET_PLAYER", player, team, name: socket.id, isPlayersTurn}
-            //     gameRoomManager.messageGameRoom(gameRoom, "action", actionForReducer)
-            //     break
-            // }
-            // case "server/END_TURN": {
-            //     gameRoomManager.messageGameRoom(gameRoom, "action", {type: "END_TURN"})
-            //     break                
-            // } 
-            // case "server/SET_OPPONENTS_SELECTION": {
-            //     gameRoomManager.messageGameRoom(gameRoom, "action", {type: "SET_OPPONENTS_SELECTION", payload: action.payload})
-            //     socket.emit("action", {type: "SET_OPPONENTS_SELECTION", payload: undefined})                
-            //     break
-            // }
+            case "server/ADD_NEXT_MOVE": {
+                let nextAction = Object.assign(action, {type: "ADD_NEXT_MOVE"})
+
+                gameRoomManager.messageGameRoom(gameRoom, "action", nextAction)
+
+                break
+            }
+            default:
+                break
         }
     })
 })
