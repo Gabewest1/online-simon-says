@@ -30,7 +30,7 @@ export const playAsGuest = function* () {
     }
 
     yield put({ type: "server/PLAY_AS_GUEST", payload: guest })
-    yield put(actions.loginSuccess({ token: null, info: guest }))
+    yield put(actions.loginSuccess({ token: null, user: guest }))
 } 
 
 export default root
