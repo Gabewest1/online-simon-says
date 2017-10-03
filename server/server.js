@@ -31,9 +31,7 @@ io.on("connection", socket => {
 
         switch (action.type) {
             case "server/PLAY_AS_GUEST": {
-                socket.username = action.payload.username
-                socket.xp = action.payload.xp
-                socket.isEliminated = false
+                socket.player = action.payload
 
                 break
             }
