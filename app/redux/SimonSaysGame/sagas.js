@@ -62,6 +62,7 @@ export const simonGameSaga = function* (action) {
 export const multiplayerGameSaga = function* () {
     let playerPerforming
     let isItMyTurn
+    let playerPassed
 
     while (!(yield select(selectors.isGameOver))) {
         playerPerforming = yield select(selectors.selectPerformingPlayer)
@@ -71,19 +72,28 @@ export const multiplayerGameSaga = function* () {
 
         if (isItMyTurn) {
             yield put(actions.setIsScreenDarkened(false))
-            const playerPassed = yield call(performPlayersTurn, playerPerforming)
+            console.log("ABOUT TO PERFORM MY TURN")
+            playerPassed = yield call(performPlayersTurn, playerPerforming)
+            console.log("FINISHED MY TURN", playerPassed)
         } else {
             //wait for player to perform their turn. Need to know if the player
             //performed their turn successfully or not.
             yield put(actions.setIsScreenDarkened(true))
-            const { payload: playerPassed} = yield take(actions.opponentFinishedTurn)
+            console.log("WAITING FOR THE PLAYER TO FINISH THEIR TURN")
+            let { payload } = yield take(actions.opponentFinishedTurn)
+            playerPassed = payload
+            console.log("PLAYER TO FINISHED THEIR TURN")            
         }
 
         if (playerPassed) {
             if (isItMyTurn) {
+                console.log("IM ABOUT THE SET THE NEXT MOVE")
                 yield call(setNextMove)
+                console.log("FINISHED SETTING THE NEXT MOVE")
             } else {
+                console.log("WAITING FOR THE PLAYER TO ADD NEXT MOVE")        
                 yield take(actions.addNextMove)
+                console.log("PLAYER ADDED NEXT MOVE")                        
             }
         }
 
@@ -221,7 +231,7 @@ export const performPlayersTurn = function* (player) {
 
     if (GAME_MODE === MULTIPLAYER_GAME) {
         yield put({ type: "server/OPPONENT_FINISHED_TURN", payload: true })        
-
+        console.log("RETURNING TRUE")
         return true
     }
 }
