@@ -67,6 +67,8 @@ export const multiplayerGameSaga = function* () {
         playerPerforming = yield select(selectors.selectPerformingPlayer)
         isItMyTurn = yield select(selectors.isItMyTurn)
 
+        console.log("WHOS TURN IS IT:", playerPerforming, isItMyTurn)
+
         if (isItMyTurn) {
             yield put(actions.setIsScreenDarkened(false))
             const playerPassed = yield call(performPlayersTurn, playerPerforming)
@@ -81,7 +83,7 @@ export const multiplayerGameSaga = function* () {
             if (isItMyTurn) {
                 yield call(setNextMove)
             } else {
-                yield take(actions.setNextMove)
+                yield take(actions.addNextMove)
             }
         }
 
