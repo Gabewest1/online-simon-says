@@ -8,6 +8,7 @@ const {
     gameOver,
     startTurn,
     endTurn,
+    setWinner,
     advanceTurn,
     eliminatePlayer,
     restartGame,
@@ -32,6 +33,7 @@ const {
     "GAME_OVER",
     "START_TURN",
     "END_TURN",
+    "SET_WINNER",
     "ADVANCE_TURN",
     "ELIMINATE_PLAYER",
     "RESTART_GAME",
@@ -58,6 +60,7 @@ export const actions = {
     gameOver,
     startTurn,
     endTurn,
+    setWinner,
     advanceTurn,
     eliminatePlayer,
     restartGame,
@@ -95,8 +98,8 @@ export const movesReducer = handleActions({
 export const playersReducer = handleActions({
     [foundMatch]: (state, action) => action.payload,
     [addPlayer]: (state, { payload }) => state.concat(payload),
-    [removePlayer]: (state, { payload }) => state.filter(player => player !== payload ),
-    [eliminatePlayer]: (state, { payload }) => state.map(player => player === payload ? { ...player, isEliminated: true } : player),
+    [removePlayer]: (state, { payload }) => state.filter(player => player.username !== payload.username ),
+    [eliminatePlayer]: (state, { payload }) => state.map(player => player.username === payload.username ? { ...player, isEliminated: true } : player),
 }, [])
 
 const gameReducerInitialState = {
@@ -117,6 +120,7 @@ export const gameReducer = handleActions({
     [decreaseTimer]: (state, action) => ({ ...state, timer: state.timer - 1 }),
     [setPerformingPlayer]: (state, action) => ({ ...state, performingPlayer: action.payload }),
     [resetTimer]: (state, action) => ({ ...state, timer: 15 }),
+    [setWinner]: (state, action) => ({ ...state, winner: action.payload }),
     [startGame]: (state, action) => ({ ...gameReducerInitialState, hasFoundMatch: state.hasFoundMatch })
 }, gameReducerInitialState)
 

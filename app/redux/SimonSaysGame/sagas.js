@@ -20,7 +20,9 @@ const root = function* () {
 export const watchAnimateSimonPadOnline = function* () {
     while (true) {
         const { payload } = yield take("ANIMATE_SIMON_PAD_ONLINE")
+        console.log("PAAAAD:", payload)
         yield fork(animateSimonPad, payload)
+        console.log("DiD i ruUN")
     }
 }
 
@@ -138,8 +140,12 @@ export const setNextMove = function* () {
         let nextMove = Math.floor(Math.random() * 4)
         yield put(actions.addNextMove(nextMove))
     } else {
-        let nextMove = yield take(actions.simonPadClicked)
-        yield put({ type: "server/ADD_NEXT_MOVE", payload: nextMove })
+        let { payload } = yield take(actions.simonPadClicked)
+        let pad = { pad: payload, isValid: true }
+
+        yield fork(animateSimonPad, pad)
+        yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad }) 
+        yield put({ type: "server/ADD_NEXT_MOVE", payload: pad })
     }
 }
 
