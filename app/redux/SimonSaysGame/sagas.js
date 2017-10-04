@@ -38,7 +38,6 @@ export const watchFindMatch = function* () {
 }
 
 export const watchSimonGameSaga = function* () {
-    console.log("S")
     yield takeEvery(actions.startGame, simonGameSaga)
 }
 
@@ -269,11 +268,12 @@ export const endTurn = function* () {
         } else {
             let currentPlayersIndex = players.indexOf(performingPlayer)
             let counter = 1
-            let nextPlayerToPerform = players[currentPlayersIndex + counter]
+            let nextPlayerToPerform = players[(currentPlayersIndex + counter) % players.length]
 
-            while (!nextPlayerToPerform.isEliminated) {
-                nextPlayerToPerform = players[currentPlayersIndex + counter]
+            while (nextPlayerToPerform.isEliminated) {
+                console.log("IM LOOPING")
                 counter++
+                nextPlayerToPerform = players[(currentPlayersIndex + counter) % players.length]
             }
 
             console.log("PASSED THE ROUND :D")

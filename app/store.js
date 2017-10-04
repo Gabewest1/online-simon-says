@@ -1,6 +1,7 @@
 import { createStore, combineReducers, compose, applyMiddleware } from "redux"
 import createSagaMiddleware from "redux-saga"
 import createSocketIoMiddleware from 'redux-socket.io'
+import logger from 'redux-logger'
 import { reducer as form } from "redux-form"
 import rootSaga from "./rootSaga"
 import reducers from "./rootReducer"
@@ -16,7 +17,7 @@ console.log("CONNECTING TO PORT:", PORT, socket)
 const socketIoMiddleware = createSocketIoMiddleware(socket, "server/")
 
 const sagaMiddleware = createSagaMiddleware()
-const middlewares = [socketIoMiddleware, sagaMiddleware]
+const middlewares = [socketIoMiddleware, sagaMiddleware, logger]
 
 let store = createStore(
     combineReducers({...reducers, form}),
