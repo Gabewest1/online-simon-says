@@ -145,7 +145,7 @@ export const setNextMove = function* () {
 
         yield fork(animateSimonPad, pad)
         yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad }) 
-        yield put({ type: "server/ADD_NEXT_MOVE", payload: pad })
+        yield put({ type: "server/ADD_NEXT_MOVE", payload })
     }
 }
 
@@ -221,6 +221,7 @@ export const performPlayersTurn = function* (player) {
             yield fork(animateSimonPad, pad)
         } else if (GAME_MODE === MULTIPLAYER_GAME) {
             yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
+            yield fork(animateSimonPad, pad)            
         }
 
         if (!isValidMove) {
