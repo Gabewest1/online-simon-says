@@ -57,7 +57,7 @@ io.on("connection", socket => {
                 break
             }
             case "server/ANIMATE_SIMON_PAD": {
-                let nextAction = Object.assign(action, {type: "ANIMATE_SIMON_PAD"})
+                let nextAction = Object.assign(action, {type: "ANIMATE_SIMON_PAD_ONLINE"})
 
                 gameRoom.players.forEach(player => {
                     if (player !== socket) {

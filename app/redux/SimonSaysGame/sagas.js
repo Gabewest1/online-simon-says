@@ -12,8 +12,16 @@ const SINGLE_PLAYER = 1
 const root = function* () {
     yield [
         watchSimonGameSaga(),
-        watchFindMatch()
+        watchFindMatch(),
+        watchAnimateSimonPadOnline()
     ]
+}
+
+export const watchAnimateSimonPadOnline = function* () {
+    while (true) {
+        const { payload } = yield take("ANIMATE_SIMON_PAD_ONLINE")
+        yield fork(animateSimonPad, payload)
+    }
 }
 
 export const watchFindMatch = function* () {
@@ -207,8 +215,6 @@ export const performPlayersTurn = function* (player) {
             yield fork(animateSimonPad, pad)
         } else if (GAME_MODE === MULTIPLAYER_GAME) {
             yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
-
-            return false
         }
 
         if (!isValidMove) {
