@@ -8,7 +8,9 @@
     "postinstall": "node Remove_Babelrc_files.js"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "express": "^4.16.1",
+    "mongoose": "^4.12.0",
     "react": "16.0.0-alpha.12",
     "react-native": "0.48.4",
     "react-native-navigation": "^1.1.233",
@@ -25,8 +27,11 @@
     "styled-components": "^2.2.0"
   },
   "devDependencies": {
+    "babel-eslint": "^8.0.1",
     "babel-jest": "21.2.0",
     "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.8.0",
+    "eslint-plugin-react": "^7.4.0",
     "jest": "21.2.1",
     "react-test-renderer": "16.0.0-alpha.12"
   },

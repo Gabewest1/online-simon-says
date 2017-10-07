@@ -1,7 +1,22 @@
 const express = require("express")
 const socket = require("socket.io")
+const mongoose = require("mongoose")
+const User = require("./User.js")
 
 const app = express()
+
+const db = mongoose.connect("mongodb://gabewest1:490501GG@ds149134.mlab.com:49134/simon-says",{ useMongoClient: true }, () => {
+    console.log("MONGOOSE CONNECTED TO THE DATABASE :D")
+})
+
+mongoose.connection.on('open', function (ref) {
+    console.log('Connected to mongo server.');
+    User.remove({}, (err) => {
+        if (err) console.log(err)
+    })
+
+    mongoose.model("Player", {}).remove({}, (err) => {})
+})
 
 const PORT = process.env.PORT || 3000
 
@@ -30,6 +45,48 @@ io.on("connection", socket => {
         let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
         switch (action.type) {
+            case "server/LOGIN": {
+                const { payload: credentials } = action
+                const query = { 
+                    "$and": [
+                        {"$or": [{ username: credentials.username }, { email: credentials.email }]},
+                        { password: credentials.password }
+                    ]
+                }
+
+                User.findOne(query, (err, user) => {
+                    if (err) {
+                        console.log(err)
+                    } else if (user) {
+                        console.log("FOUND USER:", user)
+                        const payload = { user }
+                        
+                        socket.emit("action", { type: "LOGIN_SUCCESS", payload })
+                    } else {
+                        socket.emit("action", { type: "LOGIN_ERROR", payload: err })
+                    }
+                    
+                })
+
+                break
+            }
+            case "server/REGISTER": {
+                const { payload: credentials } = action
+                
+                console.log("REGISTERING USER:", credentials)
+                new User(credentials).save((err, user) => {
+                    if (err) {
+                        console.log(err)
+                        socket.emit("action", { type: "LOGIN_ERROR", payload: err })
+                    } else {
+                        console.log("NEW USER:", user)
+                        const payload = { user }
+                        socket.emit("action", { type: "LOGIN_SUCCESS", payload })
+                    }
+                })
+
+                break
+            }
             case "server/PLAY_AS_GUEST": {
                 socket.player = action.payload
 
