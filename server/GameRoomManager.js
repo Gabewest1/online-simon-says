@@ -54,7 +54,7 @@ class GameRoomManager {
 
             let players = gameRoom.players.map(socket => {
                 console.log("before:", socket.player)
-                let newPlayer = Object.assign({}, socket.player, {isEliminated: false})
+                let newPlayer = Object.assign(socket.player, {isEliminated: false})
                 console.log("after:", newPlayer)
             })
             gameRoom.gameStarted = true
