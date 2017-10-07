@@ -1,4 +1,5 @@
 import React from "react"
+import { Keyboard } from "react-native"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
@@ -24,6 +25,8 @@ class LoginScreen extends React.Component {
         this.validate = this.validate.bind(this)
     }
     validate(values) {
+        Keyboard.dismiss()
+
         let errors = {}
 
         errors.username = !values.username ? "Please enter a username" : undefined
