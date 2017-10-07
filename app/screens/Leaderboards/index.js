@@ -4,8 +4,9 @@ import { bindActionCreators } from "redux"
 import styled from  "styled-components/native"
 import PropTypes from "prop-types"
 
-const Container = styled.View`
-    height: 100%;
+import Background from "../../components/background"
+
+const Container = styled(Background)`
     justify-content: space-around;
     align-items: center;
 `

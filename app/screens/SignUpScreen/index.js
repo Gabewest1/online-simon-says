@@ -7,7 +7,9 @@ import { reduxForm, Field, SubmissionError } from "redux-form"
 import styled from "styled-components/native"
 import { actions as authActions } from "../../redux/Auth"
 
-const Container = styled.View`
+import Background from "../../components/background"
+
+const Form = styled.View`
 
 `
 const InputField = styled.TextInput`
@@ -54,29 +56,31 @@ class SignUpScreen extends React.Component {
         let { handleSubmit } = this.props
 
         return (
-            <Container>
-                <Field
-                    name="username"
-                    type="text"
-                    component={ this.renderInput }
-                    placeholder="username" />
-                <Field
-                    name="email"
-                    type="text"
-                    component={ this.renderInput }
-                    placeholder="email" />
-                <Field
-                    name="password"
-                    type="password"
-                    component={ this.renderInput }
-                    placeholder="password" />
-                <Field
-                    name="re-password"
-                    type="password"
-                    component={ this.renderInput }
-                    placeholder="re-password" />
-                <SubmitButton onPress={ handleSubmit(this.validate) } title="Submit" />
-            </Container>
+            <Background>
+                <Form>
+                    <Field
+                        name="username"
+                        type="text"
+                        component={ this.renderInput }
+                        placeholder="username" />
+                    <Field
+                        name="email"
+                        type="text"
+                        component={ this.renderInput }
+                        placeholder="email" />
+                    <Field
+                        name="password"
+                        type="password"
+                        component={ this.renderInput }
+                        placeholder="password" />
+                    <Field
+                        name="re-password"
+                        type="password"
+                        component={ this.renderInput }
+                        placeholder="re-password" />
+                    <SubmitButton onPress={ handleSubmit(this.validate) } title="Submit" />
+                </Form>
+            </Background>
         )
     }
 }

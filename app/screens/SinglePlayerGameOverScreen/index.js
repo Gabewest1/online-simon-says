@@ -1,19 +1,13 @@
 import React from "react"
 import styled from "styled-components/native"
+import Background from "../../components/background"
 
-const Container = styled.View`
-
-
-`
-const Text = styled.Text`
-
-`
 class SinglePlayerGameOverScreen extends React.Component {
     render() {
         return (
-            <Container>
+            <Background>
                 <Text>GameOver</Text>
-            </Container>
+            </Background>
         )
     }
 }

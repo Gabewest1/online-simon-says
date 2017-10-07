@@ -6,11 +6,11 @@ import PropTypes from "prop-types"
 
 import ListItem from "../../components/list-item--circle"
 import SimonSaysLogo from "../../components/simon__logo"
+import Background from "../../components/background"
 
-import { SINGLE_PLAYER_GAME } from "../../gameModeConstants"
+import { SINGLE_PLAYER_GAME } from "../../constants"
 
-const Container = styled.View`
-    height: 100%;
+const Container = styled(Background)`
     justify-content: space-around;
     align-items: center;
 `

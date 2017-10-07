@@ -4,13 +4,14 @@ import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 import PropTypes from "prop-types"
 
+import Background from "../../components/background"
+
 import {
     actions as simonGameActions,
     selectors as simonGameSelectors
 } from "../../redux/SimonSaysGame"
 
-const Container = styled.View`
-    height: 100%;
+const Container = styled(Background)`
     justify-content: space-around;
     align-items: center;
 `

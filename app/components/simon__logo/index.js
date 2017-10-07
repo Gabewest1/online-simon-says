@@ -5,7 +5,7 @@ import Circle from "../circle"
 const Container = styled.View`
     flex-direction: row;
 `
-const SimonText = styled.Text`
+const SimonLogo = styled.Image`
     font-size: 80px;
 `
 
@@ -13,11 +13,7 @@ class SimonSaysLogo extends React.Component {
     render() {
         return (
             <Container>
-                {/* <Circle style={{position: "absolute"}} color="red" left="0" top="5" radius={ 35 } />
-                <Circle style={{position: "absolute"}} color="green" left="22" top="90" radius={ 50 } />
-                <Circle style={{position: "absolute"}} color="blue" left="52" top="5" radius={ 42 } />
-                <Circle style={{position: "absolute"}} color="yellow" left="90" top="90" radius={ 30 } /> */}
-                <SimonText>Simon</SimonText>
+                <SimonLogo source={ require("../../assets/images/simon-logo.png") } />
             </Container>
         )
     }

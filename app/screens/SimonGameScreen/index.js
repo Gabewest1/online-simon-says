@@ -5,16 +5,16 @@ import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 
 import SimonGame from "../../components/simon__game"
+import Background from "../../components/background"
 
 import {
     actions as simonGameActions,
     selectors as simonGameSelectors
 } from "../../redux/SimonSaysGame"
 
-import { SINGLE_PLAYER_GAME } from "../../gameModeConstants"
+import { SINGLE_PLAYER_GAME, BACKGROUND_COLOR } from "../../constants"
 
-const Container = styled.View`
-    height: 100%;
+const Container = styled(Background)`
     justify-content: center;
     align-items: center;
 `

@@ -6,9 +6,11 @@ import { bindActionCreators } from "redux"
 import { reduxForm, Field, SubmissionError } from "redux-form"
 import styled from "styled-components/native"
 
+import Background from "../../components/background"
+
 import { actions as authActions } from "../../redux/Auth"
 
-const Container = styled.View`
+const Form = styled.View`
 
 `
 const InputField = styled.TextInput`
@@ -53,19 +55,21 @@ class LoginScreen extends React.Component {
         let { handleSubmit } = this.props
 
         return (
-            <Container>
-                <Field
-                    name="username"
-                    type="text"
-                    component={ this.renderInput.bind(this) }
-                    placeholder="username or email" />
-                <Field
-                    name="password"
-                    type="password"
-                    component={ this.renderInput.bind(this) }
-                    placeholder="password" />
-                <SubmitButton onPress={ handleSubmit(this.validate) } title="Submit" />
-            </Container>
+            <Background>
+                <Form>
+                    <Field
+                        name="username"
+                        type="text"
+                        component={ this.renderInput.bind(this) }
+                        placeholder="username or email" />
+                    <Field
+                        name="password"
+                        type="password"
+                        component={ this.renderInput.bind(this) }
+                        placeholder="password" />
+                    <SubmitButton onPress={ handleSubmit(this.validate) } title="Submit" />
+                </Form>
+            </Background>
         )
     }
 }
