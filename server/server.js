@@ -50,7 +50,7 @@ io.on("connection", socket => {
                 const { payload: credentials } = action
                 const query = { 
                     "$and": [
-                        {"$or": [{ username: credentials.username }, { email: credentials.email }]},
+                        {"$or": [{ username: credentials.username }, { email: credentials.username }]},
                         { password: credentials.password }
                     ]
                 }

@@ -51,7 +51,12 @@ class GameRoomManager {
         if (gameRoom.players.length === gameRoom.playersNeededToStart) {
             //Cant pass down the game room to clients with the actual socket objects in 
             //the array or else my server stackoverflows.
-            let players = gameRoom.players.map(socket => Object.assign({}, socket.player, {isEliminated: false}))
+
+            let players = gameRoom.players.map(socket => {
+                console.log("before:", socket.player)
+                let newPlayer = Object.assign({}, socket.player, {isEliminated: false})
+                console.log("after:", newPlayer)
+            })
             gameRoom.gameStarted = true
             
             this.messageGameRoom(gameRoom, "action", { type: "FOUND_MATCH", payload: players })
