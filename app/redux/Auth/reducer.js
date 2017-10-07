@@ -45,7 +45,7 @@ export default handleActions({
     [loginError]: (state, action) => ({
         ...state,
         isLoading: false,
-        error: action.error
+        error: action.payload
     }),
     [register]: (state, action) => ({ ...state, isLoading: true })
 }, initialState)

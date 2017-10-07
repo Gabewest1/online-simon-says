@@ -31,8 +31,9 @@ export const watchRegister = function* () {
     yield takeEvery(actions.register, register)
 }
 export const login = function* (action) {
-    console.log("Entered the login function", action)
-    yield put({ type: "server/LOGIN", payload: action.payload })
+    const credentials = action.payload
+
+    yield put({ type: "server/LOGIN", payload: credentials })
 }
 
 export const register = function* (action) {
@@ -59,7 +60,7 @@ export const handleSucessfulSignIn = function* () {
             screen: "SelectGameMode",
             title: "Play",
             animated: true,
-            animationType: 'slide-horizontal'
+            animationType: "slide-horizontal"
         })
     }
 }

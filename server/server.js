@@ -2,6 +2,7 @@ const express = require("express")
 const socket = require("socket.io")
 const mongoose = require("mongoose")
 const User = require("./User.js")
+const stopSubmit = require("redux-form").stopSubmit
 
 const app = express()
 
@@ -11,11 +12,11 @@ const db = mongoose.connect("mongodb://gabewest1:490501GG@ds149134.mlab.com:4913
 
 mongoose.connection.on('open', function (ref) {
     console.log('Connected to mongo server.');
-    User.remove({}, (err) => {
-        if (err) console.log(err)
-    })
+    // User.remove({}, (err) => {
+    //     if (err) console.log(err)
+    // })
 
-    mongoose.model("Player", {}).remove({}, (err) => {})
+    // mongoose.model("Player", {}).remove({}, (err) => {})
 })
 
 const PORT = process.env.PORT || 3000
@@ -59,11 +60,16 @@ io.on("connection", socket => {
                         console.log(err)
                     } else if (user) {
                         console.log("FOUND USER:", user)
-                        const payload = { user }
+                        socket.player = user
                         
-                        socket.emit("action", { type: "LOGIN_SUCCESS", payload })
+                        socket.emit("action", { type: "LOGIN_SUCCESS", payload: { user }})
                     } else {
+                        //Need to do something with the errors
+                        let errors = {}
+
+                        
                         socket.emit("action", { type: "LOGIN_ERROR", payload: err })
+                        socket.emit("action", stopSubmit("signIn", errors))                        
                     }
                     
                 })
@@ -72,17 +78,35 @@ io.on("connection", socket => {
             }
             case "server/REGISTER": {
                 const { payload: credentials } = action
-                
-                console.log("REGISTERING USER:", credentials)
-                new User(credentials).save((err, user) => {
+                const query = { "$or": [
+                    { username: credentials.username },
+                    { email: credentials.email }
+                ]}
+
+                User.findOne(query, (err, user) => {
                     if (err) {
                         console.log(err)
+                    } else if (user) {
+                        let errors = {}
+
+                        errors.username =  user.username === credentials.username ? "Username taken" : undefined
+                        errors.email = user.email === credentials.email ? "Email taken" : undefined
+
                         socket.emit("action", { type: "LOGIN_ERROR", payload: err })
+                        socket.emit("action", stopSubmit("signUp", errors))
                     } else {
-                        console.log("NEW USER:", user)
-                        const payload = { user }
-                        socket.emit("action", { type: "LOGIN_SUCCESS", payload })
+                        new User(credentials).save((err, user) => {
+                            if (err) {
+                                console.log(err)
+                                socket.emit("action", { type: "LOGIN_ERROR", payload: err })
+                            } else {
+                                socket.player = user
+
+                                socket.emit("action", { type: "LOGIN_SUCCESS", payload: { user }})
+                            }
+                        })
                     }
+                    
                 })
 
                 break
