@@ -21,6 +21,11 @@ const List = styled.View`
 `
 
 class StartingScreen extends React.Component {
+    constructor(props) {
+        super(props)
+
+        props.giveSagasNavigator(props.navigator)
+    }
     render() {
         let { navigator } = this.props
 
@@ -35,10 +40,7 @@ class StartingScreen extends React.Component {
                         Login
                     </ListItem>
                     <ListItem 
-                        onPress={ () => {
-                            this.props.playAsGuest()
-                            navigator.push({screen: "SelectGameMode", title: "Play", animated: true, animationType: 'slide-horizontal'}) 
-                        }} 
+                        onPress={ this.props.playAsGuest }
                         color={ "green" }>
                             Play as a guest
                     </ListItem>
@@ -57,7 +59,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 StartingScreen.propTypes = {
-    navigator: PropTypes.object.isRequired
+    giveSagasNavigator: PropTypes.func.isRequired,
+    navigator: PropTypes.object.isRequired,
+    playAsGuest: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StartingScreen)

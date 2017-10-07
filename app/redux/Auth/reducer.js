@@ -4,19 +4,25 @@ const {
     login,
     loginError,
     loginSuccess,
-    playAsGuest
+    giveSagasNavigator,
+    playAsGuest,
+    register
 } = createActions(
     "LOGIN",
     "LOGIN_ERROR",
     "LOGIN_SUCCESS",
-    "PLAY_AS_GUEST"
+    "GIVE_SAGAS_NAVIGATOR",
+    "PLAY_AS_GUEST",
+    "REGISTER"
 )
 
 export const actions = {
     login,
     loginError,
     loginSuccess,
-    playAsGuest
+    giveSagasNavigator,
+    playAsGuest,
+    register
 }
 
 const initialState = {
@@ -41,5 +47,6 @@ export default handleActions({
         isLoading: false,
         error: action.error
     }),
+    [register]: (state, action) => ({ ...state, isLoading: true })
 }, initialState)
 
