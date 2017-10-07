@@ -38,8 +38,6 @@ class SignUpScreen extends React.Component {
         } else {
             throw new SubmissionError(errors)
         }
-
-        return true
     }
     renderInput = ({ meta, placeholder, type, input: { onChange, ...restInput }}) => {
         let shouldHideText = type === "password" && !meta.error
@@ -98,6 +96,6 @@ SignUpScreen.propTypes = {
 }
 
 export default reduxForm({
-    form: "signIn"
+    form: "signUp"
 })(connect(mapStateToProps, mapDispatchToProps)(SignUpScreen))
 
