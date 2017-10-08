@@ -1,4 +1,5 @@
 package com.online;
+import com.horcrux.svg.SvgPackage;
 
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.reactnativenavigation.NavigationApplication;
+
 
 public class MainApplication extends NavigationApplication {
 
@@ -21,7 +23,8 @@ public class MainApplication extends NavigationApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage()
+          new MainReactPackage(),
+            new SvgPackage()
       );
     }
   };
@@ -48,6 +51,7 @@ public class MainApplication extends NavigationApplication {
       // No need to add RnnPackage and MainReactPackage
       return Arrays.<ReactPackage>asList(
           // eg. new VectorIconsPackage()
+          new SvgPackage()
       );
   }
 

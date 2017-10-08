@@ -6,7 +6,7 @@ const Container = styled.View`
     flex-direction: row;
 `
 const SimonLogo = styled.Image`
-    font-size: 80px;
+
 `
 
 class SimonSaysLogo extends React.Component {
