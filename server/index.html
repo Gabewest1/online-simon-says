@@ -1,0 +1,19 @@
+<html>
+<head></head>
+<body>
+    
+    <button id="button">Print the gamerooms</button>
+    <p id="text"></p>
+    <script>
+        document.getElementById("button").addEventListener("click", () => {
+            fetch("/gamerooms")
+                .then(res => res.json())
+                .then(res => {
+                    console.log(res)
+                    document.getElementById("text").textContent = JSON.stringify(res)
+                })
+                .catch(err => console.log(err))
+        })
+    </script>
+</body>
+</html>

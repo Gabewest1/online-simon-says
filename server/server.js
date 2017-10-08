@@ -1,8 +1,9 @@
 const express = require("express")
-const socket = require("socket.io")
 const mongoose = require("mongoose")
-const User = require("./User.js")
+const path = require("path")
+const socket = require("socket.io")
 const stopSubmit = require("redux-form").stopSubmit
+const User = require("./User.js")
 
 const app = express()
 
@@ -20,6 +21,16 @@ mongoose.connection.on('open', function (ref) {
 })
 
 const PORT = process.env.PORT || 3000
+
+app.get("/", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "index.html"))
+})
+
+app.get("/gamerooms", (req, res) => {
+    let gameRooms = gameRoomManager.gameRooms
+    console.log(gameRooms)
+    res.json({gameRooms})
+})
 
 const server = app.listen(PORT, () => console.log(`running on port ${PORT}`))
 
@@ -89,7 +100,7 @@ io.on("connection", socket => {
                     } else if (user) {
                         let errors = {}
 
-                        errors.username =  user.username === credentials.username ? "Username taken" : undefined
+                        errors.username = user.username === credentials.username ? "Username taken" : undefined
                         errors.email = user.email === credentials.email ? "Email taken" : undefined
 
                         socket.emit("action", { type: "LOGIN_ERROR", payload: err })
