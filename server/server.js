@@ -30,13 +30,23 @@ const gameRoomManager = new (require("./GameRoomManager"))(io)
 io.on("connection", socket => {
     console.log(`${socket.id} connected to the game`)
     console.log("sockets:", Object.keys(io.sockets.sockets))
-    socket.on("disconnect", (reason) => {
+    socket.on("disconnect", reason => {
         console.log(`${socket.id} disconnected bc: ${reason}`)
 
         let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
-        if (gameRoom) {
+        if (gameRoom && !gameRoom.gameStarted) {
             gameRoomManager.cancelSearch(socket)
+        }
+
+        if (socket.player && socket.player.loggedIn) {
+            User.findOneAndUpdate({ username: socket.player.username }, { loggedIn: false }, (err, user) => {
+                if (err) {
+                    console.log(err)
+                }
+
+                console.log("USER LOGGED OUT:", user)
+            })
         }
 
     })
@@ -58,11 +68,14 @@ io.on("connection", socket => {
                 User.findOne(query, (err, user) => {
                     if (err) {
                         console.log(err)
-                    } else if (user && user.validPassword(credentials.password)) {
+                    } else if (user && !user.loggedIn && user.validPassword(credentials.password)) {
                         console.log("FOUND USER:", user)
+                        user.loggedIn = true
                         socket.player = user
 
                         socket.emit("action", { type: "LOGIN_SUCCESS", payload: { user }})
+
+                        user.save(err => err && console.log(err))
                     } else {
                         //Need to do something with the errors
                         let errors = {}
@@ -78,7 +91,7 @@ io.on("connection", socket => {
             }
             case "server/REGISTER": {
                 const { payload: credentials } = action
-                const query = { "$or": [
+                const query = { $or: [
                     { username: credentials.username },
                     { email: credentials.email }
                 ]}
@@ -100,6 +113,7 @@ io.on("connection", socket => {
                         newUser.username = credentials.username
                         newUser.email = credentials.email
                         newUser.password = newUser.generateHash(credentials.password)
+                        newUser.loggedIn = true
 
                         newUser.save((err, user) => {
                             if (err) {

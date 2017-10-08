@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
     password: String,
     username: String,
     xp: Number,
+    loggedIn: Boolean,
     onlineMatches: [{ type: mongoose.Schema.Types.ObjectId, ref: "Game" }]
 })
 
