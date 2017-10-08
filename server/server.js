@@ -49,29 +49,29 @@ io.on("connection", socket => {
             case "server/LOGIN": {
                 const { payload: credentials } = action
                 const query = {
-                    "$and": [
-                        {"$or": [{ username: credentials.username }, { email: credentials.username }]},
-                        { password: credentials.password }
+                    $or: [
+                        { username: credentials.username },
+                        { email: credentials.username }
                     ]
                 }
 
                 User.findOne(query, (err, user) => {
                     if (err) {
                         console.log(err)
-                    } else if (user) {
+                    } else if (user && user.validPassword(credentials.password)) {
                         console.log("FOUND USER:", user)
                         socket.player = user
-                        
+
                         socket.emit("action", { type: "LOGIN_SUCCESS", payload: { user }})
                     } else {
                         //Need to do something with the errors
                         let errors = {}
 
-                        
+
                         socket.emit("action", { type: "LOGIN_ERROR", payload: err })
-                        socket.emit("action", stopSubmit("signIn", errors))                        
+                        socket.emit("action", stopSubmit("signIn", errors))
                     }
-                    
+
                 })
 
                 break
@@ -95,7 +95,13 @@ io.on("connection", socket => {
                         socket.emit("action", { type: "LOGIN_ERROR", payload: err })
                         socket.emit("action", stopSubmit("signUp", errors))
                     } else {
-                        new User(credentials).save((err, user) => {
+                        const newUser = new User()
+
+                        newUser.username = credentials.username
+                        newUser.email = credentials.email
+                        newUser.password = newUser.generateHash(credentials.password)
+
+                        newUser.save((err, user) => {
                             if (err) {
                                 console.log(err)
                                 socket.emit("action", { type: "LOGIN_ERROR", payload: err })
