@@ -1,3 +1,4 @@
+const CircularJSON = require('circular-json')
 const express = require("express")
 const mongoose = require("mongoose")
 const path = require("path")
@@ -25,7 +26,7 @@ const PORT = process.env.PORT || 3000
 app.get("/gamerooms", (req, res) => {
     let gameRooms = gameRoomManager.gameRooms
     console.log(gameRooms)
-    res.json({gameRooms})
+    res.json(CircularJSON.stringify({gameRooms}))
 })
 
 app.get("/", (req, res) => {
