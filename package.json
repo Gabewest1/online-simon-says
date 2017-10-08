@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
-    "circular-json": "^0.3.3",
     "express": "^4.16.1",
     "mongoose": "^4.12.0",
     "react": "16.0.0-alpha.12",

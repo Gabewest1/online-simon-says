@@ -1,7 +1,5 @@
-const CircularJSON = require('circular-json')
 const express = require("express")
 const mongoose = require("mongoose")
-const path = require("path")
 const socket = require("socket.io")
 const stopSubmit = require("redux-form").stopSubmit
 const User = require("./User.js")
@@ -22,17 +20,6 @@ mongoose.connection.on('open', function (ref) {
 })
 
 const PORT = process.env.PORT || 3000
-
-app.get("/gamerooms", (req, res) => {
-    let gameRooms = gameRoomManager.gameRooms
-    console.log(gameRooms)
-    res.json(CircularJSON.stringify({gameRooms}))
-})
-
-app.get("/", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "index.html"))
-})
-
 
 const server = app.listen(PORT, () => console.log(`running on port ${PORT}`))
 
@@ -61,7 +48,7 @@ io.on("connection", socket => {
         switch (action.type) {
             case "server/LOGIN": {
                 const { payload: credentials } = action
-                const query = { 
+                const query = {
                     "$and": [
                         {"$or": [{ username: credentials.username }, { email: credentials.username }]},
                         { password: credentials.password }
