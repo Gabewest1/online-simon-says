@@ -22,15 +22,16 @@ mongoose.connection.on('open', function (ref) {
 
 const PORT = process.env.PORT || 3000
 
-app.get("/", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "index.html"))
-})
-
 app.get("/gamerooms", (req, res) => {
     let gameRooms = gameRoomManager.gameRooms
     console.log(gameRooms)
     res.json({gameRooms})
 })
+
+app.get("/", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "index.html"))
+})
+
 
 const server = app.listen(PORT, () => console.log(`running on port ${PORT}`))
 
