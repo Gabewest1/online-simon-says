@@ -3,10 +3,12 @@ import { all, call, fork, put, race, select, take } from "redux-saga/effects"
 import { actions, selectors } from "./index"
 import { selectors as userSelectors } from "../Auth"
 
-export const ANIMATION_DURATION = 200
-let GAME_MODE 
+export const ANIMATION_DURATION = 50
+export const TIMEOUT = 3000
 const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
+
+let GAME_MODE 
 
 
 const root = function* () {
@@ -158,7 +160,7 @@ export const startTimer = function* () {
 
         let { playersMove, timedout } = yield race({
             playersMove: take(actions.simonPadClicked),
-            timedout: call(delay, 1000)
+            timedout: call(delay, TIMEOUT)
         })
 
         if (playersMove) {
@@ -177,7 +179,7 @@ export const getPlayersMove = function* (isFirstMove) {
     } else {
         let { playersMove, timedout } = yield race({
             playersMove: take(actions.simonPadClicked),
-            timedout: call(delay, 1000)
+            timedout: call(delay, TIMEOUT)
         })
 
         return { playersMove, timedout }

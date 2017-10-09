@@ -40,7 +40,7 @@ class StartingScreen extends React.Component {
                         Login
                     </ListItem>
                     <ListItem 
-                        onPress={ this.props.playAsGuest }
+                        onPress={ () => this.props.playAsGuest() }
                         color={ "green" }>
                             Play as a guest
                     </ListItem>
