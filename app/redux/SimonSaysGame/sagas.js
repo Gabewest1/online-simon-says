@@ -1,10 +1,10 @@
 import { delay, takeEvery } from "redux-saga"
-import { all, call, fork, put, race, select, take } from "redux-saga/effects"
+import { all, call, cancel, fork, put, race, select, take } from "redux-saga/effects"
 import { actions, selectors } from "./index"
 import { selectors as userSelectors } from "../Auth"
 
-export const ANIMATION_DURATION = 50
-export const TIMEOUT = 3000
+export const ANIMATION_DURATION = 1
+export const TIMEOUT_TIME = 3
 const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
 
@@ -22,9 +22,7 @@ const root = function* () {
 export const watchAnimateSimonPadOnline = function* () {
     while (true) {
         const { payload } = yield take("ANIMATE_SIMON_PAD_ONLINE")
-        console.log("PAAAAD:", payload)
         yield fork(animateSimonPad, payload)
-        console.log("DiD i ruUN")
     }
 }
 
@@ -34,9 +32,9 @@ export const watchFindMatch = function* () {
 
         yield put({ type: "server/FIND_MATCH", gameMode })
 
-        const { foundMatch, cancelSearch } = yield race({
-            foundMatch: take(actions.foundMatch),
-            cancelSearch: take(actions.cancelSearch)
+        const { cancelSearch } = yield race({
+            cancelSearch: take(actions.cancelSearch),
+            foundMatch: take(actions.foundMatch)
         })
 
         //I'm passing in the gameMode as a payload even though on the server my
@@ -146,45 +144,32 @@ export const setNextMove = function* () {
         let pad = { pad: payload, isValid: true }
 
         yield fork(animateSimonPad, pad)
-        yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad }) 
+        yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
         yield put({ type: "server/ADD_NEXT_MOVE", payload })
     }
 }
 
-export const startTimer = function* () {
+export const startLongTimer = function* () {
     let timeTillPlayerTimesout = yield select(selectors.getTimer)
 
     while (timeTillPlayerTimesout > 0) {
+        yield delay(1000)
         yield put(actions.decreaseTimer())
         timeTillPlayerTimesout--
-
-        let { playersMove, timedout } = yield race({
-            playersMove: take(actions.simonPadClicked),
-            timedout: call(delay, TIMEOUT)
-        })
-
-        if (playersMove) {
-            return { playersMove, timedout: false }
-        } else if (timeTillPlayerTimesout === 0) {
-            return { playersMove: false, timedout: true }
-        }
     }
+
+    yield put({ type: "PLAYER_TIMEDOUT"})
 }
 
-export const getPlayersMove = function* (isFirstMove) {
-    if (isFirstMove) {
-        let { playersMove, timedout } = yield call(startTimer)
+export const startShortTimer = function* () {
+    let timeTillPlayerTimesout = TIMEOUT_TIME
 
-        return { playersMove, timedout }
-    } else {
-        let { playersMove, timedout } = yield race({
-            playersMove: take(actions.simonPadClicked),
-            timedout: call(delay, TIMEOUT)
-        })
-
-        return { playersMove, timedout }
+    while (timeTillPlayerTimesout > 0) {
+        yield delay(1000)
+        timeTillPlayerTimesout--
     }
 
+    yield put({ type: "PLAYER_TIMEDOUT"})
 }
 
 export const eliminatePlayer = function* (player) {
@@ -198,8 +183,18 @@ export const performPlayersTurn = function* (player) {
     while (movesPerformed < movesToPerform.length) {
         console.log("WAITING FOR YOU TO MAKE A MOVE")
         let isPlayersFirstMove = movesPerformed === 0
+        let timer
 
-        let { playersMove, timedout } = yield call(getPlayersMove, isPlayersFirstMove)
+        if (isPlayersFirstMove) {
+            timer = yield fork(startLongTimer)
+        } else {
+            timer = yield fork(startShortTimer)
+        }
+
+        const { playersMove, timedout } = yield race({
+            playersMove: take(actions.simonPadClicked),
+            timedout: take("PLAYER_TIMEDOUT")
+        })
 
         console.log("MOVE:", playersMove, timedout)
         if (timedout) {
@@ -213,7 +208,8 @@ export const performPlayersTurn = function* (player) {
 
                 return false
             }
-            
+        } else {
+            yield cancel(timer)
         }
 
         const isValidMove = playersMove.payload === movesToPerform[movesPerformed]
@@ -223,7 +219,7 @@ export const performPlayersTurn = function* (player) {
             yield fork(animateSimonPad, pad)
         } else if (GAME_MODE === MULTIPLAYER_GAME) {
             yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
-            yield fork(animateSimonPad, pad)            
+            yield fork(animateSimonPad, pad)
         }
 
         if (!isValidMove) {
@@ -247,6 +243,8 @@ export const performPlayersTurn = function* (player) {
         yield put({ type: "server/OPPONENT_FINISHED_TURN", payload: true })        
         console.log("RETURNING TRUE")
         return true
+    } else {
+        yield delay(500)
     }
 }
 
