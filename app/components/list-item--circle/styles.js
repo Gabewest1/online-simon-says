@@ -8,10 +8,6 @@ export const ListItemWithCircle = styled.TouchableOpacity`
     border-radius: 5px;
     border-width: 1px;
     position: relative;
-    shadow-opacity: 0.75;
-    shadow-radius: 5px;
-    shadow-color: red;
-    shadow-offset: 0px 0px;
 `
 export const Item = styled.Text`
     font-size: 30px;

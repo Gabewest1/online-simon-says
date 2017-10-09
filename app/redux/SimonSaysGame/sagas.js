@@ -244,6 +244,7 @@ export const performPlayersTurn = function* (player) {
         console.log("RETURNING TRUE")
         return true
     } else {
+        //Give a little pause before starting the next turn
         yield delay(500)
     }
 }
