@@ -80,6 +80,9 @@ io.on("connection", socket => {
                         //Need to do something with the errors
                         let errors = {}
 
+                        const foundUser = user && (user.username === credentials.username || user.email === credentials.username)
+                        errors.username = !foundUser ? "User not found" : undefined
+                        errors.password = foundUser && user.password !== credentials.password ? "Incorrect password" : undefined
 
                         socket.emit("action", { type: "LOGIN_ERROR", payload: err })
                         socket.emit("action", stopSubmit("signIn", errors))
