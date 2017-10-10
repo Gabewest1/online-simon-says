@@ -1,5 +1,5 @@
 import React from "react"
-import { Container, Item, ListItemWithCircle } from "./styles"
+import { Container, Item, ListItemWithCircle, StyledIcon } from "./styles"
 import Circle from "../circle"
 import { BoxShadow } from 'react-native-shadow'
 import styled from "styled-components/native"
@@ -7,7 +7,7 @@ import styled from "styled-components/native"
 const Shadow = styled(BoxShadow)`
     margin-bottom: 20px;
 `
-export const ListItemWithCircleView = ({ color, children, onPress }) => {
+export const ListItem = ({ children, color, icon, onPress }) => {
     const dimenstions = { width: 300, height: 60 }
 
     const shadowOpt = {
@@ -23,10 +23,11 @@ export const ListItemWithCircleView = ({ color, children, onPress }) => {
 
     return (
         <Shadow setting={ shadowOpt }>
-            <ListItemWithCircle style={ dimenstions } color={ color } onPress={ onPress }>
+            <ListItemWithCircle style={ dimenstions } onPress={ onPress }>
                 <Container>
-                    {/* <Circle color={ "white" } radius={ 50 } /> */}
+                    <StyledIcon name={ icon } />
                     <Item
+                        name="people"
                         color={ color }
                         underlineColorAndroid="transparent">
                         { children }

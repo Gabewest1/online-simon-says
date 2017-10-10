@@ -1,10 +1,10 @@
 import React from "react"
-import { ListItemWithCircleView } from "./views"
+import { ListItem } from "./views"
 
 class ListItemWithCircle extends React.Component {
     render() {
         return (
-            <ListItemWithCircleView { ...this.props } />
+            <ListItem { ...this.props } />
         )
     }
 }
