@@ -14,16 +14,12 @@ export const ListItemWithCircle = styled.TouchableOpacity`
 export const Item = styled.Text`
     font-size: ${FONT_SIZE};
     color: white;
-    margin-left: 10px;
     text-align: center;
     flex-grow: 1;
-    height: 100%;
 `
 export const Container = styled.View`
     flex-direction: row;
     align-items: center;
-    padding: 5px;
-    height: 100%;
 `
 export const StyledIcon = styled(Icon)`
     color: white;

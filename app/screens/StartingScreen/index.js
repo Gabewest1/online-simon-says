@@ -1,12 +1,14 @@
 import React from "react"
+import { View } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from  "styled-components/native"
-import PropTypes from "prop-types"
+import PropTypes from "prop-types" 
 
 import ListItem from "../../components/list-item--circle"
 import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
+import SignInForm from "../../components/sign-in-form"
 
 import { actions as userActions } from "../../redux/Auth"
 
@@ -33,17 +35,7 @@ class StartingScreen extends React.Component {
             <Container>
                 <SimonSaysLogo />
                 <List>
-                    <ListItem onPress={ () => navigator.push({screen: "SignUpScreen", title: "SignUp", animated: true, animationType: 'slide-horizontal'}) }color={ "red" }>
-                        Sign-up
-                    </ListItem>
-                    <ListItem onPress={ () => navigator.push({screen: "LoginScreen", title: "Login", animated: true, animationType: 'slide-horizontal'}) }color={ "blue" }>
-                        Login
-                    </ListItem>
-                    <ListItem 
-                        onPress={ () => this.props.playAsGuest() }
-                        color={ "green" }>
-                            Play as a guest
-                    </ListItem>
+                    <SignInForm playAsGuest={ this.props.playAsGuest } />
                 </List>
             </Container>
         )
