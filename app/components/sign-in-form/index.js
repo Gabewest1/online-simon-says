@@ -67,12 +67,12 @@ class SignInForm extends React.Component {
                 <Field
                     name="username"
                     type="text"
-                    component={ this.renderInput.bind(this) }
+                    component={ this.renderInput }
                     placeholder="username or email" />
                 <Field
                     name="password"
                     type="password"
-                    component={ this.renderInput.bind(this) }
+                    component={ this.renderInput }
                     placeholder="password" />
                 <ListItem
                     style={{ marginTop: 25 }}
