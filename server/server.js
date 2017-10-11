@@ -82,7 +82,8 @@ io.on("connection", socket => {
 
                         const foundUser = user && (user.username === credentials.username || user.email === credentials.username)
                         errors.username = !foundUser ? "User not found" : undefined
-                        errors.password = foundUser && user.password !== credentials.password ? "Incorrect password" : undefined
+                        errors.password = foundUser && !user.validPassword(credentials.password) ? "Incorrect password" : undefined
+                        errors.loggedIn = foundUser && user.loggedIn ? "User is already logged in" : undefined
 
                         socket.emit("action", { type: "LOGIN_ERROR", payload: err })
                         socket.emit("action", stopSubmit("signIn", errors))
