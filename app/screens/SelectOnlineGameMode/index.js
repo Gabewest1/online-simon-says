@@ -17,7 +17,6 @@ const Container = styled(Background)`
 
 const List = styled.View`
     width: 80%;
-    padding-bottom: 100px;
 `
 
 
@@ -38,17 +37,22 @@ class SelectOnlineGameMode extends React.Component {
                 <List>
                     <ListItem
                         onPress={ () => this.gotoGameScreen(TWO_PLAYER_GAME) }
-                        color={ "red" }>
+                        style={{ marginBottom: 35 }}
+                        color={ "red" }
+                        icon={{ name: "looks-two" }}>
                         Two Player
                     </ListItem>
                     <ListItem
                         onPress={ () => this.gotoGameScreen(THREE_PLAYER_GAME) }
-                        color={ "blue" }>
+                        style={{ marginBottom: 35 }}
+                        color={ "blue" }
+                        icon={{ name: "looks-3" }}>
                         Three Player
                     </ListItem>
                     <ListItem
                         onPress={ () => this.gotoGameScreen(FOUR_PLAYER_GAME) }
-                        color={ "green" }>
+                        color={ "green" }
+                        icon={{ name: "looks-4" }}>
                         Four Player
                     </ListItem>
                 </List>

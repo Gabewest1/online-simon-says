@@ -30,6 +30,7 @@ class SinglePlayerGameOverScreen extends React.Component {
                 <Container>
                     <ListItem
                         title="Play Again"
+                        style={{ marginBottom: 35 }}
                         onPress={ () => this.props.navigator.resetTo({
                             screen: "SimonGameScreen",
                             title: "",
