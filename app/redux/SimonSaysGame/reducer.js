@@ -5,6 +5,7 @@ const {
     simonPadClicked,
     animateSimonPad,
     startGame,
+    resetGame,
     gameOver,
     startTurn,
     endTurn,
@@ -30,6 +31,7 @@ const {
     "SIMON_PAD_CLICKED",
     "ANIMATE_SIMON_PAD",
     "START_GAME",
+    "RESET_GAME",
     "GAME_OVER",
     "START_TURN",
     "END_TURN",
@@ -57,6 +59,7 @@ export const actions = {
     simonPadClicked,
     animateSimonPad,
     startGame,
+    resetGame,
     gameOver,
     startTurn,
     endTurn,
@@ -91,7 +94,7 @@ export const padsReducer = handleActions({
 ])
 
 export const movesReducer = handleActions({
-    [startGame]: () => [],
+    [resetGame]: () => [],
     [addNextMove]: (state, { payload }) => [...state, payload],
 }, [])
 
@@ -121,7 +124,7 @@ export const gameReducer = handleActions({
     [setPerformingPlayer]: (state, action) => ({ ...state, performingPlayer: action.payload }),
     [resetTimer]: (state, action) => ({ ...state, timer: 15 }),
     [setWinner]: (state, action) => ({ ...state, winner: action.payload }),
-    [startGame]: (state, action) => ({ ...gameReducerInitialState, hasFoundMatch: state.hasFoundMatch })
+    [resetGame]: (state, action) => ({ ...gameReducerInitialState })
 }, gameReducerInitialState)
 
 export default combineReducers({
