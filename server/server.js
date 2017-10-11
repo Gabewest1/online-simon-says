@@ -134,6 +134,17 @@ io.on("connection", socket => {
 
                 break
             }
+            case "server/LOGOUT": {
+                User.findOneAndUpdate({ username: socket.player.username }, { loggedIn: false }, (err, user) => {
+                    if (err) {
+                        console.log(err)
+                    }
+
+                    console.log("USER LOGGED OUT:", user)
+                })
+
+                break
+            }
             case "server/PLAY_AS_GUEST": {
                 socket.player = action.payload
 

@@ -4,6 +4,7 @@ const {
     login,
     loginError,
     loginSuccess,
+    logout,
     giveSagasNavigator,
     playAsGuest,
     register
@@ -11,6 +12,7 @@ const {
     "LOGIN",
     "LOGIN_ERROR",
     "LOGIN_SUCCESS",
+    "LOGOUT",
     "GIVE_SAGAS_NAVIGATOR",
     "PLAY_AS_GUEST",
     "REGISTER"
@@ -20,6 +22,7 @@ export const actions = {
     login,
     loginError,
     loginSuccess,
+    logout,
     giveSagasNavigator,
     playAsGuest,
     register
@@ -47,6 +50,6 @@ export default handleActions({
         isLoading: false,
         error: action.payload
     }),
+    [logout]: (state, action) => initialState,
     [register]: (state, action) => ({ ...state, isLoading: true })
 }, initialState)
-

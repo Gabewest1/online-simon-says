@@ -9,6 +9,7 @@ const root = function* () {
         getNavigatorActions(),
         handleSucessfulSignIn(),
         watchLogin(),
+        watchLogout(),
         watchPlayAsGuest(),
         watchRegister()
     ]
@@ -19,17 +20,19 @@ export const getNavigatorActions = function* () {
     NavigatorActions = action.payload
 }
 export const watchLogin = function* () {
-    console.log("Watching login")
     yield takeEvery(actions.login, login)
 }
-
+export const watchLogout = function* () {
+    yield takeEvery(actions.logout, logout)
+}
 export const watchPlayAsGuest = function* () {
     yield takeEvery(actions.playAsGuest, playAsGuest)
 }
-
 export const watchRegister = function* () {
     yield takeEvery(actions.register, register)
 }
+
+
 export const login = function* (action) {
     const credentials = action.payload
 
@@ -49,6 +52,10 @@ export const playAsGuest = function* () {
 
     yield put({ type: "server/PLAY_AS_GUEST", payload: guest })
     yield put(actions.loginSuccess({ token: null, user: guest }))
+}
+
+export const logout = function* () {
+    yield put({ type: "server/LOGOUT" })
 }
 
 export const handleSucessfulSignIn = function* () {
