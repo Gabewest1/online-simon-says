@@ -12,7 +12,7 @@ const borderStyles = {
     borderWidth: .3
 }
 
-export const ListItem = ({ children, color, icon, onPress, style }) => {
+export const ListItem = ({ children, color, icon, onPress, style, title }) => {
     return (
         <Button
             raised
@@ -20,7 +20,7 @@ export const ListItem = ({ children, color, icon, onPress, style }) => {
             buttonStyle={{ ...borderStyles, backgroundColor: BACKGROUND_COLOR }}
             containerViewStyle={{ ...style, ...borderStyles }}
             textStyle={{textAlign: 'center'}}
-            title={ children }
+            title={ children || title }
             onPress={ onPress } />
     )
 }

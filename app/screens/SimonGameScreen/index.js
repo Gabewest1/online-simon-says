@@ -42,7 +42,7 @@ const Timer = styled.Text`
     color: black;
 `
 class SimonGameScreen extends React.Component {
-    componentDidMount() {
+    componentWillMount() {
         this.props.startGame(this.props.gameMode)
     }
     handlePadClick(pad) {
@@ -72,15 +72,17 @@ class SimonGameScreen extends React.Component {
         this.props.navigator.push({
             screen: "SinglePlayerGameOverScreen", // unique ID registered with Navigation.registerScreen
             title: "Game Over", // title of the screen as appears in the nav bar (optional)
-            passProps: {}, // simple serializable object that will pass as props to the modal (optional)
+            passProps: { gameMode: this.props.gameMode }, // simple serializable object that will pass as props to the modal (optional)
             navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-            animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+            animationType: 'slide-up', // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+            overrideBackPress: true,
+            backButtonHidden: true
         })
     }
     render() {
         //rendering the game over screen requires the regular game screen to be 
         //rendered first. Then the game over screen can be pushed onto the screen.
-        if (this.props.isGameOver) {
+        if (this.props.hasGameStarted && this.props.isGameOver) {
             setTimeout(() => this.renderGameOver(), 1)
         }
 
@@ -90,13 +92,14 @@ class SimonGameScreen extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        pads: simonGameSelectors.getPads(state),
-        isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
+        hasGameStarted: simonGameSelectors.hasGameStarted(state),
         isGameOver: simonGameSelectors.isGameOver(state),
-        round: simonGameSelectors.getCurrentRound(state),
-        timer: simonGameSelectors.getTimer(state),
+        isItMyTurn: simonGameSelectors.isItMyTurn(state),
+        isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
+        pads: simonGameSelectors.getPads(state),
         players: simonGameSelectors.getPlayers(state),
-        isItMyTurn: simonGameSelectors.isItMyTurn(state)
+        round: simonGameSelectors.getCurrentRound(state),
+        timer: simonGameSelectors.getTimer(state)
     }
 }
 
@@ -105,6 +108,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 SimonGameScreen.propTypes = {
+    hasGameStarted: PropTypes.bool.isRequired,
     gameMode: PropTypes.number.isRequired,
     isGameOver: PropTypes.bool.isRequired,
     pads: PropTypes.array.isRequired,
