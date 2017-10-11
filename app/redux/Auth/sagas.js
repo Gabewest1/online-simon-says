@@ -7,7 +7,7 @@ let NavigatorActions
 const root = function* () {
     yield [
         getNavigatorActions(),
-        handleSucessfulSignIn(),
+        handleSuccessfulSignIn(),
         watchLogin(),
         watchLogout(),
         watchPlayAsGuest(),
@@ -58,7 +58,7 @@ export const logout = function* () {
     yield put({ type: "server/LOGOUT" })
 }
 
-export const handleSucessfulSignIn = function* () {
+export const handleSuccessfulSignIn = function* () {
     console.log("WAITING FOR A LOGIN SUCCESS")
     while (yield take(actions.loginSuccess)) {
         console.log("USER LOGGED IN AND IM ABOUT TO NAVIGATE!")
@@ -67,7 +67,8 @@ export const handleSucessfulSignIn = function* () {
             screen: "SelectGameMode",
             title: "Play",
             animated: true,
-            animationType: "slide-horizontal"
+            animationType: "slide-horizontal",
+            backButtonHidden: true
         })
     }
 }
