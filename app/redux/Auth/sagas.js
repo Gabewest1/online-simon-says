@@ -32,16 +32,24 @@ export const watchRegister = function* () {
     yield takeEvery(actions.register, register)
 }
 
-
 export const login = function* (action) {
-    const credentials = action.payload
+    let credentials =  {...action.payload }
+    
+    Object.keys(credentials).map(key => {
+        credentials[key] = credentials[key].toLowerCase()
+    })
 
     yield put({ type: "server/LOGIN", payload: credentials })
 }
 
 export const register = function* (action) {
-    console.log("Entered the register function", action)
-    yield put({ type: "server/REGISTER", payload: action.payload })
+    let credentials = { ...action.payload }
+
+    Object.keys(credentials).map(key => {
+        credentials[key] = credentials[key].toLowerCase()
+    })
+
+    yield put({ type: "server/REGISTER", payload: credentials })
 }
 
 export const playAsGuest = function* () {

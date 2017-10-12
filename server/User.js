@@ -1,9 +1,9 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const UserSchema = new mongoose.Schema({
-    email: String,
+    email: { type: String, lowercase: true },
     password: String,
-    username: String,
+    username: { type: String, lowercase: true },
     xp: Number,
     loggedIn: Boolean,
     onlineMatches: [{ type: mongoose.Schema.Types.ObjectId, ref: "Game" }]

@@ -1,5 +1,6 @@
 import React from "react"
 import { Keyboard } from "react-native"
+import { FormInput, FormValidationMessage } from "react-native-elements"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
@@ -10,6 +11,9 @@ import { actions as authActions } from "../../redux/Auth"
 import Background from "../../components/background"
 
 const Form = styled.View`
+
+`
+const View = styled.View`
 
 `
 const InputField = styled.TextInput`
@@ -35,21 +39,35 @@ class SignUpScreen extends React.Component {
         errors.password = !values.password ? "Please enter a password" : undefined
         errors["re-password"] = !values["re-password"] ? "Please re-enter password" : undefined
 
+        if (!errors.password && !errors["re-password"]) {
+            errors.password = values.password.toLowerCase() !== values["re-password"].toLowerCase()
+                ? "Passwords don't match"
+                : undefined
+        }
+
         if (!errors.username && !errors.email && !errors.password && !errors["re-password"]) {
             this.props.register(values)
         } else {
             throw new SubmissionError(errors)
         }
     }
-    renderInput = ({ meta, placeholder, type, input: { onChange, ...restInput }}) => {
+    renderInput(props) {
+        const { meta, placeholder, type, input: { onChange, ...restInput }} = props
         let shouldHideText = type === "password" && !meta.error
+        console.log("PROPS:", props)
 
         return (
-            <InputField
-                onChangeText={ onChange }
-                secureTextEntry={ shouldHideText }
-                placeholder={ meta.error ? meta.error : placeholder }
-                { ...restInput } />
+            <View>
+                <FormInput
+                    { ...restInput }
+                    shake={ meta.error }
+                    style={{marginBottom: -8 }}
+                    placeholderTextColor="gray"
+                    onChangeText={ onChange }
+                    secureTextEntry={ shouldHideText }
+                    placeholder={ placeholder } />
+                <FormValidationMessage>{ meta.error }</FormValidationMessage>
+            </View>
         )
     }
     render() {
