@@ -28,7 +28,7 @@ const io = socket(server)
 const gameRoomManager = new (require("./GameRoomManager"))(io)
 
 io.on("connection", socket => {
-    console.log(`${socket.id} connected to the game`)
+    console.dir(`${socket.id} connected to the game from ip: ${socket.handshake.address}`)
     console.log("sockets:", Object.keys(io.sockets.sockets))
     socket.on("disconnect", reason => {
         console.log(`${socket.id} disconnected bc: ${reason}`)
@@ -163,30 +163,32 @@ io.on("connection", socket => {
             case "server/ELIMINATE_PLAYER": {
                 let nextAction = Object.assign(action, {type: "ELIMINATE_PLAYER"})
 
-                gameRoomManager.messageGameRoom(gameRoom, "action", nextAction)
+                gameRoom.messageGameRoom(nextAction)
                 break
             }
             case "server/OPPONENT_FINISHED_TURN": {
                 let nextAction = Object.assign(action, {type: "OPPONENT_FINISHED_TURN"})
 
-                gameRoomManager.messageGameRoom(gameRoom, "action", nextAction)                
+                gameRoom.messageGameRoom(nextAction)                
                 break
             }
             case "server/ANIMATE_SIMON_PAD": {
-                let nextAction = Object.assign(action, {type: "ANIMATE_SIMON_PAD_ONLINE"})
+                const nextAction = Object.assign(action, {type: "ANIMATE_SIMON_PAD_ONLINE"})
+                const dontMessageMyself = (playersSocket) => playersSocket !== socket
 
-                gameRoom.players.forEach(player => {
-                    if (player !== socket) {
-                        player.emit("action", nextAction)
-                    }
-                })
+                gameRoom.messageGameRoom(nextAction, dontMessageMyself)
+                // gameRoom.players.forEach(player => {
+                //     if (player !== socket) {
+                //         player.emit("action", nextAction)
+                //     }
+                // })
 
                 break
             }
             case "server/ADD_NEXT_MOVE": {
                 let nextAction = Object.assign(action, {type: "ADD_NEXT_MOVE"})
 
-                gameRoomManager.messageGameRoom(gameRoom, "action", nextAction)
+                gameRoom.messageGameRoom(nextAction)
 
                 break
             }

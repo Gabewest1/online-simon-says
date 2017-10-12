@@ -1,3 +1,5 @@
+const GameRoom = require("./GameRoom")
+
 const TWO_PLAYER_GAME = 2
 const THREE_PLAYER_GAME = 3
 const FOUR_PLAYER_GAME = 4
@@ -15,65 +17,32 @@ class GameRoomManager {
 
     cancelSearch(player) {
         const playersGameRoom = this.findPlayersGameRoom(player)
-
-        playersGameRoom.players = playersGameRoom.players.filter(person => person !== player)
+        playersGameRoom.removePlayer(player)
         console.log("ROOMS:", this.gameRooms)        
     }
 
     findMatch(player, gameMode) {
         let gameRoom = this.getOpenGame(gameMode)
-        gameRoom.players.push(player)
+        gameRoom.addPlayer(player)
         console.log("ROOMS:", this.gameRooms)
-        this.isGameRoomReady(gameRoom)
+        if (gameRoom.isGameRoomReady()) {
+            gameRoom.startGame()
+        }
     }
 
     createGameRoom(gameMode) {
-        const newGameRoom = {
-            id: this.gameRoomCounter++,
-            gameStarted: false,
-            players: [],
-            playersReady: [],
-            playersNeededToStart: gameMode
-        }
+        const newGameRoom = new GameRoom(this.gameRoomCounter++, gameMode)
 
         this.gameRooms[gameMode].push(newGameRoom)
 
         return newGameRoom
     }
-
-    endGameRoom(gameRoom) {
-        gameRoom.players.forEach(player => player.disconnect())
-        gameRoom.spectators.forEach(spectator => spectator.disconnect())
-        this.gameRooms = this.gameRooms.filter(room => room.id !== gameRoom.id)
-    }
-
-    isGameRoomReady(gameRoom) {
-        if (gameRoom.players.length === gameRoom.playersNeededToStart) {
-            //Cant pass down the game room to clients with the actual socket objects in 
-            //the array or else my server stackoverflows.
-
-            let players = gameRoom.players.map(socket => Object.assign(socket.player, {isEliminated: false}))
-            gameRoom.gameStarted = true
-
-            this.messageGameRoom(gameRoom, "action", { type: "FOUND_MATCH", payload: players })
-        }
-    }
-
-    messageGameRoom(gameRoom, eventName, data) {
-        gameRoom.players.forEach(player => player.emit(eventName, data))
-    }
-
+    
     getOpenGame(gameMode) {
         const gameRooms = this.gameRooms[gameMode]
         const openGameRoom = gameRooms.find(room => room.players.length < room.playersNeededToStart && !room.gameStarted)
 
         return openGameRoom || this.createGameRoom(gameMode)
-    }
-
-    removePlayer(player) {
-        let gameRoom = this.findPlayersGameRoom(player)
-
-        gameRoom.players = gameRoom.players.filter(person => person !== player)
     }
 
     findPlayersGameRoom(player) {

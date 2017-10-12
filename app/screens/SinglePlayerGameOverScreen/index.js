@@ -66,7 +66,8 @@ class SinglePlayerGameOverScreen extends React.Component {
                             animated: true,
                             animationType: 'slide-horizontal',
                             overrideBackPress: true,
-                            backButtonHidden: true
+                            backButtonHidden: true,
+                            passProps: { gameMode: this.props.gameMode }
                         }) } />
                     <ListItem
                         title="Quit"
