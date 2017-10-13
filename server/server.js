@@ -160,36 +160,12 @@ io.on("connection", socket => {
                 gameRoomManager.cancelSearch(socket)
                 break
             }
-            case "server/ELIMINATE_PLAYER": {
-                let nextAction = Object.assign(action, {type: "ELIMINATE_PLAYER"})
-
-                gameRoom.messageGameRoom(nextAction)
-                break
-            }
-            case "server/OPPONENT_FINISHED_TURN": {
-                let nextAction = Object.assign(action, {type: "OPPONENT_FINISHED_TURN"})
-
-                gameRoom.messageGameRoom(nextAction)                
-                break
-            }
             case "server/ANIMATE_SIMON_PAD": {
-                const nextAction = Object.assign(action, {type: "ANIMATE_SIMON_PAD_ONLINE"})
-                const dontMessageMyself = (playersSocket) => playersSocket !== socket
-
-                gameRoom.messageGameRoom(nextAction, dontMessageMyself)
-                // gameRoom.players.forEach(player => {
-                //     if (player !== socket) {
-                //         player.emit("action", nextAction)
-                //     }
-                // })
-
+                gameRoom.handleSimonMove(action.payload)
                 break
             }
             case "server/ADD_NEXT_MOVE": {
-                let nextAction = Object.assign(action, {type: "ADD_NEXT_MOVE"})
-
-                gameRoom.messageGameRoom(nextAction)
-
+                gameRoom.addNextMove(action.payload)
                 break
             }
             default:
