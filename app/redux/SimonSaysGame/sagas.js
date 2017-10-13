@@ -69,21 +69,32 @@ export const simonGameSaga = function* (action) {
 }
 
 export const multiplayerGameSaga = function* () {
-    if ((yield select(selectors.isItMyTurn))) {
-        yield put(actions.setIsScreenDarkened(false))
-        yield call(performPlayersTurnOnline)
-    }
     
     while (!(yield select(selectors.isGameOver))) {
-        console.log("Waiting for my turn")
-        yield put(actions.setIsScreenDarkened(true))
-        yield take("IT_IS_YOUR_TURN")
-
         
-        console.log("ABOUT TO PERFORM MY TURN")
-        yield put(actions.setIsScreenDarkened(false))
-        yield call(performPlayersTurnOnline)
+        if ((yield select(selectors.isItMyTurn))) {
+            yield put(actions.setIsScreenDarkened(false))
+            yield call(performPlayersTurnOnline)
+        }
+
+        yield put(actions.setIsScreenDarkened(true))
+        yield take("START_NEXT_TURN")
     }
+}
+
+export const performPlayersTurnOnline = function* (player) {
+    const movesStream = yield takeEvery(actions.simonPadClicked, pipeMovesToServer)
+    
+    const { playerFinishedTurn, eliminatePlayer } = yield race({
+        playerFinishedTurn: yield take(actions.playerFinishedTurn),
+        eliminatePlayer: yield take(actions.eliminatePlayer)
+    })
+
+    yield cancel(movesStream)
+}
+
+export const pipeMovesToServer = function* (action) {
+    yield put({ type: "server/ANIMATE_SIMON_PAD", payload: action.payload })
 }
 
 export const singlePlayerGameSaga = function* () {
@@ -150,20 +161,6 @@ export const startShortTimer = function* () {
 
 export const eliminatePlayer = function* (player) {
 
-}
-
-export const performPlayersTurnOnline = function* (player) {
-    const movesStream = yield takeEvery(actions.simonPadClicked, pipeMovesToServer)
-    
-    const { playerFinishedTurn, eliminatePlayer } = yield race({
-        playerFinishedTurn: yield take(actions.playerFinishedTurn),
-        eliminatePlayer: yield take(actions.eliminatePlayer)
-    })
-
-    yield cancel(movesStream)
-}
-export const pipeMovesToServer = function* (action) {
-    yield put({ type: "server/ANIMATE_SIMON_PAD", payload: action.payload })
 }
 
 export const performPlayersTurn = function* (player) {
