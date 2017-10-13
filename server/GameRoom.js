@@ -1,6 +1,3 @@
-const { actions: simonActions } = require("../app/redux/SimonSaysGame")
-const SimonGame = require("./SimonGame")
-
 class GameRoom {
     constructor(id, gameMode) {
         this.id = id
@@ -12,7 +9,6 @@ class GameRoom {
         this.movesToPerform = []
         this.currentMovesIndex = 0
         this.round = 0
-        this.simonGame = new SimonGame()
         this.timer
         this.performingPlayer
     }
@@ -66,6 +62,11 @@ class GameRoom {
             this.timer = this.startShortTimer()
         }
     }
+    endGame() {
+        const winner = this.players.filter(({ player }) => !player.isEliminated)[0].player
+        this.messageGameRoom({ type: "SET_WINNER", payload: winner})
+        this.messageGameRoom({ type: "GAME_OVER" })
+    }
     setNextPlayer() {
         let indexOfCurrentPlayer = this.players.indexOf(this.performingPlayer)
         let counter = 1
@@ -77,7 +78,9 @@ class GameRoom {
         }
 
         this.performingPlayer = nextPlayerToPerform
+        this.movesToPerform = 0
         this.messageGameRoom({ type: "SET_PERFORMING_PLAYER", payload: this.performingPlayer.player })
+        this.messageGameRoom({ type: "IT_IS_YOUR_TURN" }, (player) => player === this.performingPlayer)
     }
     isGameOver() {
         const numPlayersLeft = this.players.map(({ player }) => !player.isEliminated).length
@@ -89,13 +92,17 @@ class GameRoom {
         }
     }
     handleSimonMove(playersMove) {
+        clearInterval(this.timer)
+        this.timer = undefined
+        //If the player performed all their moves then this next move will be
+        //the newest move for the next player to perform. This is where the logic
+        //for ending the game or moving to the next player turn happens.
         if (this.currentMovesIndex === this.movesToPerform) {
             const pad = { pad: playersMove, isValid: true }       
             this.messageGameRoom({ type: "ANIMATE_SIMON_PAD_ONLINE", payload: pad })
-            this.addNextMove(playersMove)        
+            this.addNextMove(playersMove)
+            this.setNextPlayer()     
             this.messageGameRoom({ type: "PLAYER_FINISHED_TURN" })
-            clearInterval(this.timer)
-            this.timer = undefined
 
             return
         }
@@ -106,14 +113,17 @@ class GameRoom {
 
         if (!isValidMove) {
             this.eliminatePlayer(this.performingPlayer)
+
+            if (this.isGameOver()) {
+                this.endGame()
+            } else {
+                this.setNextPlayer()
+            }
+        } else {
+            this.currentMovesIndex++
+    
+            this.listenForNextMove()
         }
-
-        clearInterval(this.timer)
-        this.timer = undefined
-
-        this.currentMovesIndex++
-
-        this.listenForNextMove()
     }
     playerTimedOut() {
         clearInterval(this.timer)
@@ -124,7 +134,7 @@ class GameRoom {
         let timeTillPlayerTimesout = 15
 
         return setInterval(() => {
-            this.messageGameRoom(simonActions.decreaseTimer())
+            this.messageGameRoom({ type: "DECREASE_TIMER" })
             timeTillPlayerTimesout--
 
             if (timeTillPlayerTimesout <= 0) {

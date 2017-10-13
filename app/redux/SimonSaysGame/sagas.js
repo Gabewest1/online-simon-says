@@ -1,5 +1,5 @@
-import { delay, takeEvery } from "redux-saga"
-import { all, call, cancel, fork, put, race, select, take } from "redux-saga/effects"
+import { delay } from "redux-saga"
+import { all, call, cancel, fork, put, race, select, take, takeEvery } from "redux-saga/effects"
 import { actions, selectors } from "./index"
 import { selectors as userSelectors } from "../Auth"
 
@@ -160,8 +160,6 @@ export const performPlayersTurnOnline = function* (player) {
     })
 
     yield cancel(movesStream)
-
-    return playerFinishedTurn
 }
 export const pipeMovesToServer = function* (action) {
     yield put({ type: "server/ANIMATE_SIMON_PAD", payload: action.payload })
