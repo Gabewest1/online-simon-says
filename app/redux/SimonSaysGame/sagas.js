@@ -106,6 +106,7 @@ export const performPlayersTurnOnline = function* (player) {
 
         const pad = { pad: playersMove.payload, isValid: isValidMove }
         console.log("PLAYER PRESSED PAD:", pad)
+        yield fork(animateSimonPad, pad)
         yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
         movesPerformed++
     }

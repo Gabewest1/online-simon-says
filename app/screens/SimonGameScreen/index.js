@@ -104,7 +104,7 @@ class SimonGameScreen extends React.Component {
     render() {
         //rendering the game over screen requires the regular game screen to be 
         //rendered first. Then the game over screen can be pushed onto the screen.
-        if (this.props.hasGameStarted && this.props.isGameOver) {
+        if (this.props.winner && this.props.isGameOver) {
             setTimeout(() => this.renderGameOver(), 1)
         }
 
@@ -122,7 +122,8 @@ function mapStateToProps(state) {
         performingPlayer: simonGameSelectors.selectPerformingPlayer(state),
         players: simonGameSelectors.getPlayers(state),
         round: simonGameSelectors.getCurrentRound(state),
-        timer: simonGameSelectors.getTimer(state)
+        timer: simonGameSelectors.getTimer(state),
+        winner: simonGameSelectors.getWinner(state)
     }
 }
 
@@ -142,7 +143,8 @@ SimonGameScreen.propTypes = {
     players: PropTypes.array.isRequired,
     isItMyTurn: PropTypes.bool.isRequired,
     simonPadClicked: PropTypes.func.isRequired,
-    animateSimonPad: PropTypes.func.isRequired
+    animateSimonPad: PropTypes.func.isRequired,
+    winner: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SimonGameScreen)

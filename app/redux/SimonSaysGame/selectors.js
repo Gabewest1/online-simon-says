@@ -3,6 +3,7 @@ import { selectors as userSelectors } from "../Auth"
 export const getMoves = state => state.simonSays.moves
 export const getPlayers = state => state.simonSays.players
 export const getPads = state => state.simonSays.pads
+export const getWinner = state => state.simonSays.game.winner
 export const selectPerformingPlayer = state => {
     let player = state.simonSays.game.performingPlayer
 
