@@ -78,19 +78,35 @@ export const multiplayerGameSaga = function* () {
         }
 
         yield put(actions.setIsScreenDarkened(true))
+        console.log("Waiting for the next turn to start")
         yield take("START_NEXT_TURN")
+        console.log("Starting the next turn!")
     }
 }
 
 export const performPlayersTurnOnline = function* (player) {
-    const movesStream = yield takeEvery(actions.simonPadClicked, pipeMovesToServer)
-    
-    const { playerFinishedTurn, eliminatePlayer } = yield race({
-        playerFinishedTurn: yield take(actions.playerFinishedTurn),
-        eliminatePlayer: yield take(actions.eliminatePlayer)
-    })
+    const movesToPerform = yield select(selectors.getMoves)
+    let movesPerformed = 0
 
-    yield cancel(movesStream)
+    while (movesPerformed <= movesToPerform.length) {
+        const { playersMove, eliminatePlayer } = yield race({
+            playersMove: yield take(actions.simonPadClicked),
+            eliminatePlayer: yield take(actions.eliminatePlayer)
+        })
+
+        if (eliminatePlayer) {
+            break
+        }
+
+        const isValidMove =
+            movesPerformed === movesToPerform.length ||
+            playersMove.payload === movesToPerform[movesPerformed]
+
+        const pad = { pad: playersMove.payload, isValid: isValidMove }
+
+        yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
+        movesPerformed++
+    }
 }
 
 export const pipeMovesToServer = function* (action) {
