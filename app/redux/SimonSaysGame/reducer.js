@@ -26,7 +26,7 @@ const {
     setIsScreenDarkened,
     decreaseTimer,
     resetTimer,
-    opponentFinishedTurn
+    playerFinishedTurn
 } = createActions(
     "SIMON_PAD_CLICKED",
     "ANIMATE_SIMON_PAD",
@@ -52,7 +52,7 @@ const {
     "SET_IS_SCREEN_DARKENED",
     "DECREASE_TIMER",
     "RESET_TIMER",
-    "OPPONENT_FINISHED_TURN"
+    "PLAYER_FINISHED_TURN"
 )
 
 export const actions = {
@@ -80,7 +80,7 @@ export const actions = {
     setIsScreenDarkened,
     decreaseTimer,
     resetTimer,
-    opponentFinishedTurn
+    playerFinishedTurn
 }
 
 export const padsReducer = handleActions({

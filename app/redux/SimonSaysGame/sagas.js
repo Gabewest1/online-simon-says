@@ -69,44 +69,19 @@ export const simonGameSaga = function* (action) {
 }
 
 export const multiplayerGameSaga = function* () {
-    let playerPerforming
-    let isItMyTurn
-    let playerPassed
 
     while (!(yield select(selectors.isGameOver))) {
-        playerPerforming = yield select(selectors.selectPerformingPlayer)
         isItMyTurn = yield select(selectors.isItMyTurn)
 
-        console.log("WHOS TURN IS IT:", playerPerforming, isItMyTurn)
-
-        if (isItMyTurn) {
-            yield put(actions.setIsScreenDarkened(false))
-            console.log("ABOUT TO PERFORM MY TURN")
-            playerPassed = yield call(performPlayersTurnOnline, playerPerforming)
-            console.log("FINISHED MY TURN", playerPassed)
-        } else {
-            //wait for player to perform their turn. Need to know if the player
-            //performed their turn successfully or not.
+        if (!isItMyTurn) {
+            console.log("Waiting for my turn")
             yield put(actions.setIsScreenDarkened(true))
-            console.log("WAITING FOR THE PLAYER TO FINISH THEIR TURN")
-            let { payload } = yield take(actions.opponentFinishedTurn)
-            playerPassed = payload
-            console.log("PLAYER TO FINISHED THEIR TURN")            
+            yield take("IT_IS_YOUR_TURN")
         }
-
-        if (playerPassed) {
-            if (isItMyTurn) {
-                console.log("IM ABOUT THE SET THE NEXT MOVE")
-                yield call(setNextMove)
-                console.log("FINISHED SETTING THE NEXT MOVE")
-            } else {
-                console.log("WAITING FOR THE PLAYER TO ADD NEXT MOVE")        
-                yield take(actions.addNextMove)
-                console.log("PLAYER ADDED NEXT MOVE")                        
-            }
-        }
-
-        yield call(endTurn)
+        
+        console.log("ABOUT TO PERFORM MY TURN")
+        yield put(actions.setIsScreenDarkened(false))
+        yield call(performPlayersTurnOnline)
     }
 }
 
@@ -177,7 +152,16 @@ export const eliminatePlayer = function* (player) {
 }
 
 export const performPlayersTurnOnline = function* (player) {
-    yield takeEvery(actions.simonPadClicked, pipeMovesToServer)
+    const movesStream = yield takeEvery(actions.simonPadClicked, pipeMovesToServer)
+    
+    const { playerFinishedTurn, playerEliminated } = yield race({
+        playerFinishedTurn: yield take(actions.playerFinishedTurn),
+        playerEliminated: yield take(actions.playerEliminated)
+    })
+
+    yield cancel(movesStream)
+
+    return playerFinishedTurn
 }
 export const pipeMovesToServer = function* (action) {
     yield put({ type: "server/ANIMATE_SIMON_PAD", payload: action.payload })
@@ -235,8 +219,6 @@ export const savePlayersStats = function* () {
 }
 
 export const endTurn = function* () {
-    console.log("ENDING THE GAME")
-
     const players = yield select(selectors.getPlayers)
     const performingPlayer = yield select(selectors.selectPerformingPlayer)
 
