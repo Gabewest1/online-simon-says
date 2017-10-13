@@ -69,15 +69,16 @@ export const simonGameSaga = function* (action) {
 }
 
 export const multiplayerGameSaga = function* () {
-
+    if ((yield select(selectors.isItMyTurn))) {
+        yield put(actions.setIsScreenDarkened(false))
+        yield call(performPlayersTurnOnline)
+    }
+    
     while (!(yield select(selectors.isGameOver))) {
-        isItMyTurn = yield select(selectors.isItMyTurn)
+        console.log("Waiting for my turn")
+        yield put(actions.setIsScreenDarkened(true))
+        yield take("IT_IS_YOUR_TURN")
 
-        if (!isItMyTurn) {
-            console.log("Waiting for my turn")
-            yield put(actions.setIsScreenDarkened(true))
-            yield take("IT_IS_YOUR_TURN")
-        }
         
         console.log("ABOUT TO PERFORM MY TURN")
         yield put(actions.setIsScreenDarkened(false))

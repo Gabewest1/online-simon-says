@@ -33,7 +33,7 @@ class GameRoom {
         this.players = this.players.filter(player => player !== playerToRemove)
     }
     eliminatePlayer(playerToEliminate) {
-        console.log("ELIMNATING PLAYER:", playerToEliminate)
+        console.log("ELIMNATING PLAYER:", playerToEliminate.player)
         this.players.find(player => player === playerToEliminate).player.isEliminated = true
         this.eliminatedPlayers.push(playerToEliminate)
         
