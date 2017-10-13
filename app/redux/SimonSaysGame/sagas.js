@@ -89,9 +89,11 @@ export const performPlayersTurnOnline = function* (player) {
     let movesPerformed = 0
 
     while (movesPerformed <= movesToPerform.length) {
+        console.log("WAITING FOR A MOVE")
+
         const { playersMove, timedout } = yield race({
-            playersMove: yield take(actions.simonPadClicked),
-            timedout: yield take("PLAYER_TIMEDOUT")
+            playersMove: take(actions.simonPadClicked),
+            timedout: take("PLAYER_TIMEDOUT")
         })
 
         if (timedout) {
@@ -103,7 +105,7 @@ export const performPlayersTurnOnline = function* (player) {
             playersMove.payload === movesToPerform[movesPerformed]
 
         const pad = { pad: playersMove.payload, isValid: isValidMove }
-
+        console.log("PLAYER PRESSED PAD:", pad)
         yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
         movesPerformed++
     }
