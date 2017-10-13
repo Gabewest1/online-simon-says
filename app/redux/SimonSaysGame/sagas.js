@@ -82,7 +82,7 @@ export const multiplayerGameSaga = function* () {
         if (isItMyTurn) {
             yield put(actions.setIsScreenDarkened(false))
             console.log("ABOUT TO PERFORM MY TURN")
-            playerPassed = yield call(performPlayersTurn, playerPerforming)
+            playerPassed = yield call(performPlayersTurnOnline, playerPerforming)
             console.log("FINISHED MY TURN", playerPassed)
         } else {
             //wait for player to perform their turn. Need to know if the player
@@ -169,11 +169,18 @@ export const startShortTimer = function* () {
         timeTillPlayerTimesout--
     }
 
-    yield put({ type: "PLAYER_TIMEDOUT"})
+    yield put({ type: "PLAYER_TIMEDOUT" })
 }
 
 export const eliminatePlayer = function* (player) {
 
+}
+
+export const performPlayersTurnOnline = function* (player) {
+    yield takeEvery(actions.simonPadClicked, pipeMovesToServer)
+}
+export const pipeMovesToServer = function* (action) {
+    yield put({ type: "server/ANIMATE_SIMON_PAD", payload: action.payload })
 }
 
 export const performPlayersTurn = function* (player) {
@@ -198,16 +205,9 @@ export const performPlayersTurn = function* (player) {
 
         console.log("MOVE:", playersMove, timedout)
         if (timedout) {
-            if (GAME_MODE === SINGLE_PLAYER) {
-                yield put(actions.eliminatePlayer(player))
+            yield put(actions.eliminatePlayer(player))
 
-                break
-            } else if (GAME_MODE === MULTIPLAYER_GAME) {
-                yield put({ type: "server/ELIMINATE_PLAYER", payload: player })
-                yield put({ type: "server/OPPONENT_FINISHED_TURN", payload: false })
-
-                return false
-            }
+            break
         } else {
             yield cancel(timer)
         }
@@ -215,38 +215,19 @@ export const performPlayersTurn = function* (player) {
         const isValidMove = playersMove.payload === movesToPerform[movesPerformed]
         const pad = { pad: playersMove.payload, isValid: isValidMove }
 
-        if (GAME_MODE === SINGLE_PLAYER) {
-            yield fork(animateSimonPad, pad)
-        } else if (GAME_MODE === MULTIPLAYER_GAME) {
-            yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
-            yield fork(animateSimonPad, pad)
-        }
-
+        yield fork(animateSimonPad, pad)
+        
         if (!isValidMove) {
-            if (GAME_MODE === SINGLE_PLAYER) {
-                yield put(actions.eliminatePlayer(player))
+            yield put(actions.eliminatePlayer(player))
 
-                break
-            } else if (GAME_MODE === MULTIPLAYER_GAME) {
-                yield put({ type: "server/ELIMINATE_PLAYER", payload: player })
-                yield put({ type: "server/OPPONENT_FINISHED_TURN", payload: false })
-
-                return false
-            }
-            
+            break
         }
 
         movesPerformed++
     }
 
-    if (GAME_MODE === MULTIPLAYER_GAME) {
-        yield put({ type: "server/OPPONENT_FINISHED_TURN", payload: true })        
-        console.log("RETURNING TRUE")
-        return true
-    } else {
-        //Give a little pause before starting the next turn
-        yield delay(500)
-    }
+    //Give a little pause before starting the next turn
+    yield delay(500)
 }
 
 export const savePlayersStats = function* () {
