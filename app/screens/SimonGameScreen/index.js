@@ -36,11 +36,32 @@ const TintedBG = styled.View`
         }
     }}
 `
+const PlayersView = styled.View`
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 15px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+`
+const Player = styled.Text`
+    backgroundColor: ${({ isItMyTurn }) => isItMyTurn ? "gold" : "white"};
+    borderRadius: 330px;
+    padding: 7.5px 10px;
+`
 const Timer = styled.Text`
     width: 100%;
     text-align: center;
     color: black;
 `
+const Players = ({ player1, player2, performingPlayer }) => {
+    return (
+        <PlayersView>
+            <Player isItMyTurn={ performingPlayer.username === player1.username }>{ player1.username }</Player>
+            <Player isItMyTurn={ performingPlayer.username === player2.username }>{ player2.username }</Player>
+        </PlayersView>
+    )
+}
 class SimonGameScreen extends React.Component {
     componentWillMount() {
         this.props.startGame(this.props.gameMode)
@@ -62,6 +83,7 @@ class SimonGameScreen extends React.Component {
         return (
             <Container>
                 <TintedBG show={ this.props.isScreenDarkened } />
+                <Players performingPlayer={ this.props.performingPlayer } player1={ this.props.players[0] } player2={ this.props.players[1]} />
                 <Timer>{ this.props.timer }</Timer>
                 <SimonGame { ...this.props } onPressIn={ this.handlePadClick.bind(this) } />
             </Container>
@@ -97,6 +119,7 @@ function mapStateToProps(state) {
         isItMyTurn: simonGameSelectors.isItMyTurn(state),
         isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
         pads: simonGameSelectors.getPads(state),
+        performingPlayer: simonGameSelectors.selectPerformingPlayer(state),
         players: simonGameSelectors.getPlayers(state),
         round: simonGameSelectors.getCurrentRound(state),
         timer: simonGameSelectors.getTimer(state)
@@ -111,10 +134,11 @@ SimonGameScreen.propTypes = {
     hasGameStarted: PropTypes.bool.isRequired,
     gameMode: PropTypes.number.isRequired,
     isGameOver: PropTypes.bool.isRequired,
-    pads: PropTypes.array.isRequired,
     round: PropTypes.number.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
     timer: PropTypes.number.isRequired,
+    pads: PropTypes.array.isRequired,
+    performingPlayer: PropTypes.object.isRequired,
     players: PropTypes.array.isRequired,
     isItMyTurn: PropTypes.bool.isRequired,
     simonPadClicked: PropTypes.func.isRequired,
