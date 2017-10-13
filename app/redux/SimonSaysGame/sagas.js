@@ -69,9 +69,9 @@ export const simonGameSaga = function* (action) {
 }
 
 export const multiplayerGameSaga = function* () {
-    
+
     while (!(yield select(selectors.isGameOver))) {
-        
+
         if ((yield select(selectors.isItMyTurn))) {
             yield put(actions.setIsScreenDarkened(false))
             yield call(performPlayersTurnOnline)
@@ -89,12 +89,12 @@ export const performPlayersTurnOnline = function* (player) {
     let movesPerformed = 0
 
     while (movesPerformed <= movesToPerform.length) {
-        const { playersMove, eliminatePlayer } = yield race({
+        const { playersMove, timedout } = yield race({
             playersMove: yield take(actions.simonPadClicked),
-            eliminatePlayer: yield take(actions.eliminatePlayer)
+            timedout: yield take("PLAYER_TIMEDOUT")
         })
 
-        if (eliminatePlayer) {
+        if (timedout) {
             break
         }
 
