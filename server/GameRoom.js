@@ -22,6 +22,7 @@ class GameRoom {
         }
     }
     addNextMove(move) {
+        console.log("THIS:", this)
         this.movesToPerform.push(move)
         this.messageGameRoom({ type: "ADD_NEXT_MOVE", payload: move })
     }
@@ -97,7 +98,7 @@ class GameRoom {
         //If the player performed all their moves then this next move will be
         //the newest move for the next player to perform. This is where the logic
         //for ending the game or moving to the next player turn happens.
-        if (this.currentMovesIndex === this.movesToPerform) {
+        if (this.currentMovesIndex === this.movesToPerform.length) {
             const pad = { pad: playersMove, isValid: true }       
             this.messageGameRoom({ type: "ANIMATE_SIMON_PAD_ONLINE", payload: pad })
             this.addNextMove(playersMove)

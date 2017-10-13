@@ -154,9 +154,9 @@ export const eliminatePlayer = function* (player) {
 export const performPlayersTurnOnline = function* (player) {
     const movesStream = yield takeEvery(actions.simonPadClicked, pipeMovesToServer)
     
-    const { playerFinishedTurn, playerEliminated } = yield race({
+    const { playerFinishedTurn, eliminatePlayer } = yield race({
         playerFinishedTurn: yield take(actions.playerFinishedTurn),
-        playerEliminated: yield take(actions.playerEliminated)
+        eliminatePlayer: yield take(actions.eliminatePlayer)
     })
 
     yield cancel(movesStream)
