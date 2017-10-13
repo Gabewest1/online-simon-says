@@ -1,5 +1,5 @@
 import { delay } from "redux-saga"
-import { all, call, cancel, fork, put, race, select, take, takeEvery } from "redux-saga/effects"
+import { all, call, cancel, fork, put, race, select, take, takeLatest } from "redux-saga/effects"
 import { actions, selectors } from "./index"
 import { selectors as userSelectors } from "../Auth"
 
@@ -48,7 +48,7 @@ export const watchFindMatch = function* () {
 }
 
 export const watchSimonGameSaga = function* () {
-    yield takeEvery(actions.startGame, simonGameSaga)
+    yield takeLatest(actions.startGame, simonGameSaga)
 }
 
 export const simonGameSaga = function* (action) {
@@ -108,6 +108,11 @@ export const performPlayersTurnOnline = function* (player) {
         console.log("PLAYER PRESSED PAD:", pad)
         yield fork(animateSimonPad, pad)
         yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
+
+        if (!isValidMove) {
+            break
+        }
+
         movesPerformed++
     }
 }
