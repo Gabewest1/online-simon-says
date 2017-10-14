@@ -95,7 +95,11 @@ export const multiplayerGameSaga = function* (gameMode) {
         }
 
         console.log("Waiting for the next turn to start")
-        yield take("START_NEXT_TURN")
+        yield race({
+            startNextTurn: take("START_NEXT_TURN"),
+            gameOver: take("GAME_OVER")
+        })
+
         console.log("Starting the next turn!")
     }
 
