@@ -120,7 +120,7 @@ SimonGameScreen.propTypes = {
     round: PropTypes.number.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
     timer: PropTypes.number.isRequired,
-    pads: PropTypes.object.isRequired,
+    pads: PropTypes.array.isRequired,
     performingPlayer: PropTypes.object.isRequired,
     players: PropTypes.array.isRequired,
     isItMyTurn: PropTypes.bool.isRequired,
