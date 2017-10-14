@@ -35,10 +35,12 @@ io.on("connection", socket => {
 
         let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
+        //Cancel matchmaking if player was looking for a match
         if (gameRoom && !gameRoom.gameStarted) {
             gameRoomManager.cancelSearch(socket)
         }
 
+        //Logout the player if they are logged in
         if (socket.player && socket.player.loggedIn) {
             User.findOneAndUpdate({ username: socket.player.username }, { loggedIn: false }, (err, user) => {
                 if (err) {
@@ -53,7 +55,6 @@ io.on("connection", socket => {
 
     socket.on("action", action => {
         console.log("ACTION:", action)
-        let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
         switch (action.type) {
             case "server/LOGIN": {
@@ -161,10 +162,12 @@ io.on("connection", socket => {
                 break
             }
             case "server/ANIMATE_SIMON_PAD": {
+                let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.handleSimonMove(action.payload)
                 break
             }
             case "server/ADD_NEXT_MOVE": {
+                let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.addNextMove(action.payload)
                 break
             }
