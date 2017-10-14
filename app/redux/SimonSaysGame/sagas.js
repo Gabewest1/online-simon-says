@@ -9,16 +9,20 @@ const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
 
 let GAME_MODE 
-
+let ScreenNavigator
 
 const root = function* () {
     yield [
         watchSimonGameSaga(),
         watchFindMatch(),
-        watchAnimateSimonPadOnline()
+        watchAnimateSimonPadOnline(),
+        getNavigator()
     ]
 }
-
+export const getNavigator = function* () {
+    const action = yield take("GIVE_SAGAS_NAVIGATOR")
+    ScreenNavigator = action.payload
+}
 export const watchAnimateSimonPadOnline = function* () {
     while (true) {
         const { payload } = yield take("ANIMATE_SIMON_PAD_ONLINE")
@@ -32,7 +36,7 @@ export const watchFindMatch = function* () {
 
         yield put({ type: "server/FIND_MATCH", gameMode })
 
-        const { cancelSearch } = yield race({
+        const { cancelSearch, foundMatch } = yield race({
             cancelSearch: take(actions.cancelSearch),
             foundMatch: take(actions.foundMatch)
         })
@@ -44,6 +48,16 @@ export const watchFindMatch = function* () {
         if (cancelSearch) {
             yield put({ type: "server/CANCEL_SEARCH", payload: gameMode })
         }
+
+        ScreenNavigator.push({
+            screen: "SimonGameScreen",
+            title: "",
+            animated: true,
+            animationType: 'slide-horizontal',
+            passProps: { gameMode },
+            overrideBackPress: true,
+            backButtonHidden: true
+        })
     }
 }
 
@@ -63,25 +77,37 @@ export const simonGameSaga = function* (action) {
         yield call(singlePlayerGameSaga)
     } else {
         GAME_MODE = MULTIPLAYER_GAME
-        yield call(multiplayerGameSaga)
+        yield call(multiplayerGameSaga, gameMode)
     }
 
 }
 
-export const multiplayerGameSaga = function* () {
+export const multiplayerGameSaga = function* (gameMode) {
 
     while (!(yield select(selectors.isGameOver))) {
 
         if ((yield select(selectors.isItMyTurn))) {
             yield put(actions.setIsScreenDarkened(false))
             yield call(performPlayersTurnOnline)
+        } else {
+            yield put(actions.setIsScreenDarkened(true))
         }
 
-        yield put(actions.setIsScreenDarkened(true))
         console.log("Waiting for the next turn to start")
         yield take("START_NEXT_TURN")
         console.log("Starting the next turn!")
     }
+
+    const winner = yield select(selectors.getWinner)
+
+    ScreenNavigator.push({
+        screen: "SinglePlayerGameOverScreen",
+        title: "Game Over",
+        passProps: { gameMode, winner },
+        animationType: 'slide-up',
+        overrideBackPress: true,
+        backButtonHidden: true
+    })
 }
 
 export const performPlayersTurnOnline = function* (player) {

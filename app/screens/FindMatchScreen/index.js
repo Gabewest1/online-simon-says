@@ -19,6 +19,7 @@ const Container = styled(Background)`
 const Text = styled.Text`
 
 `
+let IS_TRANSITIONING = false
 
 class FindMatchScreen extends React.Component {
     constructor(props) {
@@ -40,6 +41,8 @@ class FindMatchScreen extends React.Component {
     }
     transitionToGameScreenInOneSecond() {
         setTimeout(() => {
+            IS_TRANSITIONING = false
+
             this.props.navigator.push({
                 screen: "SimonGameScreen",
                 title: "",
@@ -52,7 +55,8 @@ class FindMatchScreen extends React.Component {
         }, 1000)
     }
     render() {
-        if (this.props.hasFoundMatch) {
+        if (this.props.hasFoundMatch && !IS_TRANSITIONING) {
+            IS_TRANSITIONING = true
             this.transitionToGameScreenInOneSecond()
         }
 

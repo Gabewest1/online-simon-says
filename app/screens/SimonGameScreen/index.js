@@ -79,7 +79,8 @@ class SimonGameScreen extends React.Component {
         //     this.props.simonPadClicked(pad)
         // }
     }
-    renderGame() {
+
+    render() {
         return (
             <Container>
                 <TintedBG show={ this.props.isScreenDarkened } />
@@ -88,27 +89,6 @@ class SimonGameScreen extends React.Component {
                 <SimonGame { ...this.props } onPressIn={ this.handlePadClick.bind(this) } />
             </Container>
         )
-    }
-    renderGameOver() {
-        console.log("RENDERING THE GAME OVER SCREEN")
-        this.props.navigator.push({
-            screen: "SinglePlayerGameOverScreen", // unique ID registered with Navigation.registerScreen
-            title: "Game Over", // title of the screen as appears in the nav bar (optional)
-            passProps: { gameMode: this.props.gameMode }, // simple serializable object that will pass as props to the modal (optional)
-            navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-            animationType: 'slide-up', // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
-            overrideBackPress: true,
-            backButtonHidden: true
-        })
-    }
-    render() {
-        //rendering the game over screen requires the regular game screen to be 
-        //rendered first. Then the game over screen can be pushed onto the screen.
-        if (this.props.winner && this.props.isGameOver) {
-            setTimeout(() => this.renderGameOver(), 1)
-        }
-
-        return this.renderGame()
     }
 }
 
@@ -138,7 +118,7 @@ SimonGameScreen.propTypes = {
     round: PropTypes.number.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
     timer: PropTypes.number.isRequired,
-    pads: PropTypes.array.isRequired,
+    pads: PropTypes.object.isRequired,
     performingPlayer: PropTypes.object.isRequired,
     players: PropTypes.array.isRequired,
     isItMyTurn: PropTypes.bool.isRequired,

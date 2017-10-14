@@ -83,22 +83,24 @@ export const actions = {
     playerFinishedTurn
 }
 
+const padsReducerInitialState = {
+    0: { isAnimating: false, isValid: undefined },
+    1: { isAnimating: false, isValid: undefined },
+    2: { isAnimating: false, isValid: undefined },
+    3: { isAnimating: false, isValid: undefined }
+}
 export const padsReducer = handleActions({
     [animateSimonPad]: (state, { payload: { pad, isValid } }) =>
-        state.map((x, i) => pad == i ? { ...x, isAnimating: !x.isAnimating, isValid } : x)
-}, [
-    { isAnimating: false, isValid: undefined },
-    { isAnimating: false, isValid: undefined },
-    { isAnimating: false, isValid: undefined },
-    { isAnimating: false, isValid: undefined }
-])
+        ({ ...state, [pad]: { isAnimating: !state[pad].isAnimating, isValid }})
+}, padsReducerInitialState)
 
 export const movesReducer = handleActions({
     [resetGame]: () => [],
-    [addNextMove]: (state, { payload }) => [...state, payload],
+    [addNextMove]: (state, { payload }) => [...state, payload]
 }, [])
 
 export const playersReducer = handleActions({
+    [resetGame]: (state, action) => [],
     [foundMatch]: (state, action) => action.payload,
     [addPlayer]: (state, { payload }) => state.concat(payload),
     [removePlayer]: (state, { payload }) => state.filter(player => player.username !== payload.username ),

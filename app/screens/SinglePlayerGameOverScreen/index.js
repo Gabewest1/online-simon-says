@@ -57,6 +57,7 @@ class SinglePlayerGameOverScreen extends React.Component {
     renderOnlineGameOver() {
         return (
             <Background centered>
+                <Text>{ this.props.winner.username }</Text>
                 <Container>
                     <ListItem
                         title="Find Next Match"
