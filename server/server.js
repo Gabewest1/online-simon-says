@@ -147,6 +147,40 @@ io.on("connection", socket => {
 
                 break
             }
+            case "server/UPDATE_PLAYERS_STATS": {
+                User.findOne({ username: socket.player.username }, (err, user) => {
+                    if (err) {
+                        console.log(err)
+                    }
+
+                    if (!user) {
+                        return
+                    }
+
+                    console.log("UPDATING USER:", user)
+                    const stats = action.payload
+                    const updateWinsOrLoses = stats.didWin ? "wins" : "loses"
+                    const currentStreak = stats.didWin ? user.statsByGameMode[stats.gameMode].currentStreak + 1 : 0
+                    const currentBestStreak = user.statsByGameMode[stats.gameMode].bestStreak
+                    const bestStreak = Math.max(currentStreak, currentBestStreak)
+
+                    user.xp += stats.xp
+                    user.statsByGameMode[stats.gameMode].matchesPlayed += 1
+                    user.statsByGameMode[stats.gameMode][`${updateWinsOrLoses}`] += 1
+                    user.statsByGameMode[stats.gameMode].currentStreak = currentStreak
+                    user.statsByGameMode[stats.gameMode].bestStreak = bestStreak
+
+                    user.save((err, user) => {
+                        if (err) {
+                            console.log(err)
+                        }
+
+                        console.log("Updated users stats:", user)
+                    })
+                })
+
+                break
+            }
             case "server/PLAY_AS_GUEST": {
                 socket.player = action.payload
 
