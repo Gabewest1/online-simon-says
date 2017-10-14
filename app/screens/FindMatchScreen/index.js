@@ -39,27 +39,7 @@ class FindMatchScreen extends React.Component {
 
         return true
     }
-    transitionToGameScreenInOneSecond() {
-        setTimeout(() => {
-            IS_TRANSITIONING = false
-
-            this.props.navigator.push({
-                screen: "SimonGameScreen",
-                title: "",
-                animated: true,
-                animationType: 'slide-horizontal',
-                passProps: { gameMode: this.props.gameMode },
-                overrideBackPress: true,
-                backButtonHidden: true
-            })
-        }, 1000)
-    }
     render() {
-        if (this.props.hasFoundMatch && !IS_TRANSITIONING) {
-            IS_TRANSITIONING = true
-            this.transitionToGameScreenInOneSecond()
-        }
-
         return (
             <Container>
                 <Text>{this.props.hasFoundMatch ? "Found Match!" : "Looking for Match..."}</Text>
