@@ -74,7 +74,7 @@ class SimonGame extends React.Component {
                         isAnimating={ pads[0].isAnimating }
                         onPressIn={ () => this.props.onPressIn(0) } />
                     <SimonPad
-                        style={{top: 0, left: 0, opacity: pads[1].isAnimating ? 0 : 1 }}
+                        style={{top: 0, left: 0, opacity: pads[0].isAnimating ? 0 : 1 }}
                         source={ require("../../assets/images/game-pad-red.png") }
                         isAnimating={ pads[0].isAnimating }
                         onPressIn={ () => this.props.onPressIn(0) } />

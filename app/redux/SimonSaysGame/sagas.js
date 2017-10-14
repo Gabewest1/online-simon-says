@@ -3,7 +3,7 @@ import { all, call, cancel, fork, put, race, select, take, takeLatest } from "re
 import { actions, selectors } from "./index"
 import { selectors as userSelectors } from "../Auth"
 
-export const ANIMATION_DURATION = 1
+export const ANIMATION_DURATION = 100
 export const TIMEOUT_TIME = 3
 const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
@@ -47,17 +47,18 @@ export const watchFindMatch = function* () {
         //game room and canceling their search.
         if (cancelSearch) {
             yield put({ type: "server/CANCEL_SEARCH", payload: gameMode })
+        } else {
+            ScreenNavigator.push({
+                screen: "SimonGameScreen",
+                title: "",
+                animated: true,
+                animationType: 'slide-horizontal',
+                passProps: { gameMode },
+                overrideBackPress: true,
+                backButtonHidden: true
+            })
         }
 
-        ScreenNavigator.push({
-            screen: "SimonGameScreen",
-            title: "",
-            animated: true,
-            animationType: 'slide-horizontal',
-            passProps: { gameMode },
-            overrideBackPress: true,
-            backButtonHidden: true
-        })
     }
 }
 
