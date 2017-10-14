@@ -18,7 +18,7 @@ class GameRoomManager {
     cancelSearch(player) {
         const playersGameRoom = this.findPlayersGameRoom(player)
         playersGameRoom.removePlayer(player)
-        console.log("ROOMS:", this.gameRooms)        
+        console.log("ROOMS:", this.gameRooms)
     }
 
     findMatch(player, gameMode) {
@@ -46,15 +46,13 @@ class GameRoomManager {
     }
 
     findPlayersGameRoom(player) {
-        let gameRoom = this.gameRooms[TWO_PLAYER_GAME].find(room => room.players.indexOf(player) >= 0)
-
-        if (!gameRoom) {
-            gameRoom = this.gameRooms[THREE_PLAYER_GAME].find(room => room.players.indexOf(player) >= 0)
+        console.log("LOOKING FOR PLAYERS GAME ROOM:", player.gameRoom)
+        let gameRoom
+        if (player.gameRoom) {
+            const { id, gameMode } = player.gameRoom
+            gameRoom = this.gameRooms[gameMode].find(room => room.id === id)
         }
-
-        if (!gameRoom) {
-            gameRoom = this.gameRooms[FOUR_PLAYER_GAME].find(room => room.players.indexOf(player) >= 0)
-        }
+        console.log(`${gameRoom ? "found" : "No"} gameroom for player`)
 
         return gameRoom
     }

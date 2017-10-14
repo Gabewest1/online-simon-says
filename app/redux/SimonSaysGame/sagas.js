@@ -161,6 +161,15 @@ export const singlePlayerGameSaga = function* () {
         yield call(performPlayersTurn, playerPerforming)
         yield call(endTurn)
     }
+
+    ScreenNavigator.push({
+        screen: "SinglePlayerGameOverScreen",
+        title: "Game Over",
+        passProps: { gameMode: SINGLE_PLAYER },
+        animationType: 'slide-up',
+        overrideBackPress: true,
+        backButtonHidden: true
+    })
 }
 
 export const displayMovesToPerform = function* () {
