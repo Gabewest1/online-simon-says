@@ -166,9 +166,9 @@ io.on("connection", socket => {
                 gameRoom.handleSimonMove(action.payload)
                 break
             }
-            case "server/ADD_NEXT_MOVE": {
+            case "server/READY_FOR_NEXT_TURN": {
                 let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
-                gameRoom.addNextMove(action.payload)
+                gameRoom.playerReady(socket)
                 break
             }
             default:

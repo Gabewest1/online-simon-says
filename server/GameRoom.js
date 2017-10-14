@@ -4,6 +4,7 @@ class GameRoom {
         this.gameMode = gameMode
         this.playersNeededToStart = gameMode
         this.players = []
+        this.playersReady = []
         this.eliminatedPlayers = []
         this.gameStarted = false
         this.movesToPerform = []
@@ -53,7 +54,7 @@ class GameRoom {
             this.endGame()
         } else {
             this.setNextPlayer()
-            this.startPlayersTurn()
+            this.startNextTurn()
         }
     }
     endGame() {
@@ -64,11 +65,6 @@ class GameRoom {
         this.players = []
         // this.updatePlayersStats()
     }
-    handleFinalMove(playersMove) {
-        console.log("Handling the final move")
-        this.addNextMove(playersMove.pad)
-        this.endTurn()
-    }
     handleSimonMove(playersMove) {
         this.timer = clearInterval(this.timer)
         this.animateSimonPad(playersMove)
@@ -77,9 +73,8 @@ class GameRoom {
         //for ending the game or moving to the next player turn happens.
         if (!playersMove.isValid) {
             this.eliminatePlayer(this.performingPlayer)
-            this.endTurn()
         } else if (this.currentMovesIndex === this.movesToPerform.length) {
-            this.handleFinalMove(playersMove)
+            this.addNextMove(playersMove.pad)
         } else {
             this.currentMovesIndex++
 
@@ -116,7 +111,16 @@ class GameRoom {
         this.timer = clearInterval(this.timer)
         this.messageGameRoom({ type: "PLAYER_TIMEDOUT" })
         this.eliminatePlayer(this.performingPlayer)
-        this.endTurn()
+    }
+    playerReady(player) {
+        if (this.playersReady.indexOf(player) === -1) {
+            this.playersReady.push(player)
+
+            if (this.playersReady.length === this.playersNeededToStart) {
+                this.playersReady = []
+                this.endTurn()
+            }
+        }
     }
     setNextPlayer() {
         let indexOfCurrentPlayer = this.players.indexOf(this.performingPlayer)
@@ -141,18 +145,21 @@ class GameRoom {
 
             this.performingPlayer = this.players[0]
             this.messageGameRoom({ type: "FOUND_MATCH", payload: players })
-            setTimeout(() => {
-                this.listenForNextMove()
-            }, 1000)
+
+            setTimeout(() => this.listenForNextMove(), 1000)
         }
     }
-    startPlayersTurn() {
+    startNextTurn() {
         console.log("STARTING NEXT PLAYERS TURN:", this.performingPlayer.player.username)
         this.currentMovesIndex = 0
         this.increaseRound()
         this.messageGameRoom({ type: "RESET_TIMER" })
-        this.messageGameRoom({ type: "START_NEXT_TURN" })
-        this.listenForNextMove()
+        setTimeout(() => {
+            this.messageGameRoom({ type: "START_NEXT_TURN" })
+            setTimeout(() => {
+                this.listenForNextMove()
+            }, 1000)
+        }, 1000)
     }
     startLongTimer() {
         let timeTillPlayerTimesout = 15
@@ -176,6 +183,11 @@ class GameRoom {
                 this.playerTimedOut()
             }
         }, 1000)
+    }
+    updatePlayerStats() {
+        this.eliminatedPlayers(player => {
+
+        })
     }
 }
 
