@@ -70,34 +70,45 @@ class SimonGame extends React.Component {
 
                     <SimonPad
                         style={{top: 0, left: 0}}
-                        source={ pads[0].isAnimating ?
-                            require("../../assets/images/game-pad-red-active.png") :
-                            require("../../assets/images/game-pad-red.png")
-                        }
+                        source={ require("../../assets/images/game-pad-red-active.png") }
                         isAnimating={ pads[0].isAnimating }
                         onPressIn={ () => this.props.onPressIn(0) } />
                     <SimonPad
+                        style={{top: 0, left: 0, opacity: pads[1].isAnimating ? 0 : 1 }}
+                        source={ require("../../assets/images/game-pad-red.png") }
+                        isAnimating={ pads[0].isAnimating }
+                        onPressIn={ () => this.props.onPressIn(0) } />
+
+                    <SimonPad
                         style={{top: 0, right: 0}}
-                        source={ pads[1].isAnimating ?
-                            require("../../assets/images/game-pad-green-active.png") :
-                            require("../../assets/images/game-pad-green.png")
-                        }
+                        source={ require("../../assets/images/game-pad-green-active.png") }
                         isAnimating={ pads[1].isAnimating }
                         onPressIn={ () => this.props.onPressIn(1) } />
                     <SimonPad
+                        style={{top: 0, right: 0, opacity: pads[1].isAnimating ? 0 : 1}}
+                        source={ require("../../assets/images/game-pad-green.png") }
+                        isAnimating={ pads[1].isAnimating }
+                        onPressIn={ () => this.props.onPressIn(1) } />
+
+                    <SimonPad
                         style={{bottom: 0, left: 0}}
-                        source={ pads[2].isAnimating ?
-                            require("../../assets/images/game-pad-yellow-active.png") :
-                            require("../../assets/images/game-pad-yellow.png")
-                        }
+                        source={ require("../../assets/images/game-pad-yellow-active.png") }
                         isAnimating={ pads[2].isAnimating }
                         onPressIn={ () => this.props.onPressIn(2) } />
                     <SimonPad
+                        style={{bottom: 0, left: 0, opacity: pads[2].isAnimating ? 0 : 1}}
+                        source={ require("../../assets/images/game-pad-yellow.png") }
+                        isAnimating={ pads[2].isAnimating }
+                        onPressIn={ () => this.props.onPressIn(2) } />
+                        
+                    <SimonPad
                         style={{bottom: 0, right: 0}}
-                        source={ pads[3].isAnimating ?
-                            require("../../assets/images/game-pad-blue-active.png") :
-                            require("../../assets/images/game-pad-blue.png")
-                        }
+                        source={ require("../../assets/images/game-pad-blue-active.png") }
+                        isAnimating={ pads[3].isAnimating }
+                        onPressIn={ () => this.props.onPressIn(3) } />
+                    <SimonPad
+                        style={{bottom: 0, right: 0, opacity: pads[3].isAnimating ? 0 : 1}}
+                        source={ require("../../assets/images/game-pad-blue.png") }
                         isAnimating={ pads[3].isAnimating }
                         onPressIn={ () => this.props.onPressIn(3) } />
 
@@ -111,7 +122,7 @@ class SimonGame extends React.Component {
 SimonGame.propTypes = {
     isScreenDarkened: PropTypes.bool.isRequired,
     onPressIn: PropTypes.func.isRequired,
-    pads: PropTypes.array.isRequired,
+    pads: PropTypes.object.isRequired,
     round: PropTypes.number.isRequired
 }
 
