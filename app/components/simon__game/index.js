@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components/native"
 import PropTypes from "prop-types"
 import SimonPad from "../simon__pad"
-
+import { SINGLE_PLAYER_GAME } from "../../constants"
 const SIMON_GAME_DIAMETER = 320
 
 const SimonGameContainer = styled.View`
@@ -57,8 +57,27 @@ const TintedBG = styled.View`
     }}
 `
 class SimonGame extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+            pad0: { isAnimating: false },
+            pad1: { isAnimating: false },
+            pad2: { isAnimating: false },
+            pad3: { isAnimating: false }
+        }
+    }
+    handlePadPress(pad) {
+        if (this.props.gameMode === SINGLE_PLAYER_GAME) {
+            this.setState({ [`pad${pad}`]: { isAnimating: true }})
+        }
+        this.props.onPressIn(pad)
+    }
     render() {
+        //Pads that come from this.props are used to animate the moves of opponents in
+        //online matches. Pads from this.state are used on the clients side to optimize
+        //the animations speed and responsivensss.
         const { pads, isScreenDarkened } = this.props
+        const { pad0, pad1, pad2, pad3 } = this.state
 
         return (
             <BlackContainer>
@@ -70,47 +89,43 @@ class SimonGame extends React.Component {
 
                     <SimonPad
                         style={{top: 0, left: 0}}
-                        source={ require("../../assets/images/game-pad-red-active.png") }
-                        isAnimating={ pads[0].isAnimating }
-                        onPressIn={ () => this.props.onPressIn(0) } />
-                    <SimonPad
-                        style={{top: 0, left: 0, opacity: pads[0].isAnimating ? 0 : 1 }}
-                        source={ require("../../assets/images/game-pad-red.png") }
-                        isAnimating={ pads[0].isAnimating }
-                        onPressIn={ () => this.props.onPressIn(0) } />
+                        source={ pad0.isAnimating || pads[0].isAnimating ?
+                            require("../../assets/images/game-pad-red-active.png") :
+                            require("../../assets/images/game-pad-red.png")
+                        }
+                        isAnimating={ pad0.isAnimating || pads[0].isAnimating }
+                        onPressIn={ () => this.handlePadPress(0) }
+                        onPressOut={ () => this.setState({ pad0: { isAnimating: false }}) } />
 
                     <SimonPad
                         style={{top: 0, right: 0}}
-                        source={ require("../../assets/images/game-pad-green-active.png") }
-                        isAnimating={ pads[1].isAnimating }
-                        onPressIn={ () => this.props.onPressIn(1) } />
-                    <SimonPad
-                        style={{top: 0, right: 0, opacity: pads[1].isAnimating ? 0 : 1}}
-                        source={ require("../../assets/images/game-pad-green.png") }
-                        isAnimating={ pads[1].isAnimating }
-                        onPressIn={ () => this.props.onPressIn(1) } />
+                        source={ pad1.isAnimating || pads[1].isAnimating ?
+                            require("../../assets/images/game-pad-green-active.png") :
+                            require("../../assets/images/game-pad-green.png")
+                        }
+                        isAnimating={ pad1.isAnimating || pads[1].isAnimating }
+                        onPressIn={ () => this.handlePadPress(1) }
+                        onPressOut={ () => this.setState({ pad1: { isAnimating: false }}) } />
 
                     <SimonPad
                         style={{bottom: 0, left: 0}}
-                        source={ require("../../assets/images/game-pad-yellow-active.png") }
-                        isAnimating={ pads[2].isAnimating }
-                        onPressIn={ () => this.props.onPressIn(2) } />
-                    <SimonPad
-                        style={{bottom: 0, left: 0, opacity: pads[2].isAnimating ? 0 : 1}}
-                        source={ require("../../assets/images/game-pad-yellow.png") }
-                        isAnimating={ pads[2].isAnimating }
-                        onPressIn={ () => this.props.onPressIn(2) } />
-                        
+                        source={ pad2.isAnimating || pads[2].isAnimating ?
+                            require("../../assets/images/game-pad-yellow-active.png") :
+                            require("../../assets/images/game-pad-yellow.png")
+                        }
+                        isAnimating={ pad2.isAnimating || pads[2].isAnimating }
+                        onPressIn={ () => this.handlePadPress(2) }
+                        onPressOut={ () => this.setState({ pad2: { isAnimating: false }}) } />
+
                     <SimonPad
                         style={{bottom: 0, right: 0}}
-                        source={ require("../../assets/images/game-pad-blue-active.png") }
-                        isAnimating={ pads[3].isAnimating }
-                        onPressIn={ () => this.props.onPressIn(3) } />
-                    <SimonPad
-                        style={{bottom: 0, right: 0, opacity: pads[3].isAnimating ? 0 : 1}}
-                        source={ require("../../assets/images/game-pad-blue.png") }
-                        isAnimating={ pads[3].isAnimating }
-                        onPressIn={ () => this.props.onPressIn(3) } />
+                        source={ pad3.isAnimating || pads[3].isAnimating ?
+                            require("../../assets/images/game-pad-blue-active.png") :
+                            require("../../assets/images/game-pad-blue.png")
+                        }
+                        isAnimating={ pad3.isAnimating || pads[3].isAnimating }
+                        onPressIn={ () => this.handlePadPress(3) }
+                        onPressOut={ () => this.setState({ pad3: { isAnimating: false }}) } />
 
                     <TintedBG show={ isScreenDarkened } />
                 </SimonGameContainer>
@@ -120,6 +135,7 @@ class SimonGame extends React.Component {
 }
 
 SimonGame.propTypes = {
+    gameMode: PropTypes.number.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
     onPressIn: PropTypes.func.isRequired,
     pads: PropTypes.array.isRequired,

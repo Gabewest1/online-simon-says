@@ -8,7 +8,7 @@ export const TIMEOUT_TIME = 3
 const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
 
-let GAME_MODE 
+let GAME_MODE
 let ScreenNavigator
 
 const root = function* () {
@@ -180,7 +180,7 @@ export const displayMovesToPerform = function* () {
 
     for (let move of movesToPerform) {
         yield call(animateSimonPad, { pad: move, isValid: true })
-        yield call(delay, 500)    //Wait half a second between each move
+        yield call(delay, 500) //Wait half a second between each move
     }
 
     yield put(actions.setIsScreenDarkened(false))
@@ -258,10 +258,7 @@ export const performPlayersTurn = function* (player) {
         }
 
         const isValidMove = playersMove.payload === movesToPerform[movesPerformed]
-        const pad = { pad: playersMove.payload, isValid: isValidMove }
 
-        yield fork(animateSimonPad, pad)
-        
         if (!isValidMove) {
             yield put(actions.eliminatePlayer(player))
 
@@ -276,7 +273,7 @@ export const performPlayersTurn = function* (player) {
 }
 
 export const savePlayersStats = function* () {
-    
+
 }
 
 export const endTurn = function* () {
@@ -320,7 +317,7 @@ export const endTurn = function* () {
             yield put(actions.increaseRoundCounter())
         }
     }
-    
+
 }
 
 export const animateSimonPad = function* ({ pad, isValid }) {

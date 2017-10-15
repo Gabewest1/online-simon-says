@@ -54,12 +54,25 @@ const Timer = styled.Text`
     text-align: center;
     color: black;
 `
+const HighScoresView = styled.View`
+
+`
+const Score = styled.Text`
+
+`
 const Players = ({ player1, player2, performingPlayer }) => {
     return (
         <PlayersView>
             <Player isItMyTurn={ performingPlayer.username === player1.username }>{ player1.username }</Player>
             <Player isItMyTurn={ performingPlayer.username === player2.username }>{ player2.username }</Player>
         </PlayersView>
+    )
+}
+const HighScores = ({ highscore }) => {
+    return (
+        <HighScoresView>
+            <Score>{ highscore }</Score>
+        </HighScoresView>
     )
 }
 class SimonGameScreen extends React.Component {
