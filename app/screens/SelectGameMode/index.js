@@ -71,7 +71,12 @@ class SelectGameMode extends React.Component {
                     <ListItem
                         onPress={ () => {
                             this.props.logout()
-                            this.props.navigator.pop()
+                            this.props.navigator.resetTo({
+                                screen: "StartingScreen",
+                                title: "Home",
+                                animated: true,
+                                animationType: 'slide-horiontal'
+                            })
                         } }
                         color={ "green" }
                         icon={{ name: "exit-to-app" }}>
