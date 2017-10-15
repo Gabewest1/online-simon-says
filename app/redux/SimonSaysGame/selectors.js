@@ -11,6 +11,10 @@ export const selectPerformingPlayer = state => {
         player = getPlayers(state)[0]
     }
 
+    if (!player) {
+        player = userSelectors.getUser(state)
+    }
+
     return player
 }
 export const isItMyTurn = state => {

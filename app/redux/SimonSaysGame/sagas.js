@@ -71,10 +71,6 @@ export const simonGameSaga = function* (action) {
 
     if (gameMode === 1) {
         GAME_MODE = SINGLE_PLAYER
-        yield put(actions.addPlayer({
-            username: yield select(userSelectors.getUsername),
-            isEliminated: false
-        }))
         yield call(singlePlayerGameSaga)
     } else {
         GAME_MODE = MULTIPLAYER_GAME
@@ -159,8 +155,8 @@ export const singlePlayerGameSaga = function* () {
     while (!(yield select(selectors.isGameOver))) {
         yield call(setNextMove)
         yield call(displayMovesToPerform)
-        yield call(performPlayersTurn, playerPerforming)
-        yield call(endTurn)
+        const didPlayerPassTurn = yield call(performPlayersTurn, playerPerforming)
+        yield call(endTurn, didPlayerPassTurn)
     }
 
     ScreenNavigator.push({
@@ -224,16 +220,11 @@ export const startShortTimer = function* () {
     yield put({ type: "PLAYER_TIMEDOUT" })
 }
 
-export const eliminatePlayer = function* (player) {
-
-}
-
 export const performPlayersTurn = function* (player) {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
 
     while (movesPerformed < movesToPerform.length) {
-        console.log("WAITING FOR YOU TO MAKE A MOVE")
         let isPlayersFirstMove = movesPerformed === 0
         let timer
 
@@ -248,11 +239,8 @@ export const performPlayersTurn = function* (player) {
             timedout: take("PLAYER_TIMEDOUT")
         })
 
-        console.log("MOVE:", playersMove, timedout)
         if (timedout) {
-            yield put(actions.eliminatePlayer(player))
-
-            break
+            return false
         } else {
             yield cancel(timer)
         }
@@ -260,9 +248,7 @@ export const performPlayersTurn = function* (player) {
         const isValidMove = playersMove.payload === movesToPerform[movesPerformed]
 
         if (!isValidMove) {
-            yield put(actions.eliminatePlayer(player))
-
-            break
+            return false
         }
 
         movesPerformed++
@@ -270,54 +256,22 @@ export const performPlayersTurn = function* (player) {
 
     //Give a little pause before starting the next turn
     yield delay(500)
+
+    return true
 }
 
 export const savePlayersStats = function* () {
 
 }
 
-export const endTurn = function* () {
-    const players = yield select(selectors.getPlayers)
-    const performingPlayer = yield select(selectors.selectPerformingPlayer)
-
-    console.log("players:", players, performingPlayer)
-    //This line should be a selector
-    const playersStillPlaying = players.filter(player => player.isEliminated === false)
-
-    console.log("PLAYERS STILL PLAYING:", playersStillPlaying)
-
-    //if its a single player game then the length should be 0.
-    //if its a multiplayer game then the length should be 1.
-    if (GAME_MODE === SINGLE_PLAYER) {
-        if (playersStillPlaying.length === 0) {
-            yield put(actions.gameOver())
-        } else {
-            console.log("PASSED THE ROUND :D")
-            yield put(actions.resetTimer())
-            yield put(actions.increaseRoundCounter())
-        }
-    } else if (GAME_MODE === MULTIPLAYER_GAME) {
-        if (playersStillPlaying.length === 1) {
-            yield put(actions.setWinner(playersStillPlaying[0]))
-            yield put(actions.gameOver())
-        } else {
-            let currentPlayersIndex = players.indexOf(performingPlayer)
-            let counter = 1
-            let nextPlayerToPerform = players[(currentPlayersIndex + counter) % players.length]
-
-            while (nextPlayerToPerform.isEliminated) {
-                console.log("IM LOOPING")
-                counter++
-                nextPlayerToPerform = players[(currentPlayersIndex + counter) % players.length]
-            }
-
-            console.log("PASSED THE ROUND :D")
-            yield put(actions.setPerformingPlayer(nextPlayerToPerform))
-            yield put(actions.resetTimer())
-            yield put(actions.increaseRoundCounter())
-        }
+export const endTurn = function* (didPlayerPassTurn) {
+    if (didPlayerPassTurn) {
+        console.log("PASSED THE ROUND :D")
+        yield put(actions.resetTimer())
+        yield put(actions.increaseRoundCounter())
+    } else {
+        yield put(actions.gameOver())
     }
-
 }
 
 export const animateSimonPad = function* ({ pad, isValid }) {

@@ -97,8 +97,8 @@ class SimonGameScreen extends React.Component {
         return (
             <Container>
                 <TintedBG show={ this.props.isScreenDarkened } />
-                { this.gameMode === SINGLE_PLAYER_GAME &&
-                    <Players performingPlayer={ this.props.performingPlayer } player1={ this.props.players[0] } player2={ this.props.players[1]} />
+                { this.props.gameMode !== SINGLE_PLAYER_GAME &&
+                    <Players performingPlayer={ this.props.performingPlayer } player1={ this.props.players[0] } player2={ this.props.players[1] } />
                 }
                 <Timer>{ this.props.timer }</Timer>
                 <SimonGame { ...this.props } onPressIn={ this.handlePadClick.bind(this) } />
