@@ -50,7 +50,6 @@ class SignInForm extends React.Component {
                 <FormInput
                     { ...restInput }
                     shake={ meta.error }
-                    style={{marginBottom: -8 }}
                     placeholderTextColor="gray"
                     onChangeText={ onChange }
                     secureTextEntry={ shouldHideText }
