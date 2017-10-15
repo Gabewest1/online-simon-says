@@ -14,7 +14,12 @@ const Container = styled.View`
     width: 80%;
 `
 const Text = styled.Text`
-
+    font-size: 36;
+    color: white;
+    position: absolute;
+    top: 50;
+    border-bottom-width: 5;
+    border-color: white;
 `
 
 class SinglePlayerGameOverScreen extends React.Component {
@@ -57,10 +62,11 @@ class SinglePlayerGameOverScreen extends React.Component {
     renderOnlineGameOver() {
         return (
             <Background centered>
-                <Text>{ this.props.winner.username }</Text>
+                <Text>{ this.props.winner.username } Won!</Text>
                 <Container>
                     <ListItem
                         title="Find Next Match"
+                        style={{ marginBottom: 35 }}
                         onPress={ () => this.props.navigator.resetTo({
                             screen: "FindMatchScreen",
                             title: "",
