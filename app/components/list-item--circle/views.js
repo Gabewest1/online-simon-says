@@ -16,26 +16,10 @@ export const ListItem = ({ children, color, icon, onPress, style, title }) => {
     return (
         <Button
             raised
-            icon={ icon }
+            icon={{ ...icon, style: { position: "absolute", left: "10%" } }}
             buttonStyle={{ ...borderStyles, backgroundColor: BACKGROUND_COLOR }}
             containerViewStyle={{ ...style, ...borderStyles }}
-            textStyle={{textAlign: 'center'}}
             title={ children || title }
             onPress={ onPress } />
     )
 }
-// export const ListItem = ({ children, color, icon, onPress }) => {
-//     return (
-//         <ListItemWithCircle onPress={ onPress }>
-//             <Container>
-//                 <StyledIcon name={ icon } />
-//                 <Item
-//                     name="people"
-//                     color={ color }
-//                     underlineColorAndroid="transparent">
-//                     { children }
-//                 </Item>
-//             </Container>
-//         </ListItemWithCircle>
-//     )
-// }
