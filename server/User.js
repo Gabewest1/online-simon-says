@@ -31,6 +31,33 @@ UserSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password)
 }
 
+UserSchema.methods.calculateLevel = function(xp) {
+    const levelToXpMap = generateLevelMap()
+    
+    const level = Object.keys(levelToXpMap).reverse().find((level) => {
+        const xpRequired = levelToXpMap[level]
+        
+        return xpRequired <= xp
+    }, 1)
+    
+    console.log("YOU ARE LEVEL:", level)
+    
+    return level
+}
+
+function generateLevelMap() {
+    const levelToXpMap = {}
+    const fn = level => (level * 100) - 100
+
+    for (let level = 1; level<=100; level++) {
+        levelToXpMap[level] = fn(level)
+    }
+
+    console.log("LEVELTOXP MAP:", levelToXpMap)
+
+    return levelToXpMap
+}
+
 
 const User = mongoose.model("User", UserSchema)
 
