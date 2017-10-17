@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux"
 import styled from  "styled-components/native"
 import PropTypes from "prop-types" 
 
-import ListItem from "../../components/list-item--circle"
+import ListItem from "../../components/menu-item"
 import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
 import SignInForm from "../../components/sign-in-form"
