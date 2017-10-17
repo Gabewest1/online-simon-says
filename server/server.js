@@ -72,6 +72,7 @@ io.on("connection", socket => {
                     } else if (user && !user.loggedIn && user.validPassword(credentials.password)) {
                         console.log("FOUND USER:", user)
                         user.loggedIn = true
+                        user.level = user.calculateLevel(user.xp)
                         socket.player = user
 
                         socket.emit("action", { type: "LOGIN_SUCCESS", payload: { user }})
@@ -145,6 +146,17 @@ io.on("connection", socket => {
                     console.log("USER LOGGED OUT:", user)
                 })
 
+                break
+            }
+            case "server/FETCH_LEADERBOARD_DATA": {
+                User.find({}).sort({"statsByGameMode.1.bestStreak": -1}).limit(10).exec((err, users) => {
+                    if (err) {
+                        console.log(err)
+                    }
+
+                    console.log("SENDING THE USER LEADERBOARDS:", users)
+                    socket.emit("action", { type: "FETCH_LEADERBOARD_DATA_SUCCESS", payload: users })
+                })
                 break
             }
             case "server/UPDATE_PLAYERS_STATS": {

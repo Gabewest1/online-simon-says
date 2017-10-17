@@ -8,11 +8,13 @@ const root = function* () {
 }
 
 export const watchLeaderboardsQuery = function* () {
+    console.log("AYYY WATCHIN GSHITHK")
     yield takeLatest(actions.fetchLeaderboardData, fetchLeaderboardData)
 }
 
 export const fetchLeaderboardData = function* (action) {
-    yield put({ type: `server/${actions.fetchLeaderboardData}`, payload: action.payload })
+    console.log("AYYYYYYYY")
+    yield put({ type: "server/FETCH_LEADERBOARD_DATA", payload: action.payload })
 }
 
 export default root

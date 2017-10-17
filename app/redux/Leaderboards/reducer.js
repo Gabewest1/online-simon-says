@@ -17,7 +17,7 @@ export const actions = {
     fetchLeaderboardDataError
 }
 
-const leaderboardReducer = handleActions({
+export default handleActions({
     [fetchLeaderboardData]: (state, action) => ({ ...state, isLoading: true }),
     [fetchLeaderboardDataSuccess]: (state, action) => ({
         ...state,
@@ -30,5 +30,3 @@ const leaderboardReducer = handleActions({
         error: action.payload
     })
 }, { isLoading: true, players: [] })
-
-export default combineReducers({ leaderboards: leaderboardReducer })
