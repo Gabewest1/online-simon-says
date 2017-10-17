@@ -118,7 +118,7 @@ function mapDispatchToProps(dispatch) {
 SignInForm.propTypes = {
     login: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    navigator: PropTypes.func.isRequired,
+    navigator: PropTypes.object.isRequired,
     playAsGuest: PropTypes.func.isRequired
 }
 
