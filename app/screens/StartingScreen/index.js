@@ -5,7 +5,6 @@ import { bindActionCreators } from "redux"
 import styled from  "styled-components/native"
 import PropTypes from "prop-types" 
 
-import ListItem from "../../components/menu-item"
 import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
 import SignInForm from "../../components/sign-in-form"
@@ -13,13 +12,8 @@ import SignInForm from "../../components/sign-in-form"
 import { actions as userActions } from "../../redux/Auth"
 
 const Container = styled(Background)`
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-`
-
-const List = styled.View`
-    width: 80%;
-    padding-bottom: 100px;
 `
 
 class StartingScreen extends React.Component {
@@ -34,9 +28,7 @@ class StartingScreen extends React.Component {
         return (
             <Container>
                 <SimonSaysLogo />
-                <List>
-                    <SignInForm navigator={ navigator } playAsGuest={ playAsGuest } />
-                </List>
+                <SignInForm navigator={ navigator } playAsGuest={ playAsGuest } />
             </Container>
         )
     }
