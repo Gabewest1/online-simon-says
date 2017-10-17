@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
+import Player from "../../components/player"
 
 import SimonGame from "../../components/simon__game"
 import Background from "../../components/background"
@@ -44,10 +45,10 @@ const PlayersView = styled.View`
     top: 0;
     width: 100%;
 `
-const Player = styled.Text`
+const PlayerView = styled(Player)`
     backgroundColor: ${({ isItMyTurn }) => isItMyTurn ? "gold" : "white"};
     borderRadius: 330px;
-    padding: 7.5px 10px;
+    padding: 0 10px;
 `
 const Timer = styled.Text`
     width: 100%;
@@ -63,8 +64,8 @@ const Score = styled.Text`
 const Players = ({ player1, player2, performingPlayer }) => {
     return (
         <PlayersView>
-            <Player isItMyTurn={ performingPlayer.username === player1.username }>{ player1.username }</Player>
-            <Player isItMyTurn={ performingPlayer.username === player2.username }>{ player2.username }</Player>
+            <PlayerView player={ player1 } isItMyTurn={ performingPlayer.username === player1.username } />
+            <PlayerView player={ player2 } isItMyTurn={ performingPlayer.username === player2.username } />
         </PlayersView>
     )
 }
@@ -92,14 +93,28 @@ class SimonGameScreen extends React.Component {
         //     this.props.simonPadClicked(pad)
         // }
     }
+    renderHUD() {
+        let HUDComponent
+
+        if (this.props.gameMode !== SINGLE_PLAYER_GAME) {
+            return (
+                <Players
+                    performingPlayer={ this.props.performingPlayer } 
+                    player1={ this.props.players[0] }
+                    player2={ this.props.players[1] } />
+            )
+        } else {
+            return (
+                <HighScores highscore={ this.props.performingPlayer.statsByGameMode[1].bestStreak } />
+            )
+        }
+    }
 
     render() {
         return (
             <Container>
                 <TintedBG show={ this.props.isScreenDarkened } />
-                { this.props.gameMode !== SINGLE_PLAYER_GAME &&
-                    <Players performingPlayer={ this.props.performingPlayer } player1={ this.props.players[0] } player2={ this.props.players[1] } />
-                }
+                { this.renderHUD() }
                 <Timer>{ this.props.timer }</Timer>
                 <SimonGame { ...this.props } onPressIn={ this.handlePadClick.bind(this) } />
             </Container>
