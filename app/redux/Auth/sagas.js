@@ -56,6 +56,7 @@ export const playAsGuest = function* () {
     const guest = {
         username: `Guest${Math.floor(Math.random() * 1000000)}`,
         xp: 0,
+        level: 1,
         isAGuest: true
     }
 
