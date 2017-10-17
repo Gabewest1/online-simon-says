@@ -7,7 +7,7 @@ import { bindActionCreators } from "redux"
 import { reduxForm, Field, SubmissionError } from "redux-form"
 import styled from "styled-components/native"
 
-import ListItem from "../../components/list-item--circle"
+import ListItem from "../../components/menu-item"
 
 
 import { actions as authActions } from "../../redux/Auth"

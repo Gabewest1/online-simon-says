@@ -6,7 +6,7 @@ import styled from "styled-components/native"
 import Background from "../../components/background"
 import { SINGLE_PLAYER_GAME } from "../../constants"
 
-import ListItem from "../../components/list-item--circle"
+import ListItem from "../../components/menu-item"
 
 import { actions as simonGameActions } from "../../redux/SimonSaysGame"
 
