@@ -29,13 +29,13 @@ class StartingScreen extends React.Component {
         props.giveSagasNavigator(props.navigator)
     }
     render() {
-        let { navigator } = this.props
+        let { navigator, playAsGuest } = this.props
 
         return (
             <Container>
                 <SimonSaysLogo />
                 <List>
-                    <SignInForm playAsGuest={ this.props.playAsGuest } />
+                    <SignInForm navigator={ navigator } playAsGuest={ playAsGuest } />
                 </List>
             </Container>
         )

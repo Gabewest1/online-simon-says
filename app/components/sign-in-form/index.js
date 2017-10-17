@@ -1,6 +1,6 @@
 import React from "react"
 import { FormInput, FormValidationMessage } from "react-native-elements"
-import { Keyboard, View } from "react-native"
+import { Keyboard, View, Text } from "react-native"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
@@ -13,11 +13,16 @@ import ListItem from "../../components/list-item--circle"
 import { actions as authActions } from "../../redux/Auth"
 
 const Form = styled.View`
-
+    padding-left: 10;
+    padding-right: 10;
+    justify-content: center;
 `
-const Buttons = styled.View`
-    height: 110;
-    justify-content: space-between;
+const SignUpText = styled.Text`
+    color: white;
+    border-bottom-width: 2;
+    border-color: white;
+    align-self: flex-start;
+    margin-top: 5;
 `
 
 class SignInForm extends React.Component {
@@ -25,6 +30,15 @@ class SignInForm extends React.Component {
         super()
 
         this.validate = this.validate.bind(this)
+        this.gotoSignUpScreen = this.gotoSignUpScreen.bind(this)
+    }
+    gotoSignUpScreen() {
+        this.props.navigator.push({
+            screen: "SignUpScreen",
+            title: "Sign Up",
+            animated: true,
+            animationType: "slide-horizontal",
+        })
     }
     validate(values) {
         Keyboard.dismiss()
@@ -49,12 +63,14 @@ class SignInForm extends React.Component {
             <View>
                 <FormInput
                     { ...restInput }
+                    containerStyle={{ marginLeft: 0, marginRight: 0 }}
+                    inputStyle={{ marginLeft: 0, marginRight: 0 }}
                     shake={ meta.error }
                     placeholderTextColor="gray"
                     onChangeText={ onChange }
                     secureTextEntry={ shouldHideText }
                     placeholder={ placeholder } />
-                <FormValidationMessage>{ meta.error }</FormValidationMessage>
+                <FormValidationMessage labelStyle={{ marginLeft: 0, marginRight: 0 }}>{ meta.error }</FormValidationMessage>
             </View>
         )
     }
@@ -73,6 +89,7 @@ class SignInForm extends React.Component {
                     type="password"
                     component={ this.renderInput }
                     placeholder="password" />
+                <SignUpText onPress={ this.gotoSignUpScreen }>SignUp</SignUpText>
                 <ListItem
                     style={{ marginTop: 25 }}
                     onPress={ handleSubmit(this.validate) }
@@ -101,6 +118,7 @@ function mapDispatchToProps(dispatch) {
 SignInForm.propTypes = {
     login: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    navigator: PropTypes.func.isRequired,
     playAsGuest: PropTypes.func.isRequired
 }
 
