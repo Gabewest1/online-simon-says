@@ -106,6 +106,17 @@ class GameRoom {
             this.timer = this.startShortTimer()
         }
     }
+    playerLostConnection(thisPlayer) {
+        const isPlayerAlreadyEliminated = this.eliminatedPlayers.find(({ player }) => player === thisPlayer)
+        if (!isPlayerAlreadyEliminated) {
+            this.eliminatePlayer(thisPlayer)
+            this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: thisPlayer.player })
+
+            if (this.isGameOver()) {
+                this.endGame()
+            }
+        }
+    }
     playerTimedOut() {
         console.log("Player timed out:", this.performingPlayer.player.username)
         this.timer = clearInterval(this.timer)

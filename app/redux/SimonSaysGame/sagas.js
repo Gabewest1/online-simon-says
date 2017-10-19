@@ -16,7 +16,8 @@ const root = function* () {
         watchSimonGameSaga(),
         watchFindMatch(),
         watchAnimateSimonPadOnline(),
-        getNavigator()
+        getNavigator(),
+        playerDisconnected()
     ]
 }
 export const getNavigator = function* () {
@@ -142,6 +143,19 @@ export const performPlayersTurnOnline = function* (player) {
         }
 
         movesPerformed++
+    }
+}
+
+export const playerDisconnected = function* () {
+    while (true) {
+        const action = yield take("PLAYER_DISCONNECTED")
+
+        console.log("HHHEEEEEYYYYYY IM DISCONNECTION SOMEBODY")
+        ScreenNavigator.showInAppNotification({
+            screen: "PlayerDisconnectedMessage",
+            passProps: { player: action.payload },
+            autoDismissTimerSec: 3
+        })
     }
 }
 

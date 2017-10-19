@@ -26,7 +26,7 @@ class Player extends React.Component {
             <PlayerView { ...this.props }>
                 <IconView>
                     <Icon size={ 50 } name="star" />
-                    <Level>100</Level>
+                    <Level>{ level }</Level>
                 </IconView>
                 <Name>{ username }</Name>
             </PlayerView>

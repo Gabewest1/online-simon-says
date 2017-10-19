@@ -36,8 +36,12 @@ io.on("connection", socket => {
         let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
         //Cancel matchmaking if player was looking for a match
-        if (gameRoom && !gameRoom.gameStarted) {
-            gameRoomManager.cancelSearch(socket)
+        if (gameRoom) {
+            if(!gameRoom.gameStarted) {
+                gameRoomManager.cancelSearch(socket)
+            } else {
+                gameRoom.playerLostConnection(socket)
+            }
         }
 
         //Logout the player if they are logged in
@@ -160,6 +164,7 @@ io.on("connection", socket => {
                 break
             }
             case "server/UPDATE_PLAYERS_STATS": {
+                console.log("LETS LOOK FOR THE PLAYTER TO UPDATE")
                 User.findOne({ username: socket.player.username }, (err, user) => {
                     if (err) {
                         console.log(err)
