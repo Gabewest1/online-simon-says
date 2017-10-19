@@ -18,13 +18,12 @@ class GameRoomManager {
     cancelSearch(player) {
         const playersGameRoom = this.findPlayersGameRoom(player)
         playersGameRoom.removePlayer(player)
-        console.log("ROOMS:", this.gameRooms)
     }
 
     findMatch(player, gameMode) {
         let gameRoom = this.getOpenGame(gameMode)
         gameRoom.addPlayer(player)
-        console.log("ROOMS:", this.gameRooms)
+
         if (gameRoom.isGameRoomReady()) {
             gameRoom.startGame()
         }
