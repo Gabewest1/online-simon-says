@@ -90,8 +90,8 @@ class SimonGame extends React.Component {
                     <SimonPad
                         style={{top: 0, left: 0}}
                         source={ pad0.isAnimating || pads[0].isAnimating ?
-                            require("../../assets/images/game-pad-red-active.png") :
-                            require("../../assets/images/game-pad-red.png")
+                            require("../../assets/images/top_left_pad_active.png") :
+                            require("../../assets/images/top_left_pad.png")
                         }
                         isAnimating={ pad0.isAnimating || pads[0].isAnimating }
                         onPressIn={ () => this.handlePadPress(0) }
@@ -100,8 +100,8 @@ class SimonGame extends React.Component {
                     <SimonPad
                         style={{top: 0, right: 0}}
                         source={ pad1.isAnimating || pads[1].isAnimating ?
-                            require("../../assets/images/game-pad-green-active.png") :
-                            require("../../assets/images/game-pad-green.png")
+                            require("../../assets/images/top_right_pad_active.png") :
+                            require("../../assets/images/top_right_pad.png")
                         }
                         isAnimating={ pad1.isAnimating || pads[1].isAnimating }
                         onPressIn={ () => this.handlePadPress(1) }
@@ -110,8 +110,8 @@ class SimonGame extends React.Component {
                     <SimonPad
                         style={{bottom: 0, left: 0}}
                         source={ pad2.isAnimating || pads[2].isAnimating ?
-                            require("../../assets/images/game-pad-yellow-active.png") :
-                            require("../../assets/images/game-pad-yellow.png")
+                            require("../../assets/images/bottom_left_pad_active.png") :
+                            require("../../assets/images/bottom_left_pad.png")
                         }
                         isAnimating={ pad2.isAnimating || pads[2].isAnimating }
                         onPressIn={ () => this.handlePadPress(2) }
@@ -120,8 +120,8 @@ class SimonGame extends React.Component {
                     <SimonPad
                         style={{bottom: 0, right: 0}}
                         source={ pad3.isAnimating || pads[3].isAnimating ?
-                            require("../../assets/images/game-pad-blue-active.png") :
-                            require("../../assets/images/game-pad-blue.png")
+                            require("../../assets/images/bottom_right_pad_active.png") :
+                            require("../../assets/images/bottom_right_pad.png")
                         }
                         isAnimating={ pad3.isAnimating || pads[3].isAnimating }
                         onPressIn={ () => this.handlePadPress(3) }
