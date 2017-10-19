@@ -43,7 +43,7 @@ const Center = styled.View`
     position: absolute;
     align-items: center;
     justify-content: center;
-    z-index: 8;
+    z-index: 20;
 `
 const Round = styled.Text`
     color: white;
