@@ -22,6 +22,19 @@ const BlackContainer = styled.View`
     align-items: center;
     justify-content: center;
 `
+const Bar = styled.View`
+    backgroundColor: black;
+    position: absolute;
+    z-index: 20;
+`
+const VerticleBar =styled(Bar)`
+    height: ${SIMON_GAME_DIAMETER};
+    width: 15;
+`
+const HorizontalBar = styled(Bar)`
+    height: 15;
+    width: ${SIMON_GAME_DIAMETER};
+`
 const Center = styled.View`
     width: ${SIMON_GAME_DIAMETER * .35}px;
     height: ${SIMON_GAME_DIAMETER * .35}px;
@@ -83,6 +96,8 @@ class SimonGame extends React.Component {
             <BlackContainer>
                 <SimonGameContainer>
 
+                    <HorizontalBar />
+                    <VerticleBar />
                     <Center>
                         <Round>{ this.props.round }</Round>
                     </Center>
