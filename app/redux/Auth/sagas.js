@@ -57,7 +57,8 @@ export const playAsGuest = function* () {
         username: `Guest${Math.floor(Math.random() * 1000000)}`,
         xp: 0,
         level: 1,
-        isAGuest: true
+        isAGuest: true,
+        statsByGameMode: { 1: { bestStreak: 0 } }
     }
 
     yield put({ type: "server/PLAY_AS_GUEST", payload: guest })
