@@ -48,6 +48,7 @@ class GameRoom {
         playerToEliminate.player.isEliminated = true
         this.eliminatedPlayers.push({ player: playerToEliminate, rounds: this.round })
         this.messageGameRoom({ type: "ELIMINATE_PLAYER", payload: playerToEliminate.player})
+        this.updatePlayersStats(playerToEliminate)
     }
     endTurn() {
         if (this.isGameOver()) {
@@ -58,11 +59,12 @@ class GameRoom {
         }
     }
     endGame() {
+        this.timer = clearImmediate(this.timer)
         this.winner = this.players.filter(({ player }) => !player.isEliminated)[0]
         console.log("ENDING GAME:", this.winner.player.username + " Won!")
         this.messageGameRoom({ type: "SET_WINNER", payload: this.winner.player })
         this.messageGameRoom({ type: "GAME_OVER" })
-        this.updatePlayersStats()
+        this.updatePlayersStats(this.winner, true)
     }
     handleSimonMove(playersMove) {
         this.timer = clearInterval(this.timer)
@@ -195,28 +197,18 @@ class GameRoom {
             }
         }, 1000)
     }
-    updatePlayersStats() {
-        //Update the stats for the losers
-        this.eliminatedPlayers.forEach(({ player, rounds }, numPlayersBeaten) => {
-            if (!player.player.isAGuest) {
-                let xp = 0
-                xp += numPlayersBeaten * 10
-                xp += rounds
-                const stats = { xp, gameMode: this.gameMode, didWin: false }
-                console.log("ABOUT TO UPDATE:", player.player)
-                player.emit("action", { type: "server/UPDATE_PLAYERS_STATS", payload: stats })
-            }
-        })
+    updatePlayersStats(player, didWin) {
+        //Update players stats as long as they arent a guest
+        if (!player.player.isAGuest) {
+            let numPlayersBeaten = this.eliminatedPlayers.length
+            numPlayersBeaten -= !didWin ? 1 : 0
+            let xp = (numPlayersBeaten * 10) + this.round
+            xp += didWin ? ((this.gameMode * 5) + 10) : 0
+            const stats = { xp, gameMode: this.gameMode, didWin }
 
-        //Update the stats for the winner        
-        if (!this.winner.player.isAGuest) {
-            let xp = 0
-            xp += this.eliminatedPlayers.length * 10
-            xp += 20 + (this.gameMode * 5)
-            xp += this.round
+            console.log("ABOUT TO UPDATE:", player.player)
 
-            const stats = { xp, gameMode: this.gameMode, didWin: true }
-            this.winner.emit("action", { type: "server/UPDATE_PLAYERS_STATS", payload: stats })
+            player.emit("action", { type: "server/UPDATE_PLAYERS_STATS", payload: stats })
         }
     }
 }
