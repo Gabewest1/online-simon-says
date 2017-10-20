@@ -58,12 +58,13 @@ class GameRoom {
         if (this.isGameOver()) {
             this.endGame()
         } else {
+            this.changePlayersScreenDarkness()
             this.setNextPlayer()
             this.startNextTurn()
         }
     }
     endGame() {
-        this.timer = clearImmediate(this.timer)
+        this.timer = clearInterval(this.timer)
         this.winner = this.players.filter(({ player }) => !player.isEliminated)[0]
         console.log("ENDING GAME:", this.winner.player.username + " Won!")
         this.messageGameRoom({ type: "SET_WINNER", payload: this.winner.player })
@@ -112,11 +113,24 @@ class GameRoom {
             this.timer = this.startShortTimer()
         }
     }
+    messageGameRoom(action, filterPlayers) {
+        if (filterPlayers) {
+            this.players
+                .filter(filterPlayers)
+                .forEach(player => player.emit("action", action))
+        } else {
+            this.players.forEach(player => {
+                player.emit("action", action)
+            })
+        }
+    }
     playerLostConnection(thisPlayer) {
         const isPlayerAlreadyEliminated = this.eliminatedPlayers.find(({ player }) => player === thisPlayer)
+        console.log("IS PLAYER ALREADY ELIMINATED:", isPlayerAlreadyEliminated)
         if (!isPlayerAlreadyEliminated) {
             this.eliminatePlayer(thisPlayer)
             this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: thisPlayer.player })
+            this.removePlayer(thisPlayer)
 
             if (this.isGameOver()) {
                 this.endGame()
