@@ -13,17 +13,6 @@ class GameRoom {
         this.timer
         this.performingPlayer
     }
-    messageGameRoom(action, filterPlayers) {
-        if (filterPlayers) {
-            this.players
-                .filter(filterPlayers)
-                .forEach(player => player.emit("action", action))
-        } else {
-            this.players.forEach(player => {
-                player.emit("action", action)
-            })
-        }
-    }
     animateSimonPad(pad) {
         const action = { type: "ANIMATE_SIMON_PAD_ONLINE", payload: pad }
         const filterPlayerPerforming = player => player !== this.performingPlayer
@@ -96,11 +85,9 @@ class GameRoom {
         this.messageGameRoom({ type: "INCREASE_ROUND_COUNTER" })
     }
     isGameOver() {
-        const numPlayersLeft = this.players.filter(({ player }) => !player.isEliminated).length
+        const numPlayersLeft = this.playersNeededToStart - this.eliminatedPlayers.length
         console.log("NUMBER OF PLAYERS LEFT:", numPlayersLeft)
         if (numPlayersLeft === 1) {
-            this.timer = clearInterval(this.timer)
-
             return true
         } else {
             return false
@@ -147,17 +134,21 @@ class GameRoom {
         if (this.playersReady.indexOf(player) === -1) {
             this.playersReady.push(player)
 
-            if (this.playersReady.length === this.playersNeededToStart) {
+            if (this.playersReady.length === this.players.length) {
                 this.playersReady = []
                 this.endTurn()
             }
         }
     }
+    removePlayer(playerToRemove) {
+        this.players = this.players.filter(player => player !== playerToRemove)
+        playerToRemove.gameRoom = undefined
+    }
     setNextPlayer() {
         let indexOfCurrentPlayer = this.players.indexOf(this.performingPlayer)
         let counter = 1
         let nextPlayerToPerform = this.players[(indexOfCurrentPlayer + counter) % this.players.length]
-        console.log("About to set the next player...", this.players.map(player => player.player))
+        console.log("About to set the next player...", this.playersNeededToStart - this.eliminatedPlayers.length)
         while (nextPlayerToPerform.player.isEliminated) {
             counter++
             nextPlayerToPerform = this.players[(indexOfCurrentPlayer + counter) % this.players.length]
