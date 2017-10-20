@@ -30,12 +30,6 @@ class GameRoom {
         this.players.push(player)
         player.gameRoom = { id: this.id, gameMode: this.gameMode }
     }
-    changePlayersScreenDarkness() {
-        this.players.forEach(playersSocket => {
-            const shouldDarkenScreen = this.performingPlayer !== playersSocket
-            playersSocket.emit("action", { type: "UPDATE_SCREEN_DARKNESS", payload: shouldDarkenScreen })
-        })
-    }
     eliminatePlayer(playerToEliminate) {
         console.log("ELIMNATING PLAYER:", playerToEliminate.player)
         playerToEliminate.player.isEliminated = true
@@ -47,7 +41,6 @@ class GameRoom {
         if (this.isGameOver()) {
             this.endGame()
         } else {
-            this.changePlayersScreenDarkness()
             this.setNextPlayer()
             this.startNextTurn()
         }
@@ -114,7 +107,7 @@ class GameRoom {
     playerLostConnection(thisPlayer) {
         const isPlayerAlreadyEliminated = this.eliminatedPlayers.find(({ player }) => player === thisPlayer)
         console.log("IS PLAYER ALREADY ELIMINATED:", isPlayerAlreadyEliminated)
-        if (!isPlayerAlreadyEliminated) {
+        if (!this.isGameOver() && !isPlayerAlreadyEliminated) {
             this.eliminatePlayer(thisPlayer)
             this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: thisPlayer.player })
             this.removePlayer(thisPlayer)
