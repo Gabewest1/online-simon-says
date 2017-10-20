@@ -17,7 +17,8 @@ const root = function* () {
         watchFindMatch(),
         watchAnimateSimonPadOnline(),
         getNavigator(),
-        playerDisconnected()
+        playerDisconnected(),
+        darkenScreenSaga()
     ]
 }
 export const getNavigator = function* () {
@@ -113,6 +114,15 @@ export const multiplayerGameSaga = function* (gameMode) {
     })
 }
 
+export const darkenScreenSaga = function* () {
+    while (true) {
+        const action = yield take("UPDATE_SCREEN_DARKNESS")
+        const shouldDarkenScreen = action.payload
+
+        yield put(actions.setIsScreenDarkened(shouldDarkenScreen))
+    }
+}
+
 export const performPlayersTurnOnline = function* (player) {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
@@ -157,10 +167,6 @@ export const playerDisconnected = function* () {
             autoDismissTimerSec: 3
         })
     }
-}
-
-export const pipeMovesToServer = function* (action) {
-    yield put({ type: "server/ANIMATE_SIMON_PAD", payload: action.payload })
 }
 
 export const singlePlayerGameSaga = function* () {
