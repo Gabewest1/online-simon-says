@@ -13,12 +13,13 @@ import {
 } from "../../redux/SimonSaysGame"
 
 const Container = styled(Background)`
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
 `
 
 const Text = styled.Text`
-
+    color: white;
+    margin-top: 30;
 `
 let IS_TRANSITIONING = false
 
@@ -41,9 +42,12 @@ class FindMatchScreen extends React.Component {
         return true
     }
     render() {
+        console.dir(Spinner)
         return (
             <Container>
-                <Spinner isVisible={ true } size={ 100 } type="plane" color="#ffffff" />
+                { !this.props.hasFoundMatch && 
+                    <Spinner isVisible={ true } size={ 100 } type="Wave" color="white" />
+                }
                 <Text>{this.props.hasFoundMatch ? "Found Match!" : "Looking for Match..."}</Text>
             </Container>
         )
