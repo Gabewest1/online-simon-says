@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 import PropTypes from "prop-types"
+import Spinner from "react-native-spinkit"
 
 import Background from "../../components/background"
 
@@ -42,6 +43,7 @@ class FindMatchScreen extends React.Component {
     render() {
         return (
             <Container>
+                <Spinner isVisible={ true } size={ 100 } type="plane" color="#ffffff" />
                 <Text>{this.props.hasFoundMatch ? "Found Match!" : "Looking for Match..."}</Text>
             </Container>
         )
