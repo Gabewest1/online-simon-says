@@ -1,9 +1,9 @@
 import React from "react"
+import { Dimensions } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import { View } from "react-native"
 import styled from "styled-components/native"
-import { List, ListItem } from "react-native-elements"
+import { List } from "react-native-elements"
 import PropTypes from "prop-types"
 import Spinner from "react-native-spinkit"
 
@@ -18,20 +18,25 @@ const Container = styled.View`
     align-items: center;
     justify-content: space-between;
 `
-
-const Stats = styled.Text`
+const PlayerStatsWrapper = styled.View`
+    alignItems: center;
+    borderLeftWidth: 3;
+    borderColor: ${ BACKGROUND_COLOR };
+    flexDirection: row;
+    justifyContent: space-between;
+    padding-right: 15;
+    flex-grow: 1;
 `
+const Stats = styled.Text``
+
 const RankWrapper = styled.View`
-    justify-content: center;
     align-items: center;
+    flex-direction: row;
+    justify-content: center;
     width: 30;
-    position: absolute;
-    top: 0;
-    bottom: 0;
 `
 const Rank = styled.Text`
     color: black;
-    
 `
 
 class Leaderboards extends React.Component {
@@ -52,24 +57,18 @@ class Leaderboards extends React.Component {
     }
     renderLeaderboard() {
         return (
-            <List>
+            <List style={{ backgroundColor: "white", width: Dimensions.get("window").width }}>
                 {
                     this.props.players.map((player, index) => (
-                        <ListItem
-                            key={ player.username }
-                            containerStyle={{ paddingTop: 0, paddingBottom: 0 }}
-                            hideChevron={ true }
-                            title={
-                                <Container>
-                                    <RankWrapper>
-                                        <Rank>{ index + 1}</Rank>
-                                    </RankWrapper>
-                                    <View style={{ borderLeftWidth: 3, borderColor: BACKGROUND_COLOR, marginLeft: 30, flexDirection: "row", justifyContent: "space-between", alignItems: "center", flexGrow: 1 }}>
-                                        <Player player={ player } />
-                                        <Stats>Highscore: { player.statsByGameMode[1].bestStreak }</Stats>
-                                    </View>
-                                </Container>
-                            } />
+                        <Container key={ player.username }>
+                            <RankWrapper>
+                                <Rank>{ index + 1}</Rank>
+                            </RankWrapper>
+                            <PlayerStatsWrapper>
+                                <Player player={ player } />
+                                <Stats>Highscore: { player.statsByGameMode[1].bestStreak }</Stats>
+                            </PlayerStatsWrapper>
+                        </Container>
                     ))
                 }
             </List>
