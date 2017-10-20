@@ -94,12 +94,10 @@ class SimonGameScreen extends React.Component {
         // }
     }
     renderHUD() {
-        let HUDComponent
-
-        if (this.props.gameMode !== SINGLE_PLAYER_GAME) {
+        if (this.props.gameMode !== SINGLE_PLAYER_GAME && this.props.players.length > 0) {
             return (
                 <Players
-                    performingPlayer={ this.props.performingPlayer } 
+                    performingPlayer={ this.props.performingPlayer }
                     player1={ this.props.players[0] }
                     player2={ this.props.players[1] } />
             )

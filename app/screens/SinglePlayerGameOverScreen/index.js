@@ -26,56 +26,43 @@ class SinglePlayerGameOverScreen extends React.Component {
     componentWillMount() {
         this.props.resetGame()
     }
+    findNextMatch() {
+        this.props.navigator.resetTo({
+            screen: "FindMatchScreen",
+            title: "",
+            animated: true,
+            animationType: 'slide-horizontal',
+            overrideBackPress: true,
+            backButtonHidden: true,
+            passProps: { gameMode: this.props.gameMode }
+        })
+    }
+    playAgain() {
+        console.log(this.props)
+        this.props.navigator.resetTo({
+            screen: "SimonGameScreen",
+            title: "",
+            animated: true,
+            animationType: 'slide-horizontal',
+            overrideBackPress: true,
+            backButtonHidden: true,
+            passProps: { gameMode: this.props.gameMode }
+        })
+    }
     render() {
-        return this.props.gameMode === SINGLE_PLAYER_GAME ? this.renderSinglePlayer() : this.renderOnlineGameOver()
-    }
-    renderSinglePlayer() {
+        const onPress = this.props.gameMode === SINGLE_PLAYER_GAME ? this.playAgain.bind(this) : this.findNextMatch.bind(this)
+        const playAgainText = this.props.gameMode === SINGLE_PLAYER_GAME ? "Play Again" : "Find Next Match"
+
         return (
             <Background centered>
+                { this.props.gameMode !== SINGLE_PLAYER_GAME &&
+                    <Text>{ this.props.winner.username } Won!</Text>
+                }
                 <Container>
                     <ListItem
-                        title="Play Again"
+                        title={ playAgainText }
                         style={{ marginBottom: 35 }}
-                        onPress={ () => this.props.navigator.resetTo({
-                            screen: "SimonGameScreen",
-                            title: "",
-                            animated: true,
-                            animationType: 'slide-horizontal',
-                            overrideBackPress: true,
-                            backButtonHidden: true,
-                            passProps: { gameMode: this.props.gameMode }
-                        }) } />
-                    <ListItem
-                        title="Quit"
-                        onPress={ () => this.props.navigator.resetTo({
-                            screen: "SelectGameMode",
-                            title: "",
-                            animated: true,
-                            animationType: 'slide-horizontal',
-                            overrideBackPress: true,
-                            backButtonHidden: true
-                        }) } />
-                </Container>
-            </Background>
-        )
-    }
-    renderOnlineGameOver() {
-        return (
-            <Background centered>
-                <Text>{ this.props.winner.username } Won!</Text>
-                <Container>
-                    <ListItem
-                        title="Find Next Match"
-                        style={{ marginBottom: 35 }}
-                        onPress={ () => this.props.navigator.resetTo({
-                            screen: "FindMatchScreen",
-                            title: "",
-                            animated: true,
-                            animationType: 'slide-horizontal',
-                            overrideBackPress: true,
-                            backButtonHidden: true,
-                            passProps: { gameMode: this.props.gameMode }
-                        }) } />
+                        onPress={ () => onPress() } />
                     <ListItem
                         title="Quit"
                         onPress={ () => this.props.navigator.resetTo({
@@ -103,7 +90,8 @@ function mapDispatchToProps(dispatch) {
 SinglePlayerGameOverScreen.propTypes = {
     gameMode: PropTypes.number.isRequired,
     navigator: PropTypes.object.isRequired,
-    resetGame: PropTypes.func.isRequired
+    resetGame: PropTypes.func.isRequired,
+    winner: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SinglePlayerGameOverScreen)
