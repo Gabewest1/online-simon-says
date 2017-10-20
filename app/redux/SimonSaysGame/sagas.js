@@ -86,10 +86,7 @@ export const multiplayerGameSaga = function* (gameMode) {
     while (!(yield select(selectors.isGameOver))) {
 
         if ((yield select(selectors.isItMyTurn))) {
-            yield put(actions.setIsScreenDarkened(false))
             yield call(performPlayersTurnOnline)
-        } else {
-            yield put(actions.setIsScreenDarkened(true))
         }
 
         console.log("Waiting for the next turn to start")

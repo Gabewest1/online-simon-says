@@ -37,11 +37,15 @@ class GameRoom {
         console.log("ADDING NEXT MOVE:", move, len, this.movesToPerform.length)
     }
     addPlayer(player) {
+        /*** Important to remeber!!! This is where i assign the clients property info about their current game room ***/
         this.players.push(player)
         player.gameRoom = { id: this.id, gameMode: this.gameMode }
     }
-    removePlayer(playerToRemove) {
-        this.players = this.players.filter(player => player !== playerToRemove)
+    changePlayersScreenDarkness() {
+        this.players.forEach(playersSocket => {
+            const shouldDarkenScreen = this.performingPlayer !== playersSocket
+            playersSocket.emit("action", { type: "UPDATE_SCREEN_DARKNESS", payload: shouldDarkenScreen })
+        })
     }
     eliminatePlayer(playerToEliminate) {
         console.log("ELIMNATING PLAYER:", playerToEliminate.player)
