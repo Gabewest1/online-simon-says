@@ -42,10 +42,9 @@ class FindMatchScreen extends React.Component {
         return true
     }
     render() {
-        console.dir(Spinner)
         return (
             <Container>
-                { !this.props.hasFoundMatch && 
+                { !this.props.hasFoundMatch &&
                     <Spinner isVisible={ true } size={ 100 } type="Wave" color="white" />
                 }
                 <Text>{this.props.hasFoundMatch ? "Found Match!" : "Looking for Match..."}</Text>
