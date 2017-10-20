@@ -3,43 +3,45 @@ import styled from "styled-components/native"
 import PropTypes from "prop-types"
 import SimonPad from "../simon__pad"
 import { SINGLE_PLAYER_GAME } from "../../constants"
+
 const SIMON_GAME_DIAMETER = 320
+const BOARD_COLOR = "#020202"
 
 const SimonGameContainer = styled.View`
     width: ${SIMON_GAME_DIAMETER}px;
     height: ${SIMON_GAME_DIAMETER}px;
-    background-color: black;
+    background-color: ${ BOARD_COLOR };
     border-radius: ${SIMON_GAME_DIAMETER / 2};
     align-items: center;
     justify-content: center;
     position: relative;
 `
 const BlackContainer = styled.View`
-    width: 330px;
-    height: 330px;
-    border-radius: ${(SIMON_GAME_DIAMETER + 10) / 2};    
-    background-color: black;
+    width:${(SIMON_GAME_DIAMETER + 30)};
+    height:${(SIMON_GAME_DIAMETER + 30)};
+    border-radius: ${(SIMON_GAME_DIAMETER + 30) / 2};    
+    background-color: ${ BOARD_COLOR };
     align-items: center;
     justify-content: center;
 `
 const Bar = styled.View`
-    backgroundColor: black;
+    backgroundColor: ${ BOARD_COLOR };
     position: absolute;
     z-index: 20;
 `
-const VerticleBar =styled(Bar)`
+const VerticleBar = styled(Bar)`
     height: ${SIMON_GAME_DIAMETER};
-    width: 15;
+    width: 30;
 `
 const HorizontalBar = styled(Bar)`
-    height: 15;
+    height: 30;
     width: ${SIMON_GAME_DIAMETER};
 `
 const Center = styled.View`
-    width: ${SIMON_GAME_DIAMETER * .35}px;
-    height: ${SIMON_GAME_DIAMETER * .35}px;
+    width: ${SIMON_GAME_DIAMETER * .30}px;
+    height: ${SIMON_GAME_DIAMETER * .30}px;
     border-radius: ${SIMON_GAME_DIAMETER / 2};    
-    background-color: black;
+    background-color: ${ BOARD_COLOR };
     position: absolute;
     align-items: center;
     justify-content: center;
