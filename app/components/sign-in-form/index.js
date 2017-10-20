@@ -7,21 +7,21 @@ import { bindActionCreators } from "redux"
 import { reduxForm, Field, SubmissionError } from "redux-form"
 import styled from "styled-components/native"
 
-import ListItem from "../../components/menu-item"
+import ListItem from "../menu-item"
+import Input from "../input"
 
 
 import { actions as authActions } from "../../redux/Auth"
 
 const Form = styled.View`
-    padding-left: 10;
-    padding-right: 10;
     justify-content: center;
+    width: 280;
 `
 const SignUpText = styled.Text`
     color: white;
     border-bottom-width: 2;
     border-color: white;
-    align-self: flex-start;
+    align-self: flex-end;
     margin-top: 5;
 `
 
@@ -54,26 +54,6 @@ class SignInForm extends React.Component {
             throw new SubmissionError(errors)
         }
     }
-    renderInput(props) {
-        const { meta, placeholder, type, input: { onChange, ...restInput }} = props
-        let shouldHideText = type === "password" && !meta.error
-        console.log("PROPS:", props)
-
-        return (
-            <View>
-                <FormInput
-                    { ...restInput }
-                    containerStyle={{ marginLeft: 0, marginRight: 0 }}
-                    inputStyle={{ marginLeft: 0, marginRight: 0 }}
-                    shake={ meta.error }
-                    placeholderTextColor="gray"
-                    onChangeText={ onChange }
-                    secureTextEntry={ shouldHideText }
-                    placeholder={ placeholder } />
-                <FormValidationMessage labelStyle={{ marginLeft: 0, marginRight: 0 }}>{ meta.error }</FormValidationMessage>
-            </View>
-        )
-    }
     render() {
         let { handleSubmit } = this.props
 
@@ -82,14 +62,14 @@ class SignInForm extends React.Component {
                 <Field
                     name="username"
                     type="text"
-                    component={ this.renderInput }
+                    component={ Input }
                     placeholder="username or email" />
                 <Field
                     name="password"
                     type="password"
-                    component={ this.renderInput }
+                    component={ Input }
                     placeholder="password" />
-                <SignUpText onPress={ this.gotoSignUpScreen }>SignUp</SignUpText>
+                <SignUpText onPress={ () => this.props.playAsGuest() }>Play as Guest</SignUpText>
                 <ListItem
                     style={{ marginTop: 25 }}
                     onPress={ handleSubmit(this.validate) }
@@ -98,9 +78,9 @@ class SignInForm extends React.Component {
                 </ListItem>
                 <ListItem
                     style={{ marginTop: 15 }}
-                    onPress={ () => this.props.playAsGuest() }
-                    icon={{name: "person-outline"}}>
-                            Play as a guest
+                    onPress={ this.gotoSignUpScreen }
+                    icon={{name: "border-color"}}>
+                            Sign Up
                 </ListItem>
             </Form>
         )

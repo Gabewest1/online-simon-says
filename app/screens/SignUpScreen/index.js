@@ -9,18 +9,24 @@ import styled from "styled-components/native"
 import { actions as authActions } from "../../redux/Auth"
 
 import Background from "../../components/background"
+import MenuItem from "../../components/menu-item"
+import Input from "../../components/input"
+import Logo from "../../components/simon__logo"
 
 const Form = styled.View`
-
+    width: 80%;
+    flex-grow: 1;
+    justify-content: center;
 `
-const View = styled.View`
-
+const LogoWrapper = styled.View`
+    flex-grow: 2;
+    align-items: center;
+    justify-content: center;
 `
-const InputField = styled.TextInput`
-
-`
-const SubmitButton = styled.Button`
-
+const ButtonWrapper = styled.View`
+    flex-grow: 2;
+    justify-content: center;
+    width: 80%;
 `
 
 class SignUpScreen extends React.Component {
@@ -40,9 +46,11 @@ class SignUpScreen extends React.Component {
         errors["re-password"] = !values["re-password"] ? "Please re-enter password" : undefined
 
         if (!errors.password && !errors["re-password"]) {
-            errors.password = values.password.toLowerCase() !== values["re-password"].toLowerCase()
+            const doPasswordsMatch = values.password.toLowerCase() !== values["re-password"].toLowerCase()
                 ? "Passwords don't match"
                 : undefined
+
+            errors["re-password"] = errors.password = doPasswordsMatch
         }
 
         if (!errors.username && !errors.email && !errors.password && !errors["re-password"]) {
@@ -51,53 +59,39 @@ class SignUpScreen extends React.Component {
             throw new SubmissionError(errors)
         }
     }
-    renderInput(props) {
-        const { meta, placeholder, type, input: { onChange, ...restInput }} = props
-        let shouldHideText = type === "password" && !meta.error
-        console.log("PROPS:", props)
-
-        return (
-            <View>
-                <FormInput
-                    { ...restInput }
-                    shake={ meta.error }
-                    style={{marginBottom: -8 }}
-                    placeholderTextColor="gray"
-                    onChangeText={ onChange }
-                    secureTextEntry={ shouldHideText }
-                    placeholder={ placeholder } />
-                <FormValidationMessage>{ meta.error }</FormValidationMessage>
-            </View>
-        )
-    }
     render() {
         let { handleSubmit } = this.props
 
         return (
-            <Background>
+            <Background around>
+                <LogoWrapper>
+                    <Logo />
+                </LogoWrapper>
                 <Form>
                     <Field
                         name="username"
                         type="text"
-                        component={ this.renderInput }
+                        component={ Input }
                         placeholder="username" />
                     <Field
                         name="email"
                         type="text"
-                        component={ this.renderInput }
+                        component={ Input }
                         placeholder="email" />
                     <Field
                         name="password"
                         type="password"
-                        component={ this.renderInput }
+                        component={ Input }
                         placeholder="password" />
                     <Field
                         name="re-password"
                         type="password"
-                        component={ this.renderInput }
+                        component={ Input }
                         placeholder="re-password" />
-                    <SubmitButton onPress={ handleSubmit(this.validate) } title="Submit" />
                 </Form>
+                <ButtonWrapper>
+                    <MenuItem onPress={ handleSubmit(this.validate) } title="Submit" />
+                </ButtonWrapper>
             </Background>
         )
     }
