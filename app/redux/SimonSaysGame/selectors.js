@@ -29,6 +29,6 @@ export const isItMyTurn = state => {
 export const isGameOver = state => state.simonSays.game.isGameOver
 export const getCurrentRound = state => state.simonSays.game.round
 export const hasFoundMatch = state => state.simonSays.game.hasFoundMatch
-export const isScreenDarkened = state => state.simonSays.game.isScreenDarkened
+export const isScreenDarkened = state => state.simonSays.game.isScreenDarkened || !isItMyTurn(state)
 export const getTimer = state => state.simonSays.game.timer
 export const hasGameStarted = state => getMoves(state).length > 0
