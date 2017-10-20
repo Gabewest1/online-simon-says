@@ -5,6 +5,7 @@ import { View } from "react-native"
 import styled from "styled-components/native"
 import { List, ListItem } from "react-native-elements"
 import PropTypes from "prop-types"
+import Spinner from "react-native-spinkit"
 
 import { BACKGROUND_COLOR } from "../../constants"
 import Background from "../../components/background"
@@ -41,29 +42,37 @@ class Leaderboards extends React.Component {
         console.log("PLAYERSL:", this.props.players)
 
         return (
-            <Background>
-                <List>
-                    {
-                        this.props.players.map((player, index) => (
-                            <ListItem
-                                key={ player.username }
-                                containerStyle={{ paddingTop: 0, paddingBottom: 0 }}
-                                hideChevron={ true }
-                                title={
-                                    <Container>
-                                        <RankWrapper>
-                                            <Rank>{ index + 1}</Rank>
-                                        </RankWrapper>
-                                        <View style={{ borderLeftWidth: 3, borderColor: BACKGROUND_COLOR, marginLeft: 30, flexDirection: "row", justifyContent: "space-between", alignItems: "center", flexGrow: 1 }}>
-                                            <Player player={ player } />
-                                            <Stats>Highscore: { player.statsByGameMode[1].bestStreak }</Stats>
-                                        </View>
-                                    </Container>
-                                } />
-                        ))
-                    }
-                </List>
+            <Background centered={ this.props.isLoading }>
+                { this.props.isLoading
+                    ? <Spinner isVisible={ true } size={ 100 } type="FadingCircleAlt" color="white" />
+                    : this.renderLeaderboard()
+                }
             </Background>
+        )
+    }
+    renderLeaderboard() {
+        return (
+            <List>
+                {
+                    this.props.players.map((player, index) => (
+                        <ListItem
+                            key={ player.username }
+                            containerStyle={{ paddingTop: 0, paddingBottom: 0 }}
+                            hideChevron={ true }
+                            title={
+                                <Container>
+                                    <RankWrapper>
+                                        <Rank>{ index + 1}</Rank>
+                                    </RankWrapper>
+                                    <View style={{ borderLeftWidth: 3, borderColor: BACKGROUND_COLOR, marginLeft: 30, flexDirection: "row", justifyContent: "space-between", alignItems: "center", flexGrow: 1 }}>
+                                        <Player player={ player } />
+                                        <Stats>Highscore: { player.statsByGameMode[1].bestStreak }</Stats>
+                                    </View>
+                                </Container>
+                            } />
+                    ))
+                }
+            </List>
         )
     }
 }
