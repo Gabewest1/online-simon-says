@@ -17,7 +17,10 @@ const root = function* () {
         watchFindMatch(),
         watchAnimateSimonPadOnline(),
         getNavigator(),
-        playerDisconnected()
+        playerDisconnected(),
+        createPrivateMatchSaga(),
+        invitePlayerSaga(),
+        receiveGameInviteSaga()
     ]
 }
 export const getNavigator = function* () {
@@ -288,5 +291,52 @@ export const animateSimonPad = function* ({ pad, isValid }) {
     yield put(actions.animateSimonPad({ pad, isValid }))
 }
 
+export const createPrivateMatchSaga = function* () {
+    while (true) {
+        yield take(actions.createPrivateMatch)
+        yield put({ type: "server/CREATE_PRIVATE_MATCH" })
+        yield take("PRIVATE_MATCH_CREATED")
+
+        ScreenNavigator.push({
+            screen: "InvitePlayersScreen",
+            title: "",
+            animationType: 'slide-up'
+        })
+    }
+}
+
+export const invitePlayerSaga = function* () {
+    while (true) {
+        const action = yield take(actions.invitePlayer)
+
+        yield put({ type: "server/INVITE_PLAYER", payload: action.payload })
+    }
+}
+
+export const receiveGameInviteSaga = function* () {
+    while (true) {
+        const action = yield take("RECEIVE_INVITE")
+
+        ScreenNavigator.showInAppNotification({
+            screen: "GameInvitationNotification",
+            passProps: { player: action.payload },
+            autoDismissTimerSec: 5
+        })
+
+        const { playerAccepted, playerDeclined } = yield race({
+            playerAccepted: yield take(actions.playerAcceptedChallenge),
+            playerDeclined: yield take(actions.playerDeclinedChallenge)
+        })
+
+        if (playerAccepted) {
+            ScreenNavigator.resetTo({
+                screen: "InvitePlayersScreen",
+                title: "",
+                animationType: 'slide-up',
+                overrideBackPress: true,
+            })
+        }
+    }
+}
 
 export default root

@@ -28,7 +28,10 @@ const {
     decreaseTimer,
     resetTimer,
     playerFinishedTurn,
-    invitePlayer
+    invitePlayer,
+    createPrivateMatch,
+    playerAcceptedChallenge,
+    playerDeclinedChallenge
 } = createActions(
     "SIMON_PAD_CLICKED",
     "ANIMATE_SIMON_PAD",
@@ -56,7 +59,10 @@ const {
     "DECREASE_TIMER",
     "RESET_TIMER",
     "PLAYER_FINISHED_TURN",
-    "INVITE_PLAYER"
+    "INVITE_PLAYER",
+    "CREATE_PRIVATE_MATCH",
+    "PLAYER_ACCEPTED_CHALLENGE",
+    "PLAYER_DECLINED_CHALLENGE"
 )
 
 export const actions = {
@@ -86,7 +92,10 @@ export const actions = {
     decreaseTimer,
     resetTimer,
     playerFinishedTurn,
-    invitePlayer
+    invitePlayer,
+    createPrivateMatch,
+    playerAcceptedChallenge,
+    playerDeclinedChallenge
 }
 
 const padsReducerInitialState = [
