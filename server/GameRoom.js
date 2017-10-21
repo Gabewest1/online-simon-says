@@ -29,6 +29,9 @@ class GameRoom {
         /*** Important to remeber!!! This is where i assign the clients property info about their current game room ***/
         this.players.push(player)
         player.gameRoom = { id: this.id, gameMode: this.gameMode }
+
+        const players = this.players.map(socket => Object.assign(socket.player, { isEliminated: false }))
+        this.messageGameRoom({ type: "SET_PLAYERS", payload: players })
     }
     eliminatePlayer(playerToEliminate) {
         console.log("ELIMNATING PLAYER:", playerToEliminate.player)
@@ -155,11 +158,8 @@ class GameRoom {
         if (!this.gameStarted) {
             this.gameStarted = true
 
-            //Pass the clients an array of players
-            const players = this.players.map(socket => Object.assign(socket.player, { isEliminated: false }))
-
             this.performingPlayer = this.players[0]
-            this.messageGameRoom({ type: "FOUND_MATCH", payload: players })
+            this.messageGameRoom({ type: "FOUND_MATCH" })
 
             setTimeout(() => this.listenForNextMove(), 1000)
         }
