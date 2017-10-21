@@ -12,7 +12,9 @@ import SelectOnlineGameMode from "./screens/SelectOnlineGameMode"
 import FindMatchScreen from "./screens/FindMatchScreen"
 import SimonGameScreen from "./screens/SimonGameScreen"
 import SinglePlayerGameOverScreen from "./screens/SinglePlayerGameOverScreen"
+import InvitePlayersScreen from "./screens/InvitePlayersScreen"
 import PlayerDisconnectedMessage from "./components/playerDisconnectedMessage"
+import GameInvitationNotification from "./components/gameInvitationNotification"
 
 console.log("STARTING UP MY APP")
 
@@ -25,7 +27,9 @@ Navigation.registerComponent("SelectOnlineGameMode", () => SelectOnlineGameMode,
 Navigation.registerComponent("FindMatchScreen", () => FindMatchScreen, store, Provider)
 Navigation.registerComponent("SimonGameScreen", () => SimonGameScreen, store, Provider)
 Navigation.registerComponent("SinglePlayerGameOverScreen", () => SinglePlayerGameOverScreen, store, Provider)
+Navigation.registerComponent("InvitePlayersScreen", () => InvitePlayersScreen, store, Provider)
 Navigation.registerComponent("PlayerDisconnectedMessage", () => PlayerDisconnectedMessage, store, Provider)
+Navigation.registerComponent("GameInvitationNotification", () => GameInvitationNotification, store, Provider)
 
 Navigation.startSingleScreenApp({
     screen: {
