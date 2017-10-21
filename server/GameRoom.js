@@ -155,7 +155,7 @@ class GameRoom {
         }
 
         this.performingPlayer = nextPlayerToPerform
-        console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.player)
+        console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.player.username)
         this.messageGameRoom({ type: "SET_PERFORMING_PLAYER", payload: this.performingPlayer.player })
     }
     startGame() {
@@ -212,7 +212,7 @@ class GameRoom {
             xp += didWin ? ((this.gameMode * 5) + 10) : 0
             const stats = { xp, gameMode: this.gameMode, didWin }
 
-            console.log("ABOUT TO UPDATE:", player.player)
+            console.log("ABOUT TO UPDATE:", player.player.username)
 
             player.emit("action", { type: "server/UPDATE_PLAYERS_STATS", payload: stats })
         }
