@@ -3,6 +3,7 @@ const GameRoom = require("./GameRoom")
 const TWO_PLAYER_GAME = 2
 const THREE_PLAYER_GAME = 3
 const FOUR_PLAYER_GAME = 4
+const PRIVATE_GAME = 5
 
 class GameRoomManager {
     constructor(serverSocket) {
@@ -11,6 +12,7 @@ class GameRoomManager {
             [THREE_PLAYER_GAME]: [],
             [FOUR_PLAYER_GAME]: []
         }
+        this.privateGameRooms = []
         this.gameRoomCounter = 0
         this.socket = serverSocket
     }
@@ -36,6 +38,14 @@ class GameRoomManager {
 
         return newGameRoom
     }
+
+    createPrivateMatch(player) {
+        const newGameRoom = new GameRoom(this.gameRoomCounter++, PRIVATE_GAME)
+
+        newGameRoom.addPlayer(player)
+
+        this.privateGameRooms.push(newGameRoom)
+    }
     
     getOpenGame(gameMode) {
         const gameRooms = this.gameRooms[gameMode]
@@ -49,7 +59,13 @@ class GameRoomManager {
         let gameRoom
         if (player.gameRoom) {
             const { id, gameMode } = player.gameRoom
-            gameRoom = this.gameRooms[gameMode].find(room => room.id === id)
+
+            if (gameMode === PRIVATE_GAME) {
+                gameRoom = this.privateGameRooms.find(room => room.id === id)
+            } else {
+                gameRoom = this.gameRooms[gameMode].find(room => room.id === id)
+            }
+
         }
         console.log(`${gameRoom ? "found" : "No"} gameroom for player`)
 
