@@ -10,6 +10,7 @@ import { reduxForm, Field, SubmissionError } from "redux-form"
 import Player from "../../components/player"
 import Background from "../../components/background"
 import MenuItem from "../../components/menu-item"
+import Input from "../../components/input"
 
 import {
     actions as simonGameActions,
@@ -43,10 +44,13 @@ class InvitePlayersScreen extends React.Component {
         return (
             <Background>
                 <Field
+                    searchBar
                     name="username"
                     type="text"
                     containerStyle={{ width: 280 }}
-                    component={ SearchBar }
+                    inputStyle={{ color: "white" }}
+                    icon={{ color: "white" }}
+                    component={ Input }
                     placeholder="Invite user..." />
                 <MenuItem onPress={ this.props.handleSubmit(this.validate) }>Invite</MenuItem>
                 { this.renderPlayers() }
