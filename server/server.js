@@ -212,6 +212,31 @@ io.on("connection", socket => {
                 gameRoomManager.cancelSearch(socket)
                 break
             }
+            case "server/CREATE_PRIVATE_MATCH": {
+                gameRoomManager.createPrivateMatch(socket)
+                socket.emit("action", { type: "PRIVATE_MATCH_CREATED" })
+                break
+            }
+            case "server/INVITE_PLAYER": {
+                const playerToInviteID = Object.keys(io.sockets.sockets).find(socketID => {
+                    const socket = io.sockets.sockets[socketID]
+                    console.log("SOCKET:", socket.player)
+                    return socket.player && socket.player.username.toLowerCase() === action.payload
+                })
+
+                if (playerToInviteID) {
+                    const playersSocket = io.sockets.sockets[playerToInviteID]
+                    const payload = { player: socket.player, gameRoom: socket.gameRoom }
+                    playersSocket.emit("action", { type: "RECEIVE_INVITE", payload })
+                }
+                break
+            }
+            case "server/JOIN_PRIVATE_MATCH": {
+                const gameRoom = gameRoomManager.findPlayersGameRoom(action.payload)
+                gameRoom.addPlayer(socket)
+                socket.emit("action", { type: "JOINED_PRIVATE_MATCH" })
+                break
+            }
             case "server/ANIMATE_SIMON_PAD": {
                 let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.handleSimonMove(action.payload)
