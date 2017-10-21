@@ -26,7 +26,7 @@ const Buttons = styled.View`
 
 class GameInvitationNotification extends React.Component {
     render() {
-        const { player, playerAcceptedChallenge, playerDeclinedChallege } = this.props
+        const { player, playerAcceptedChallenge, playerDeclinedChallenge } = this.props
 
         return (
             <Message>
@@ -39,7 +39,7 @@ class GameInvitationNotification extends React.Component {
                     <Button
                         buttonStyle={{ backgroundColor: "red" }}
                         title="Decline"
-                        onPress={ playerDeclinedChallege } />
+                        onPress={ playerDeclinedChallenge } />
                 </Buttons>
             </Message>
         )
@@ -57,7 +57,7 @@ function mapDispatchToProps(dispatch) {
 GameInvitationNotification.propTypes = {
     player: PropTypes.object.isRequired,
     playerAcceptedChallenge: PropTypes.func.isRequired,
-    playerDeclinedChallege: PropTypes.func.isRequired
+    playerDeclinedChallenge: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameInvitationNotification)
