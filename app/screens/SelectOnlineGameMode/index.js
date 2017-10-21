@@ -9,6 +9,7 @@ import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
 
 import { TWO_PLAYER_GAME, THREE_PLAYER_GAME, FOUR_PLAYER_GAME } from "../../constants"
+import { actions as simonGameActions } from "../../redux/SimonSaysGame"
 
 const Container = styled(Background)`
     justify-content: space-around;
@@ -36,22 +37,25 @@ class SelectOnlineGameMode extends React.Component {
             <Container>
                 <List>
                     <ListItem
+                        onPress={ () => this.props.createPrivateMatch() }
+                        style={{ marginBottom: 35 }}
+                        icon={{ name: "looks-two" }}>
+                        Challenge a friend
+                    </ListItem>
+                    <ListItem
                         onPress={ () => this.gotoGameScreen(TWO_PLAYER_GAME) }
                         style={{ marginBottom: 35 }}
-                        color={ "red" }
                         icon={{ name: "looks-two" }}>
                         Two Player
                     </ListItem>
                     <ListItem
                         onPress={ () => this.gotoGameScreen(THREE_PLAYER_GAME) }
                         style={{ marginBottom: 35 }}
-                        color={ "blue" }
                         icon={{ name: "looks-3" }}>
                         Three Player
                     </ListItem>
                     <ListItem
                         onPress={ () => this.gotoGameScreen(FOUR_PLAYER_GAME) }
-                        color={ "green" }
                         icon={{ name: "looks-4" }}>
                         Four Player
                     </ListItem>
@@ -65,11 +69,12 @@ function mapStateToProps() {
     return {}
 }
 
-function mapDispatchToProps() {
-    return {}
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ ...simonGameActions }, dispatch)
 }
 
 SelectOnlineGameMode.propTypes = {
+    createPrivateMatch: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired
 }
 
