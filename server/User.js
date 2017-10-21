@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema({
     password: String,
     username: { type: String, lowercase: true },
     xp: { type: Number, default: 0 },
+    level: { type: Number, default: 1 },
     loggedIn: Boolean,
     statsByGameMode: {
         1: { type: GameSchema, default: GameSchema},
