@@ -83,7 +83,7 @@ class GameRoom {
     isGameOver() {
         const numPlayersLeft = this.playersNeededToStart - this.eliminatedPlayers.length
         console.log("NUMBER OF PLAYERS LEFT:", numPlayersLeft)
-        if (numPlayersLeft === 1) {
+        if (numPlayersLeft <= 1) {
             return true
         } else {
             return false
