@@ -16,6 +16,7 @@ const {
     addNextMove,
     increaseMoveCounter,
     resetMoveCounter,
+    setPlayers,
     addPlayer,
     removePlayer,
     setPerformingPlayer,
@@ -42,6 +43,7 @@ const {
     "ADD_NEXT_MOVE",
     "INCREASE_MOVE_COUNTER",
     "RESET_MOVE_COUNTER",
+    "SET_PLAYERS",
     "ADD_PLAYER",
     "REMOVE_PLAYER",
     "SET_PERFORMING_PLAYER",
@@ -70,6 +72,7 @@ export const actions = {
     addNextMove,
     increaseMoveCounter,
     resetMoveCounter,
+    setPlayers,
     addPlayer,
     removePlayer,
     setPerformingPlayer,
@@ -101,7 +104,7 @@ export const movesReducer = handleActions({
 
 export const playersReducer = handleActions({
     [resetGame]: (state, action) => [],
-    [foundMatch]: (state, action) => action.payload,
+    [setPlayers]: (state, action) => action.payload,
     [addPlayer]: (state, { payload }) => state.concat(payload),
     [removePlayer]: (state, { payload }) => state.filter(player => player.username !== payload.username ),
     [eliminatePlayer]: (state, { payload }) => state.map(player => player.username === payload.username ? { ...player, isEliminated: true } : player),
