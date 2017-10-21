@@ -320,12 +320,13 @@ export const receiveGameInviteSaga = function* () {
         ScreenNavigator.showInAppNotification({
             screen: "GameInvitationNotification",
             passProps: { player: action.payload },
-            autoDismissTimerSec: 5
+            autoDismissTimerSec: 7
         })
 
-        const { playerAccepted, playerDeclined } = yield race({
+        const { playerAccepted } = yield race({
             playerAccepted: yield take(actions.playerAcceptedChallenge),
-            playerDeclined: yield take(actions.playerDeclinedChallenge)
+            playerDeclined: yield take(actions.playerDeclinedChallenge),
+            playerDidntRespond: yield call(delay, 7000)
         })
 
         if (playerAccepted) {
