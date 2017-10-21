@@ -316,20 +316,23 @@ export const invitePlayerSaga = function* () {
 export const receiveGameInviteSaga = function* () {
     while (true) {
         const action = yield take("RECEIVE_INVITE")
+        const { player, gameRoom } = action.payload
 
         ScreenNavigator.showInAppNotification({
             screen: "GameInvitationNotification",
-            passProps: { player: action.payload },
+            passProps: { player },
             autoDismissTimerSec: 7
         })
 
         const { playerAccepted } = yield race({
-            playerAccepted: yield take(actions.playerAcceptedChallenge),
-            playerDeclined: yield take(actions.playerDeclinedChallenge),
-            playerDidntRespond: yield call(delay, 7000)
+            playerAccepted: take(actions.playerAcceptedChallenge),
+            playerDeclined: take(actions.playerDeclinedChallenge),
+            playerDidntRespond: call(delay, 7000)
         })
 
         if (playerAccepted) {
+            yield put({ type: "server/JOIN_PRIVATE_MATCH", payload: { gameRoom } })
+            yield take("JOINED_PRIVATE_MATCH")
             ScreenNavigator.resetTo({
                 screen: "InvitePlayersScreen",
                 title: "",
