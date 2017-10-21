@@ -30,7 +30,7 @@ class InvitePlayersScreen extends React.Component {
 
         let errors = {}
 
-        const isUserAlreadyInGameRoom = this.props.players.find(player => player.username === values.username)
+        const isUserAlreadyInGameRoom = this.props.players.find(player => player.username.toLowerCase() === values.username)
 
         errors.username = isUserAlreadyInGameRoom ? "User already here" : undefined
 
@@ -59,7 +59,7 @@ class InvitePlayersScreen extends React.Component {
     }
     renderPlayers() {
         return this.props.players.map(player =>
-            <Player player={ player } key={ player } />
+            <Player player={ player } key={ player.username } />
         )
     }
 }
