@@ -28,17 +28,21 @@ class GameRoom {
     addPlayer(player) {
         /*** Important to remeber!!! This is where i assign the clients property info about their current game room ***/
         this.players.push(player)
+
         player.gameRoom = { id: this.id, gameMode: this.gameMode }
+        player.isEliminated = false
 
         const players = this.players.map(socket => Object.assign(socket.player, { isEliminated: false }))
         this.messageGameRoom({ type: "SET_PLAYERS", payload: players })
     }
     eliminatePlayer(playerToEliminate) {
         console.log("ELIMNATING PLAYER:", playerToEliminate.player)
-        playerToEliminate.player.isEliminated = true
-        this.eliminatedPlayers.push({ player: playerToEliminate, rounds: this.round })
-        this.messageGameRoom({ type: "ELIMINATE_PLAYER", payload: playerToEliminate.player})
-        this.updatePlayersStats(playerToEliminate)
+        if (!playerToEliminate.player.isEliminated) {
+            playerToEliminate.player.isEliminated = true
+            this.eliminatedPlayers.push({ player: playerToEliminate, rounds: this.round })
+            this.messageGameRoom({ type: "ELIMINATE_PLAYER", payload: playerToEliminate.player})
+            this.updatePlayersStats(playerToEliminate)
+        }
     }
     endTurn() {
         if (this.isGameOver()) {
