@@ -104,7 +104,7 @@ export const multiplayerGameSaga = function* (gameMode) {
     const winner = yield select(selectors.getWinner)
 
     ScreenNavigator.resetTo({
-        screen: "SinglePlayerGameOverScreen",
+        screen: "GameOverScreen",
         title: "Game Over",
         passProps: { gameMode, winner },
         animationType: 'slide-up',
@@ -170,7 +170,7 @@ export const singlePlayerGameSaga = function* () {
     }
 
     ScreenNavigator.push({
-        screen: "SinglePlayerGameOverScreen",
+        screen: "GameOverScreen",
         title: "Game Over",
         passProps: { gameMode: SINGLE_PLAYER },
         animationType: 'slide-up',

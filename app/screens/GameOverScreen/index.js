@@ -22,7 +22,7 @@ const Text = styled.Text`
     border-color: white;
 `
 
-class SinglePlayerGameOverScreen extends React.Component {
+class GameOverScreen extends React.Component {
     componentWillMount() {
         this.props.resetGame()
     }
@@ -33,19 +33,16 @@ class SinglePlayerGameOverScreen extends React.Component {
             animated: true,
             animationType: 'slide-horizontal',
             overrideBackPress: true,
-            backButtonHidden: true,
             passProps: { gameMode: this.props.gameMode }
         })
     }
     playAgain() {
-        console.log(this.props)
-        this.props.navigator.resetTo({
+        this.props.navigator.push({
             screen: "SimonGameScreen",
             title: "",
             animated: true,
             animationType: 'slide-horizontal',
             overrideBackPress: true,
-            backButtonHidden: true,
             passProps: { gameMode: this.props.gameMode }
         })
     }
@@ -87,11 +84,11 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({ ...simonGameActions }, dispatch)
 }
 
-SinglePlayerGameOverScreen.propTypes = {
+GameOverScreen.propTypes = {
     gameMode: PropTypes.number.isRequired,
     navigator: PropTypes.object.isRequired,
     resetGame: PropTypes.func.isRequired,
     winner: PropTypes.object
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SinglePlayerGameOverScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(GameOverScreen)
