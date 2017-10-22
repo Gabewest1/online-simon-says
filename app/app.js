@@ -15,6 +15,7 @@ import SinglePlayerGameOverScreen from "./screens/SinglePlayerGameOverScreen"
 import InvitePlayersScreen from "./screens/InvitePlayersScreen"
 import PlayerDisconnectedMessage from "./components/playerDisconnectedMessage"
 import GameInvitationNotification from "./components/gameInvitationNotification"
+import QuitModal from "./components/QuitModal"
 
 console.log("STARTING UP MY APP")
 
@@ -30,6 +31,7 @@ Navigation.registerComponent("SinglePlayerGameOverScreen", () => SinglePlayerGam
 Navigation.registerComponent("InvitePlayersScreen", () => InvitePlayersScreen, store, Provider)
 Navigation.registerComponent("PlayerDisconnectedMessage", () => PlayerDisconnectedMessage, store, Provider)
 Navigation.registerComponent("GameInvitationNotification", () => GameInvitationNotification, store, Provider)
+Navigation.registerComponent("QuitModal", () => QuitModal, store, Provider)
 
 Navigation.startSingleScreenApp({
     screen: {
