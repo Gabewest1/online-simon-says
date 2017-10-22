@@ -6,6 +6,7 @@ const {
     animateSimonPad,
     startGame,
     resetGame,
+    cancelSimonGameSaga,
     gameOver,
     startTurn,
     endTurn,
@@ -24,6 +25,7 @@ const {
     findMatch,
     foundMatch,
     cancelSearch,
+    cancelPrivateMatch,
     setIsScreenDarkened,
     decreaseTimer,
     resetTimer,
@@ -31,12 +33,14 @@ const {
     invitePlayer,
     createPrivateMatch,
     playerAcceptedChallenge,
-    playerDeclinedChallenge
+    playerDeclinedChallenge,
+    playerQuitMatch
 } = createActions(
     "SIMON_PAD_CLICKED",
     "ANIMATE_SIMON_PAD",
     "START_GAME",
     "RESET_GAME",
+    "CANCEL_SIMON_GAME_SAGA",
     "GAME_OVER",
     "START_TURN",
     "END_TURN",
@@ -55,6 +59,7 @@ const {
     "FIND_MATCH",
     "FOUND_MATCH",
     "CANCEL_SEARCH",
+    "server/CANCEL_PRIVATE_MATCH",
     "SET_IS_SCREEN_DARKENED",
     "DECREASE_TIMER",
     "RESET_TIMER",
@@ -62,7 +67,8 @@ const {
     "INVITE_PLAYER",
     "CREATE_PRIVATE_MATCH",
     "PLAYER_ACCEPTED_CHALLENGE",
-    "PLAYER_DECLINED_CHALLENGE"
+    "PLAYER_DECLINED_CHALLENGE",
+    "PLAYER_QUIT_MATCH"
 )
 
 export const actions = {
@@ -70,6 +76,7 @@ export const actions = {
     animateSimonPad,
     startGame,
     resetGame,
+    cancelSimonGameSaga,
     gameOver,
     startTurn,
     endTurn,
@@ -88,6 +95,7 @@ export const actions = {
     findMatch,
     foundMatch,
     cancelSearch,
+    cancelPrivateMatch,
     setIsScreenDarkened,
     decreaseTimer,
     resetTimer,
@@ -95,7 +103,8 @@ export const actions = {
     invitePlayer,
     createPrivateMatch,
     playerAcceptedChallenge,
-    playerDeclinedChallenge
+    playerDeclinedChallenge,
+    playerQuitMatch
 }
 
 const padsReducerInitialState = [
