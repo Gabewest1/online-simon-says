@@ -1,11 +1,7 @@
 import React from "react"
-import { connect } from "react-redux"
 import { Button } from "react-native-elements"
-import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 import PropTypes from "prop-types"
-
-import { actions as navigatorActions } from "../../redux/Navigator"
 
 const Modal = styled.View`
     justify-content: space-between;
@@ -75,14 +71,6 @@ class QuitModal extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {}
-}
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ ...navigatorActions }, dispatch)
-}
-
 QuitModal.propTypes = {
     exit: PropTypes.func.isRequired,
     height: PropTypes.number,
@@ -90,4 +78,4 @@ QuitModal.propTypes = {
     width: PropTypes.number
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(QuitModal)
+export default QuitModal
