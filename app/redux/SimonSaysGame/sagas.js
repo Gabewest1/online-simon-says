@@ -300,7 +300,8 @@ export const createPrivateMatchSaga = function* () {
         ScreenNavigator.push({
             screen: "InvitePlayersScreen",
             title: "",
-            animationType: 'slide-up'
+            animationType: 'slide-up',
+            overrideBackPress: true
         })
     }
 }
