@@ -13,6 +13,10 @@ import {
     selectors as simonGameSelectors
 } from "../../redux/SimonSaysGame"
 
+import {
+    actions as navigatorActions,
+} from "../../redux/Navigator"
+
 import { SINGLE_PLAYER_GAME, BACKGROUND_COLOR } from "../../constants"
 
 const Container = styled(Background)`
@@ -79,19 +83,19 @@ const HighScores = ({ highscore }) => {
 class SimonGameScreen extends React.Component {
     componentWillMount() {
         this.props.startGame(this.props.gameMode)
+
+        this.handleBack = this.handleBack.bind(this)
+
+        this.props.navigator.setOnNavigatorEvent(this.handleBack)
+    }
+    handleBack({ id }) {
+        if (id === "backPress") {
+            this.props.showBackoutWarningMessage()
+        }
     }
     handlePadClick(pad) {
         console.log("PAD CLICKED", pad)
         this.props.simonPadClicked(pad)
-        // if (this.props.gameMode === SINGLE_PLAYER_GAME) {
-        //     console.log("I GOT CLICKED")
-        //     this.props.animateSimonPad({ pad, isValid: true })
-        //     setTimeout(() => {
-        //         this.props.animateSimonPad({ pad, isValid: true })
-        //     }, 50)
-        // } else {
-        //     this.props.simonPadClicked(pad)
-        // }
     }
     renderHUD() {
         if (this.props.gameMode !== SINGLE_PLAYER_GAME && this.props.players.length > 0) {
@@ -136,22 +140,25 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ ...simonGameActions }, dispatch)
+    return bindActionCreators({ ...simonGameActions, ...navigatorActions }, dispatch)
 }
 
 SimonGameScreen.propTypes = {
-    hasGameStarted: PropTypes.bool.isRequired,
+    animateSimonPad: PropTypes.func.isRequired,
     gameMode: PropTypes.number.isRequired,
+    hasGameStarted: PropTypes.bool.isRequired,
+    isItMyTurn: PropTypes.bool.isRequired,
     isGameOver: PropTypes.bool.isRequired,
-    round: PropTypes.number.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
-    timer: PropTypes.number.isRequired,
+    navigator: PropTypes.object.isRequired,
     pads: PropTypes.array.isRequired,
     performingPlayer: PropTypes.object.isRequired,
     players: PropTypes.array.isRequired,
-    isItMyTurn: PropTypes.bool.isRequired,
+    round: PropTypes.number.isRequired,
+    showBackoutWarningMessage: PropTypes.func.isRequired,
     simonPadClicked: PropTypes.func.isRequired,
-    animateSimonPad: PropTypes.func.isRequired,
+    startGame: PropTypes.func.isRequired,
+    timer: PropTypes.number.isRequired,
     winner: PropTypes.object
 }
 

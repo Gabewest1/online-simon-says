@@ -17,11 +17,21 @@ import {
     selectors as simonGameSelectors
 } from "../../redux/SimonSaysGame"
 
+import { actions as navigatorActions } from "../../redux/Navigator"
+
 class InvitePlayersScreen extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
 
         this.validate = this.validate.bind(this)
+        this.handleBack = this.handleBack.bind(this)
+
+        props.navigator.setOnNavigatorEvent(this.handleBack)
+    }
+    handleBack({ id }) {
+        if (id === "backPress") {
+            this.props.showBackoutWarningMessage()
+        }
     }
     validate(values) {
         Keyboard.dismiss()
@@ -71,7 +81,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ ...simonGameActions }, dispatch)
+    return bindActionCreators({ ...navigatorActions, ...simonGameActions }, dispatch)
 }
 
 InvitePlayersScreen.propTypes = {
