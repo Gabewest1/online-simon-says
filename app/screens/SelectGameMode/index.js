@@ -37,8 +37,7 @@ class SelectGameMode extends React.Component {
                             animated: true,
                             animationType: 'slide-horizontal',
                             passProps: { gameMode: SINGLE_PLAYER_GAME },
-                            overrideBackPress: true,
-                            backButtonHidden: true
+                            overrideBackPress: true
                         }) }
                         color={ "red" }
                         icon={{ name: "person" }}>
