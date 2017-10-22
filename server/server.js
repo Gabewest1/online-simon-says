@@ -12,6 +12,7 @@ const db = mongoose.connect("mongodb://gabewest1:490501GG@ds149134.mlab.com:4913
 
 mongoose.connection.on('open', function (ref) {
     console.log('Connected to mongo server.');
+    User.update({ loggedIn: true }, { loggedIn: false }, { multi: true }, (err) => err && console.log(err))
     // User.remove({}, (err) => {
     //     if (err) console.log(err)
     // })
@@ -164,7 +165,6 @@ io.on("connection", socket => {
                 break
             }
             case "server/UPDATE_PLAYERS_STATS": {
-                console.log("LETS LOOK FOR THE PLAYTER TO UPDATE")
                 User.findOne({ username: socket.player.username }, (err, user) => {
                     if (err) {
                         console.log(err)
@@ -174,7 +174,6 @@ io.on("connection", socket => {
                         return
                     }
 
-                    console.log("UPDATING USER:", user)
                     const stats = action.payload
                     const updateWinsOrLoses = stats.didWin ? "wins" : "loses"
                     const currentStreak = stats.didWin ? user.statsByGameMode[stats.gameMode].currentStreak + 1 : 0
@@ -191,8 +190,6 @@ io.on("connection", socket => {
                         if (err) {
                             console.log(err)
                         }
-
-                        console.log("Updated users stats:", user)
                     })
                 })
 
@@ -235,6 +232,17 @@ io.on("connection", socket => {
                 const gameRoom = gameRoomManager.findPlayersGameRoom(action.payload)
                 gameRoom.addPlayer(socket)
                 socket.emit("action", { type: "JOINED_PRIVATE_MATCH" })
+                break
+            }
+            case "server/CANCEL_PRIVATE_MATCH": {
+                const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+                gameRoom.removePlayer(socket)
+                gameRoom.syncPlayersArrayWithRedux()
+                break
+            }
+            case "server/PLAYER_QUIT_MATCH": {
+                const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+                gameRoom.playerLostConnection(socket)
                 break
             }
             case "server/ANIMATE_SIMON_PAD": {

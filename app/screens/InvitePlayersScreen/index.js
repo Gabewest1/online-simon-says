@@ -30,7 +30,10 @@ class InvitePlayersScreen extends React.Component {
     }
     handleBack({ id }) {
         if (id === "backPress") {
-            this.props.showBackoutWarningMessage()
+            this.props.showBackoutWarningMessage({
+                stay: { type: "STAY", onPress: this.props.stay },
+                exit: { type: "server/CANCEL_PRIVATE_MATCH", onPress: this.props.cancelPrivateMatch }
+            })
         }
     }
     validate(values) {

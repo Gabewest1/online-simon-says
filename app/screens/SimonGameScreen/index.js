@@ -90,7 +90,10 @@ class SimonGameScreen extends React.Component {
     }
     handleBack({ id }) {
         if (id === "backPress") {
-            this.props.showBackoutWarningMessage()
+            this.props.showBackoutWarningMessage({
+                stay: { type: "STAY", onPress: this.props.stay },
+                exit: { type: "PLAYER_QUIT_MATCH", onPress: this.props.playerQuitMatch }
+            })
         }
     }
     handlePadClick(pad) {

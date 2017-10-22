@@ -32,8 +32,7 @@ class GameRoom {
         player.gameRoom = { id: this.id, gameMode: this.gameMode }
         player.isEliminated = false
 
-        const players = this.players.map(socket => Object.assign(socket.player, { isEliminated: false }))
-        this.messageGameRoom({ type: "SET_PLAYERS", payload: players })
+        this.syncPlayersArrayWithRedux()
     }
     eliminatePlayer(playerToEliminate) {
         console.log("ELIMNATING PLAYER:", playerToEliminate.player)
@@ -202,6 +201,10 @@ class GameRoom {
                 this.playerTimedOut()
             }
         }, 1000)
+    }
+    syncPlayersArrayWithRedux() {
+        const players = this.players.map(socket => Object.assign(socket.player, { isEliminated: false }))
+        this.messageGameRoom({ type: "SET_PLAYERS", payload: players })
     }
     updatePlayersStats(player, didWin) {
         //Update players stats as long as they arent a guest
