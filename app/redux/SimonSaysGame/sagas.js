@@ -1,7 +1,7 @@
 import { delay } from "redux-saga"
 import { all, call, cancel, fork, put, race, select, take, takeLatest } from "redux-saga/effects"
 import { actions, selectors } from "./index"
-import { selectors as userSelectors } from "../Auth"
+import { actions as navigatorActions } from "../Navigator"
 
 export const ANIMATION_DURATION = 100
 export const TIMEOUT_TIME = 3
@@ -20,7 +20,8 @@ const root = function* () {
         playerDisconnected(),
         createPrivateMatchSaga(),
         invitePlayerSaga(),
-        receiveGameInviteSaga()
+        receiveGameInviteSaga(),
+        playerQuitMatchSaga()
     ]
 }
 export const getNavigator = function* () {
@@ -67,7 +68,11 @@ export const watchFindMatch = function* () {
 }
 
 export const watchSimonGameSaga = function* () {
-    yield takeLatest(actions.startGame, simonGameSaga)
+    while (true) {
+        const task = yield takeLatest(actions.startGame, simonGameSaga)
+        yield take(actions.cancelSimonGameSaga)
+        yield cancel(task)
+    }
 }
 
 export const simonGameSaga = function* (action) {
@@ -270,10 +275,6 @@ export const performPlayersTurn = function* (player) {
     return true
 }
 
-export const savePlayersStats = function* () {
-
-}
-
 export const endTurn = function* (didPlayerPassTurn) {
     if (didPlayerPassTurn) {
         console.log("PASSED THE ROUND :D")
@@ -342,6 +343,24 @@ export const receiveGameInviteSaga = function* () {
             })
         }
     }
+}
+
+export const playerQuitMatchSaga = function* () {
+    while (true) {
+        yield take(actions.playerQuitMatch)
+
+        if (GAME_MODE === SINGLE_PLAYER) {
+            yield call(updateStats)
+            yield put(actions.resetGame())
+            yield put(actions.cancelSimonGameSaga())
+        } else {
+            yield put({ type: "server/PLAYER_QUIT_MATCH" })
+        }
+    }
+}
+
+export const updateStats = function* () {
+
 }
 
 export default root
