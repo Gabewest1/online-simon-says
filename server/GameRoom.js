@@ -37,7 +37,10 @@ class GameRoom {
     }
     eliminatePlayer(playerToEliminate) {
         console.log("ELIMNATING PLAYER:", playerToEliminate.player)
-        if (!playerToEliminate.player.isEliminated) {
+        const theGameIsNotOver = !this.isGameOver()
+        const thePlayerHasntBeenEliminatedYet = !playerToEliminate.player.isEliminated
+
+        if (theGameIsNotOver && thePlayerHasntBeenEliminatedYet) {
             playerToEliminate.player.isEliminated = true
             this.eliminatedPlayers.push({ player: playerToEliminate, rounds: this.round })
             this.messageGameRoom({ type: "ELIMINATE_PLAYER", payload: playerToEliminate.player})
