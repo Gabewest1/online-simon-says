@@ -5,6 +5,7 @@ class GameRoom {
         this.playersNeededToStart = gameMode
         this.players = []
         this.playersReady = []
+        this.playersReadyToStart = []
         this.eliminatedPlayers = []
         this.gameStarted = false
         this.movesToPerform = []
@@ -68,8 +69,10 @@ class GameRoom {
         //for ending the game or moving to the next player turn happens.
         if (!playersMove.isValid) {
             this.eliminatePlayer(this.performingPlayer)
+            this.endTurn()
         } else if (this.currentMovesIndex === this.movesToPerform.length) {
             this.addNextMove(playersMove.pad)
+            this.endTurn()
         } else {
             this.currentMovesIndex++
 
@@ -117,10 +120,6 @@ class GameRoom {
             this.eliminatePlayer(thisPlayer)
             this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: thisPlayer.player })
             this.removePlayer(thisPlayer)
-
-            if (this.isGameOver()) {
-                this.endGame()
-            }
         }
     }
     playerTimedOut() {
@@ -128,6 +127,7 @@ class GameRoom {
         this.timer = clearInterval(this.timer)
         this.messageGameRoom({ type: "PLAYER_TIMEDOUT" })
         this.eliminatePlayer(this.performingPlayer)
+        this.endTurn()
     }
     playerReady(player) {
         if (this.playersReady.indexOf(player) === -1) {
@@ -136,6 +136,16 @@ class GameRoom {
             if (this.playersReady.length === this.players.length) {
                 this.playersReady = []
                 this.endTurn()
+            }
+        }
+    }
+    playerReadyToStart(player) {
+        if (this.playersReadyToStart.indexOf(player) === -1) {
+            this.playersReadyToStart.push(player)
+
+            if (this.playersReadyToStart.length === this.players.length) {
+                this.playersReadyToStart = []
+                this.startFirstTurn()
             }
         }
     }
@@ -156,6 +166,7 @@ class GameRoom {
         this.performingPlayer = nextPlayerToPerform
         console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.player.username)
         this.messageGameRoom({ type: "SET_PERFORMING_PLAYER", payload: this.performingPlayer.player })
+        this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
     startGame() {
         if (!this.gameStarted) {
@@ -163,9 +174,11 @@ class GameRoom {
 
             this.performingPlayer = this.players[0]
             this.messageGameRoom({ type: "FOUND_MATCH" })
-
-            setTimeout(() => this.listenForNextMove(), 1000)
         }
+    }
+    startFirstTurn() {
+        this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
+        setTimeout(() => this.listenForNextMove(), 1000)
     }
     startNextTurn() {
         console.log("STARTING NEXT PLAYERS TURN:", this.performingPlayer.player.username)
