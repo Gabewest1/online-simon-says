@@ -359,11 +359,12 @@ export const playerQuitMatchSaga = function* () {
 
         if (GAME_MODE === SINGLE_PLAYER) {
             yield call(updateStats)
-            yield put(actions.resetGame())
-            yield put(actions.cancelSimonGameSaga())
         } else {
             yield put({ type: "server/PLAYER_QUIT_MATCH" })
         }
+
+        yield put(actions.resetGame())
+        yield put(actions.cancelSimonGameSaga())
     }
 }
 
