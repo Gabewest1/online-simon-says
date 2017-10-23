@@ -13,6 +13,7 @@ let ScreenNavigator
 
 const root = function* () {
     yield [
+        cancelPrivateMatch(),
         watchSimonGameSaga(),
         watchFindMatch(),
         watchAnimateSimonPadOnline(),
@@ -310,7 +311,7 @@ export const createPrivateMatchSaga = function* () {
 export const cancelPrivateMatch = function* () {
     while (true) {
         yield take(actions.cancelPrivateMatch)
-        yield put("server/CANCEL_PRIVATE_MATCH")
+        yield put({ type: "server/CANCEL_PRIVATE_MATCH" })
     }
 }
 
@@ -342,7 +343,7 @@ export const receiveGameInviteSaga = function* () {
         if (playerAccepted) {
             yield put({ type: "server/JOIN_PRIVATE_MATCH", payload: { gameRoom } })
             yield take("JOINED_PRIVATE_MATCH")
-            ScreenNavigator.resetTo({
+            ScreenNavigator.push({
                 screen: "InvitePlayersScreen",
                 title: "",
                 animationType: 'slide-up',
