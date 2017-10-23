@@ -307,6 +307,13 @@ export const createPrivateMatchSaga = function* () {
     }
 }
 
+export const cancelPrivateMatch = function* () {
+    while (true) {
+        yield take(actions.cancelPrivateMatch)
+        yield put("server/CANCEL_PRIVATE_MATCH")
+    }
+}
+
 export const invitePlayerSaga = function* () {
     while (true) {
         const action = yield take(actions.invitePlayer)
