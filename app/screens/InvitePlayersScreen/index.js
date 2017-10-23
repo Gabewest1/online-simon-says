@@ -30,9 +30,10 @@ class InvitePlayersScreen extends React.Component {
     }
     handleBack({ id }) {
         if (id === "backPress") {
+            console.log("EXIT ACTION:", this.props)
             this.props.showBackoutWarningMessage({
                 stay: { type: "STAY", onPress: this.props.stay },
-                exit: { type: "server/CANCEL_PRIVATE_MATCH", onPress: this.props.cancelPrivateMatch }
+                exit: { type: "CANCEL_PRIVATE_MATCH", onPress: this.props.cancelPrivateMatch }
             })
         }
     }
@@ -88,6 +89,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 InvitePlayersScreen.propTypes = {
+    cancelPrivateMatch: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     invitePlayer: PropTypes.func.isRequired,
     players: PropTypes.array.isRequired
