@@ -1,5 +1,5 @@
 import { delay } from "redux-saga"
-import { all, call, cancel, fork, put, race, select, take, takeLatest } from "redux-saga/effects"
+import { all, call, cancel, fork, put, race, select, take, takeEvery, takeLatest } from "redux-saga/effects"
 import { actions, selectors } from "./index"
 import { actions as navigatorActions } from "../Navigator"
 
@@ -90,23 +90,10 @@ export const simonGameSaga = function* (action) {
 }
 
 export const multiplayerGameSaga = function* (gameMode) {
-
-    while (!(yield select(selectors.isGameOver))) {
-
-        if ((yield select(selectors.isItMyTurn))) {
-            yield call(performPlayersTurnOnline)
-        }
-
-        console.log("Waiting for the next turn to start")
-        yield put({ type: "server/READY_FOR_NEXT_TURN" })
-        yield race({
-            startNextTurn: take("START_NEXT_TURN"),
-            gameOver: take("GAME_OVER")
-        })
-
-        console.log("Starting the next turn!")
-    }
-
+    yield put({ type: "server/PLAYER_READY_TO_START" })
+    yield takeEvery("PERFORM_YOUR_TURN", performTurnSaga)
+    yield take("GAME_OVER")
+    
     const winner = yield select(selectors.getWinner)
 
     ScreenNavigator.resetTo({
@@ -119,7 +106,7 @@ export const multiplayerGameSaga = function* (gameMode) {
     })
 }
 
-export const performPlayersTurnOnline = function* () {
+export const performTurnSaga = function* () {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
 
@@ -149,7 +136,7 @@ export const performPlayersTurnOnline = function* () {
         }
 
         movesPerformed++
-    }
+    }    
 }
 
 export const playerDisconnected = function* () {
