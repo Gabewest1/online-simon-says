@@ -103,6 +103,7 @@ class SimonGame extends React.Component {
 
                     <SimonPad
                         style={{top: 0, left: 0}}
+                        index={ 0 }
                         source={ pad0.isAnimating || pads[0].isAnimating ?
                             require("../../assets/images/top_left_pad_active.png") :
                             require("../../assets/images/top_left_pad.png")
@@ -114,6 +115,7 @@ class SimonGame extends React.Component {
 
                     <SimonPad
                         style={{top: 0, right: 0}}
+                        index={ 1 }
                         source={ pad1.isAnimating || pads[1].isAnimating ?
                             require("../../assets/images/top_right_pad_active.png") :
                             require("../../assets/images/top_right_pad.png")
@@ -125,6 +127,7 @@ class SimonGame extends React.Component {
 
                     <SimonPad
                         style={{bottom: 0, left: 0}}
+                        index={ 2 }
                         source={ pad2.isAnimating || pads[2].isAnimating ?
                             require("../../assets/images/bottom_left_pad_active.png") :
                             require("../../assets/images/bottom_left_pad.png")
@@ -136,6 +139,7 @@ class SimonGame extends React.Component {
 
                     <SimonPad
                         style={{bottom: 0, right: 0}}
+                        index={ 3 }
                         source={ pad3.isAnimating || pads[3].isAnimating ?
                             require("../../assets/images/bottom_right_pad_active.png") :
                             require("../../assets/images/bottom_right_pad.png")
