@@ -82,9 +82,7 @@ class SimonGame extends React.Component {
         }
     }
     handlePadPress(pad) {
-        if (this.props.gameMode === SINGLE_PLAYER_GAME) {
-            this.setState({ [`pad${pad}`]: { isAnimating: true }})
-        }
+        this.setState({ [`pad${pad}`]: { isAnimating: true }})
         this.props.onPressIn(pad)
     }
     render() {
