@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.reactnativenavigation.NavigationApplication;
 import com.react.rnspinkit.RNSpinkitPackage; 
+import com.zmxv.RNSound.RNSoundPackage;
 
 public class MainApplication extends NavigationApplication {
 
@@ -25,7 +26,8 @@ public class MainApplication extends NavigationApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new SvgPackage(),
-            new RNSpinkitPackage()
+            new RNSpinkitPackage(),
+            new RNSoundPackage()
       );
     }
   };
@@ -53,7 +55,8 @@ public class MainApplication extends NavigationApplication {
       return Arrays.<ReactPackage>asList(
           // eg. new VectorIconsPackage()
           new SvgPackage(),
-          new RNSpinkitPackage()          
+          new RNSpinkitPackage(),
+          new RNSoundPackage()
       );
   }
 
