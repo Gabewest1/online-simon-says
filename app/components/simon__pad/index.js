@@ -20,7 +20,7 @@ const Touchable = styled.TouchableOpacity`
 class Pad extends React.Component {
     render() {
         return (
-            <Touchable { ...this.props } style={ this.props.style } onPressIn={ this.props.onPressIn } activeOpacity={ 1 } >
+            <Touchable { ...this.props } activeOpacity={ 1 } >
                 <PadView { ...this.props } />
             </Touchable>
         )

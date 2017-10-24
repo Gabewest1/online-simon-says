@@ -121,7 +121,7 @@ class SimonGameScreen extends React.Component {
                 <TintedBG show={ this.props.isScreenDarkened } />
                 { this.renderHUD() }
                 <Timer>{ this.props.timer }</Timer>
-                <SimonGame { ...this.props } onPressIn={ this.handlePadClick.bind(this) } />
+                <SimonGame { ...this.props } onPress={ this.handlePadClick.bind(this) } />
             </Container>
         )
     }

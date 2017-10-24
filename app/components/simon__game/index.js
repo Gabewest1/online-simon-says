@@ -82,7 +82,7 @@ class SimonGame extends React.Component {
         }
     }
     handlePadPress(pad) {
-        this.props.onPressIn(pad)
+        this.props.onPress(pad)
     }
     render() {
         //Pads that come from this.props are used to animate the moves of opponents in
