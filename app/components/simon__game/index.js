@@ -82,7 +82,6 @@ class SimonGame extends React.Component {
         }
     }
     handlePadPress(pad) {
-        this.setState({ [`pad${pad}`]: { isAnimating: true }})
         this.props.onPressIn(pad)
     }
     render() {
@@ -109,7 +108,8 @@ class SimonGame extends React.Component {
                             require("../../assets/images/top_left_pad.png")
                         }
                         isAnimating={ pad0.isAnimating || pads[0].isAnimating }
-                        onPressIn={ () => this.handlePadPress(0) }
+                        onPress={ () => this.handlePadPress(0) }
+                        onPressIn={ () => this.setState({ pad0: { isAnimating: true } })}
                         onPressOut={ () => this.setState({ pad0: { isAnimating: false }}) } />
 
                     <SimonPad
@@ -119,7 +119,8 @@ class SimonGame extends React.Component {
                             require("../../assets/images/top_right_pad.png")
                         }
                         isAnimating={ pad1.isAnimating || pads[1].isAnimating }
-                        onPressIn={ () => this.handlePadPress(1) }
+                        onPress={ () => this.handlePadPress(1) }
+                        onPressIn={ () => this.setState({ pad1: { isAnimating: true } })}
                         onPressOut={ () => this.setState({ pad1: { isAnimating: false }}) } />
 
                     <SimonPad
@@ -129,7 +130,8 @@ class SimonGame extends React.Component {
                             require("../../assets/images/bottom_left_pad.png")
                         }
                         isAnimating={ pad2.isAnimating || pads[2].isAnimating }
-                        onPressIn={ () => this.handlePadPress(2) }
+                        onPress={ () => this.handlePadPress(2) }
+                        onPressIn={ () => this.setState({ pad2: { isAnimating: true } })}
                         onPressOut={ () => this.setState({ pad2: { isAnimating: false }}) } />
 
                     <SimonPad
@@ -139,7 +141,8 @@ class SimonGame extends React.Component {
                             require("../../assets/images/bottom_right_pad.png")
                         }
                         isAnimating={ pad3.isAnimating || pads[3].isAnimating }
-                        onPressIn={ () => this.handlePadPress(3) }
+                        onPress={ () => this.handlePadPress(3) }
+                        onPressIn={ () => this.setState({ pad3: { isAnimating: true } })}
                         onPressOut={ () => this.setState({ pad3: { isAnimating: false }}) } />
 
                     <TintedBG show={ isScreenDarkened } />
