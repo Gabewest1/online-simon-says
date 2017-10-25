@@ -123,8 +123,8 @@ class GameRoom {
         console.log("IS PLAYER ALREADY ELIMINATED:", isPlayerAlreadyEliminated)
         if (!this.isGameOver() && !isPlayerAlreadyEliminated) {
             this.eliminatePlayer(thisPlayer)
-            this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: thisPlayer.player })
             this.removePlayer(thisPlayer)
+            this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: thisPlayer.player })
         }
     }
     playerTimedOut() {
