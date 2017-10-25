@@ -329,6 +329,10 @@ export const receiveGameInviteSaga = function* () {
             playerDidntRespond: call(delay, 7000)
         })
 
+        ScreenNavigator.dismissInAppNotification({
+            screen: "GameInvitationNotification"
+        })
+
         if (playerAccepted) {
             yield put({ type: "server/JOIN_PRIVATE_MATCH", payload: { gameRoom } })
             yield take("JOINED_PRIVATE_MATCH")
