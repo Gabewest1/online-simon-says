@@ -1,12 +1,17 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 
-const GameSchema = new mongoose.Schema({
-    wins: { type: Number, default: 0},
-    loses: { type: Number, default: 0},
-    matchesPlayed: { type: Number, default: 0},
-    bestStreak: { type: Number, default: 0},
-    currentStreak: { type: Number, default: 0}
+const SinglePlayerGameSchema = new mongoose.Schema({
+    matchesPlayed: { type: Number, default: 0 },
+    highScore: { type: Number, default: 0 }
+})
+
+const MultiplayerGameSchema = new mongoose.Schema({
+    wins: { type: Number, default: 0 },
+    loses: { type: Number, default: 0 },
+    matchesPlayed: { type: Number, default: 0 },
+    bestStreak: { type: Number, default: 0 },
+    currentStreak: { type: Number, default: 0 }
 })
 
 const UserSchema = new mongoose.Schema({
@@ -17,10 +22,10 @@ const UserSchema = new mongoose.Schema({
     level: { type: Number, default: 1 },
     loggedIn: Boolean,
     statsByGameMode: {
-        1: { type: GameSchema, default: GameSchema},
-        2: { type: GameSchema, default: GameSchema},
-        3: { type: GameSchema, default: GameSchema},
-        4: { type: GameSchema, default: GameSchema}
+        1: { type: SinglePlayerGameSchema, default: SinglePlayerGameSchema },
+        2: { type: MultiplayerGameSchema, default: MultiplayerGameSchema },
+        3: { type: MultiplayerGameSchema, default: MultiplayerGameSchema },
+        4: { type: MultiplayerGameSchema, default: MultiplayerGameSchema }
     }
 })
 

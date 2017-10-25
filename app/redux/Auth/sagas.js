@@ -58,7 +58,7 @@ export const playAsGuest = function* () {
         xp: 0,
         level: 1,
         isAGuest: true,
-        statsByGameMode: { 1: { bestStreak: 0 } }
+        statsByGameMode: { 1: { highScore: 0 } }
     }
 
     yield put({ type: "server/PLAY_AS_GUEST", payload: guest })
