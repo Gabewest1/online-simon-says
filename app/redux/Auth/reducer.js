@@ -7,7 +7,8 @@ const {
     logout,
     giveSagasNavigator,
     playAsGuest,
-    register
+    register,
+    updateStats
 } = createActions(
     "LOGIN",
     "LOGIN_ERROR",
@@ -15,7 +16,8 @@ const {
     "LOGOUT",
     "GIVE_SAGAS_NAVIGATOR",
     "PLAY_AS_GUEST",
-    "REGISTER"
+    "REGISTER",
+    "UPDATE_STATS"
 )
 
 export const actions = {
@@ -25,7 +27,8 @@ export const actions = {
     logout,
     giveSagasNavigator,
     playAsGuest,
-    register
+    register,
+    updateStats
 }
 
 const initialState = {
@@ -51,5 +54,6 @@ export default handleActions({
         error: action.payload
     }),
     [logout]: (state, action) => initialState,
-    [register]: (state, action) => ({ ...state, isLoading: true })
+    [register]: (state, action) => ({ ...state, isLoading: true }),
+    [updateStats]: (state, action) => ({ ...state, info: action.payload })
 }, initialState)
