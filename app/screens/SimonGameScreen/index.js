@@ -13,6 +13,8 @@ import {
     selectors as simonGameSelectors
 } from "../../redux/SimonSaysGame"
 
+import { selectors as userSelectors } from "../../redux/Auth"
+
 import {
     actions as navigatorActions,
 } from "../../redux/Navigator"
@@ -60,10 +62,11 @@ const Timer = styled.Text`
     color: black;
 `
 const HighScoresView = styled.View`
-
+    
 `
 const Score = styled.Text`
-
+    color: white;
+    font-size: 24
 `
 const Players = ({ player1, player2, performingPlayer }) => {
     return (
@@ -73,10 +76,10 @@ const Players = ({ player1, player2, performingPlayer }) => {
         </PlayersView>
     )
 }
-const HighScores = ({ highscore }) => {
+const HighScores = ({ highScore }) => {
     return (
         <HighScoresView>
-            <Score>{ highscore }</Score>
+            <Score>High Score: { highScore }</Score>
         </HighScoresView>
     )
 }
@@ -110,7 +113,7 @@ class SimonGameScreen extends React.Component {
             )
         } else {
             return (
-                <HighScores highscore={ this.props.performingPlayer.statsByGameMode[1].bestStreak } />
+                <HighScores highScore={ this.props.highScore } />
             )
         }
     }
@@ -130,6 +133,7 @@ class SimonGameScreen extends React.Component {
 function mapStateToProps(state) {
     return {
         hasGameStarted: simonGameSelectors.hasGameStarted(state),
+        highScore: userSelectors.getHighScore(state),
         isGameOver: simonGameSelectors.isGameOver(state),
         isItMyTurn: simonGameSelectors.isItMyTurn(state),
         isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
@@ -150,6 +154,7 @@ SimonGameScreen.propTypes = {
     animateSimonPad: PropTypes.func.isRequired,
     gameMode: PropTypes.number.isRequired,
     hasGameStarted: PropTypes.bool.isRequired,
+    highScore: PropTypes.number.isRequired,
     isItMyTurn: PropTypes.bool.isRequired,
     isGameOver: PropTypes.bool.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
