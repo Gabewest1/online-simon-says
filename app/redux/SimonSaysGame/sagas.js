@@ -1,6 +1,7 @@
 import { delay } from "redux-saga"
 import { all, call, cancel, fork, put, race, select, take, takeEvery, takeLatest } from "redux-saga/effects"
 import { actions, selectors } from "./index"
+import { selectors as userSelectors } from "../Auth"
 import { actions as navigatorActions } from "../Navigator"
 
 export const ANIMATION_DURATION = 100
@@ -136,7 +137,7 @@ export const performTurnSaga = function* () {
         }
 
         movesPerformed++
-    }    
+    }
 }
 
 export const playerDisconnected = function* () {
@@ -153,14 +154,15 @@ export const playerDisconnected = function* () {
 }
 
 export const singlePlayerGameSaga = function* () {
-    const [ playerPerforming ] = yield select(selectors.getPlayers)
 
     while (!(yield select(selectors.isGameOver))) {
         yield call(setNextMove)
         yield call(displayMovesToPerform)
-        const didPlayerPassTurn = yield call(performPlayersTurn, playerPerforming)
+        const didPlayerPassTurn = yield call(performPlayersTurn)
         yield call(endTurn, didPlayerPassTurn)
     }
+
+    yield call(updateSinglePlayerStats)
 
     ScreenNavigator.push({
         screen: "GameOverScreen",
@@ -223,7 +225,7 @@ export const startShortTimer = function* () {
     yield put({ type: "PLAYER_TIMEDOUT" })
 }
 
-export const performPlayersTurn = function* (player) {
+export const performPlayersTurn = function* () {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
 
@@ -345,7 +347,7 @@ export const playerQuitMatchSaga = function* () {
         yield take(actions.playerQuitMatch)
 
         if (GAME_MODE === SINGLE_PLAYER) {
-            yield call(updateStats)
+            yield call(updateSinglePlayerStats)
         } else {
             yield put({ type: "server/PLAYER_QUIT_MATCH" })
         }
@@ -355,8 +357,25 @@ export const playerQuitMatchSaga = function* () {
     }
 }
 
-export const updateStats = function* () {
+export const updateSinglePlayerStats = function* () {
+    const playerPerforming = yield select(selectors.selectPerformingPlayer)    
+    const round = yield select(selectors.getCurrentRound)
 
+    console.log("IS PLAYER A GUEST:", playerPerforming.isAGuest)
+
+    if (playerPerforming.isAGuest) {
+        const currentHighScore = yield select(userSelectors.getHighScore)
+
+        const highScore = Math.max(currentHighScore, round)
+
+        console.log("CURRENT HIGHSCORE AND SCORE:", currentHighScore, highScore)
+
+        playerPerforming.statsByGameMode[SINGLE_PLAYER].highScore = highScore
+
+        yield put({ type: "UPDATE_STATS", payload: playerPerforming })
+    } else {
+        yield put({ type: "server/UPDATE_SINGLE_PLAYER_STATS", payload: { round }})
+    }
 }
 
 export default root
