@@ -3,6 +3,10 @@ const mongoose = require("mongoose")
 const socket = require("socket.io")
 const stopSubmit = require("redux-form").stopSubmit
 const User = require("./User.js")
+const colors = require("colors")
+
+//constant used in the socket action handlers
+const SINGLE_PLAYER = 1
 
 const app = express()
 
@@ -164,7 +168,7 @@ io.on("connection", socket => {
                 })
                 break
             }
-            case "server/UPDATE_PLAYERS_STATS": {
+            case "server/UPDATE_SINGLE_PLAYER_STATS": {
                 User.findOne({ username: socket.player.username }, (err, user) => {
                     if (err) {
                         console.log(err)
@@ -174,22 +178,65 @@ io.on("connection", socket => {
                         return
                     }
 
-                    const stats = action.payload
-                    const updateWinsOrLoses = stats.didWin ? "wins" : "loses"
-                    const currentStreak = stats.didWin ? user.statsByGameMode[stats.gameMode].currentStreak + 1 : 0
-                    const currentBestStreak = user.statsByGameMode[stats.gameMode].bestStreak
-                    const bestStreak = Math.max(currentStreak, currentBestStreak)
+                    const { round } = action.payload
+                    const currentHighScore = user.statsByGameMode[SINGLE_PLAYER].highScore
+                    const xpGained = round + (Math.floor(round / 10) * 10)
 
-                    user.xp += stats.xp
-                    user.statsByGameMode[stats.gameMode].matchesPlayed += 1
-                    user.statsByGameMode[stats.gameMode][`${updateWinsOrLoses}`] += 1
-                    user.statsByGameMode[stats.gameMode].currentStreak = currentStreak
-                    user.statsByGameMode[stats.gameMode].bestStreak = bestStreak
+                    user.xp += xpGained
+                    user.level = user.calculateLevel(user.xp)
+                    user.statsByGameMode[SINGLE_PLAYER].matchesPlayed += 1
+                    user.statsByGameMode[SINGLE_PLAYER].highScore = Math.max(currentHighScore, round)
 
+                    console.log("UPDATED SINGLE PLAYER STATS:".green, xpGained, Math.max(currentHighScore, round))
+                    
                     user.save((err, user) => {
                         if (err) {
                             console.log(err)
                         }
+
+                        console.log("SAVED SINGLE PLAYER STATS:")
+                        socket.player = user
+                        socket.emit("action", { type: "UPDATE_STATS", payload: user })
+                    })
+                })
+
+                break
+            }
+            case "server/UPDATE_MULITPLAYER_STATS": {
+                User.findOne({ username: socket.player.username }, (err, user) => {
+                    if (err) {
+                        console.log(err)
+                    }
+
+                    if (!user) {
+                        return
+                    }
+
+                    console.log("DID I MAKE IT THIS FAR".rainbow)
+
+                    const { didPlayerWin, gameMode, xpGained } = action.payload
+
+                    const updateWinsOrLoses = didPlayerWin ? "wins" : "loses"
+                    const currentStreak = didPlayerWin ? user.statsByGameMode[gameMode].currentStreak + 1 : 0
+                    const currentBestStreak = user.statsByGameMode[gameMode].bestStreak
+                    const bestStreak = Math.max(currentStreak, currentBestStreak)
+
+                    user.xp += xpGained
+                    user.level = user.calculateLevel(user.xp)
+                    user.statsByGameMode[gameMode].matchesPlayed += 1
+                    user.statsByGameMode[gameMode][`${updateWinsOrLoses}`] += 1
+                    user.statsByGameMode[gameMode].currentStreak = currentStreak
+                    user.statsByGameMode[gameMode].bestStreak = bestStreak
+
+                    console.log("UPDATED MULTIPLAYER STATS:".green, didPlayerWin, xpGained, bestStreak)
+                    user.save((err, user) => {
+                        if (err) {
+                            console.log(err)
+                        }
+
+                        console.log("SAVED MULTIPLAYER STATS:")
+                        socket.player = user
+                        socket.emit("action", { type: "UPDATE_STATS", payload: user })
                     })
                 })
 
