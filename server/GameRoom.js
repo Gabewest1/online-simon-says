@@ -34,6 +34,7 @@ class GameRoom {
         player.isEliminated = false
 
         this.syncPlayersArrayWithRedux()
+        player.emit("action", { type: "SET_GAME_MODE", payload: this.gameMode })
     }
     eliminatePlayer(playerToEliminate) {
         console.log("ELIMNATING PLAYER:", playerToEliminate.player)
@@ -75,7 +76,7 @@ class GameRoom {
             this.endTurn()
         } else if (this.currentMovesIndex === this.movesToPerform.length) {
             this.addNextMove(playersMove.pad)
-            this.endTurn()
+            setTimeout(() => this.endTurn(), 1)
         } else {
             this.currentMovesIndex++
 
@@ -99,6 +100,7 @@ class GameRoom {
         }
     }
     listenForNextMove() {
+        console.log("STARTING THE TIMER AND LISTENING FOR THE NEXT MOVE")
         if (this.currentMovesIndex === 0) {
             this.timer = this.startLongTimer()
         } else {
@@ -168,8 +170,6 @@ class GameRoom {
 
         this.performingPlayer = nextPlayerToPerform
         console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.player.username)
-        this.messageGameRoom({ type: "SET_PERFORMING_PLAYER", payload: this.performingPlayer.player })
-        this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
     startGame() {
         if (!this.gameStarted) {
@@ -188,52 +188,57 @@ class GameRoom {
         this.currentMovesIndex = 0
         this.increaseRound()
         this.messageGameRoom({ type: "RESET_TIMER" })
-        setTimeout(() => {
-            this.messageGameRoom({ type: "START_NEXT_TURN" })
-            setTimeout(() => {
-                this.listenForNextMove()
-            }, 1000)
-        }, 1000)
+        this.listenForNextMove()
+        this.messageGameRoom({ type: "SET_PERFORMING_PLAYER", payload: this.performingPlayer.player })
+        this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
     startLongTimer() {
         let timeTillPlayerTimesout = 15
 
-        return setInterval(() => {
+        const timer = setInterval(() => {
             this.messageGameRoom({ type: "DECREASE_TIMER" })
             timeTillPlayerTimesout--
 
-            if (timeTillPlayerTimesout <= 0) {
+            if (timeTillPlayerTimesout === 0) {
                 this.playerTimedOut()
+                clearInterval(timer)
             }
         }, 1000)
+
+        return timer
     }
     startShortTimer() {
         let timeTillPlayerTimesout = 3
 
-        return setInterval(() => {
+        const timer = setInterval(() => {
             timeTillPlayerTimesout--
 
-            if (timeTillPlayerTimesout <= 0) {
+            if (timeTillPlayerTimesout === 0) {
                 this.playerTimedOut()
+                clearInterval(timer)
             }
         }, 1000)
+
+        return timer
     }
     syncPlayersArrayWithRedux() {
         const players = this.players.map(socket => Object.assign(socket.player, { isEliminated: false }))
         this.messageGameRoom({ type: "SET_PLAYERS", payload: players })
     }
-    updatePlayersStats(player, didWin) {
+    updatePlayersStats(player) {
         //Update players stats as long as they arent a guest
         if (!player.player.isAGuest) {
-            let numPlayersBeaten = this.eliminatedPlayers.length
-            numPlayersBeaten -= !didWin ? 1 : 0
-            let xp = (numPlayersBeaten * 10) + this.round
-            xp += didWin ? ((this.gameMode * 5) + 10) : 0
-            const stats = { xp, gameMode: this.gameMode, didWin }
-
             console.log("ABOUT TO UPDATE:", player.player.username)
+            const gameMode = this.gameMode
+            const didPlayerWin = this.winner && (this.winner.player.username === player.player.username)
 
-            player.emit("action", { type: "server/UPDATE_PLAYERS_STATS", payload: stats })
+            let numPlayersBeaten = this.eliminatedPlayers.length
+            numPlayersBeaten -= didPlayerWin ? 0 : 1
+
+            let xpGained = (numPlayersBeaten * 10) + this.round
+            xpGained += didPlayerWin ? ((this.gameMode * 5) + 10) : 0
+
+            player.emit("action", { type: "server/UPDATE_MULITPLAYER_STATS", payload: { didPlayerWin, gameMode, xpGained } })
         }
     }
 }
