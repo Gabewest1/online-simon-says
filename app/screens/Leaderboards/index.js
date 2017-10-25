@@ -66,7 +66,7 @@ class Leaderboards extends React.Component {
                             </RankWrapper>
                             <PlayerStatsWrapper>
                                 <Player player={ player } />
-                                <Stats>Highscore: { player.statsByGameMode[1].bestStreak }</Stats>
+                                <Stats>Highscore: { player.statsByGameMode[1].highScore }</Stats>
                             </PlayerStatsWrapper>
                         </Container>
                     ))
