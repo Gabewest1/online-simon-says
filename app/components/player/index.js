@@ -15,8 +15,14 @@ const IconView = styled.View`
 const Level = styled.Text`
     position: absolute;
     color: white;
+    background-color: transparent;
 `
-const Name = styled.Text``
+const Name = styled.Text`
+
+`
+const Image = styled.Image`
+    margin: 10px;
+`
 
 class Player extends React.Component {
     render() {
@@ -25,7 +31,7 @@ class Player extends React.Component {
         return (
             <PlayerView { ...this.props }>
                 <IconView>
-                    <Icon size={ 50 } name="star" />
+                    <Image source={ require("../../assets/images/level.png") } />
                     <Level>{ level }</Level>
                 </IconView>
                 <Name>{ username }</Name>
