@@ -158,7 +158,7 @@ io.on("connection", socket => {
                 break
             }
             case "server/FETCH_LEADERBOARD_DATA": {
-                User.find({}).sort({"statsByGameMode.1.bestStreak": -1}).limit(10).exec((err, users) => {
+                User.find({}).sort({"statsByGameMode.1.highScore": -1}).limit(10).exec((err, users) => {
                     if (err) {
                         console.log(err)
                     }
