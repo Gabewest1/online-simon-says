@@ -23,7 +23,10 @@ const root = function* () {
         createPrivateMatchSaga(),
         invitePlayerSaga(),
         receiveGameInviteSaga(),
-        playerQuitMatchSaga()
+        playerQuitMatchSaga(),
+        playerReadySaga(),
+        playerNotReadySaga(),
+        gotoGameScreenSaga()
     ]
 }
 export const getNavigator = function* () {
@@ -346,6 +349,20 @@ export const receiveGameInviteSaga = function* () {
     }
 }
 
+export const playerReadySaga = function* () {
+    while (true) {
+        yield take(actions.playerReady)
+        yield put({ type: "server/PLAYER_READY" })
+    }
+}
+
+export const playerNotReadySaga = function* () {
+    while (true) {
+        yield take(actions.playerNotReady)
+        yield put({ type: "server/PLAYER_NOT_READY" })
+    }
+}
+
 export const playerQuitMatchSaga = function* () {
     while (true) {
         yield take(actions.playerQuitMatch)
@@ -361,6 +378,17 @@ export const playerQuitMatchSaga = function* () {
     }
 }
 
+export const gotoGameScreenSaga = function* () {
+    while (true) {
+        const { payload: gameMode } = yield take("GO_TO_GAME_SCREEN")
+
+        ScreenNavigator.push({
+            screen: "SimonGameScreen",
+            passProps: { gameMode },
+            overrideBackPress: true
+        })
+    }
+}
 export const updateSinglePlayerStats = function* () {
     const playerPerforming = yield select(selectors.selectPerformingPlayer)    
     const round = yield select(selectors.getCurrentRound)

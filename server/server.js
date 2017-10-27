@@ -293,13 +293,30 @@ io.on("connection", socket => {
                 break
             }
             case "server/ANIMATE_SIMON_PAD": {
-                let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+                const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.handleSimonMove(action.payload)
                 break
             }
+            case "server/PLAYER_READY": {
+                const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+                gameRoom.playerReady(socket)
+                break
+            }
+            case "server/PLAYER_NOT_READY": {
+                const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+                gameRoom.playerNotReady(socket)
+                break
+            }
             case "server/PLAYER_READY_TO_START": {
-                let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+                const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.playerReadyToStart(socket)
+                break
+            }
+            case "server/START_GAME": {
+                const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+                const gameMode = gameRoom.players.length
+                gameRoom.startGame()
+                socket.emit("action", { type: "GO_TO_GAME_SCREEN", payload: gameMode })
                 break
             }
             default:

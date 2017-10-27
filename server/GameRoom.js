@@ -4,6 +4,7 @@ class GameRoom {
         this.gameMode = gameMode
         this.playersNeededToStart = gameMode
         this.players = []
+        this.playersRedux = []
         this.playersReady = []
         this.playersReadyToStart = []
         this.eliminatedPlayers = []
@@ -31,7 +32,6 @@ class GameRoom {
         this.players.push(player)
 
         player.gameRoom = { id: this.id, gameMode: this.gameMode }
-        player.isEliminated = false
 
         this.syncPlayersArrayWithRedux()
         player.emit("action", { type: "SET_GAME_MODE", payload: this.gameMode })
@@ -91,7 +91,7 @@ class GameRoom {
         this.messageGameRoom({ type: "INCREASE_ROUND_COUNTER" })
     }
     isGameOver() {
-        const numPlayersLeft = this.playersNeededToStart - this.eliminatedPlayers.length
+        const numPlayersLeft = this.players.filter(({ player }) => !player.isEliminated).length
         console.log("NUMBER OF PLAYERS LEFT:", numPlayersLeft)
         if (numPlayersLeft <= 1) {
             return true
@@ -135,14 +135,29 @@ class GameRoom {
         this.endTurn()
     }
     playerReady(player) {
-        if (this.playersReady.indexOf(player) === -1) {
-            this.playersReady.push(player)
-
-            if (this.playersReady.length === this.players.length) {
-                this.playersReady = []
-                this.endTurn()
+        this.playersRedux = this.playersRedux.map(p => {
+            if (p.username === player.player.username) {
+                return Object.assign(p, { isReady: true })
             }
-        }
+
+            return p
+        })
+
+        this.syncPlayersArrayWithRedux()
+    }
+    playerNotReady(player) {
+        console.log("ENTERING PLAYER NOT READY".blue)
+        this.playersRedux = this.playersRedux.map(p => {
+            console.log(`${player.player.username} === ${p.username}`.america)
+            if (p.username === player.player.username) {
+                console.log("FOUND PLAYER TO MAKE NOT READY".green)
+                return Object.assign(p, { isReady: false })
+            }
+
+            return p
+        })
+
+        this.syncPlayersArrayWithRedux()
     }
     playerReadyToStart(player) {
         if (this.playersReadyToStart.indexOf(player) === -1) {
@@ -162,7 +177,7 @@ class GameRoom {
         let indexOfCurrentPlayer = this.players.indexOf(this.performingPlayer)
         let counter = 1
         let nextPlayerToPerform = this.players[(indexOfCurrentPlayer + counter) % this.players.length]
-        console.log("About to set the next player...", this.playersNeededToStart - this.eliminatedPlayers.length)
+        console.log("About to set the next player...", this.players.filter(({ player }) => !player.isEliminated).length)
         while (nextPlayerToPerform.player.isEliminated) {
             counter++
             nextPlayerToPerform = this.players[(indexOfCurrentPlayer + counter) % this.players.length]
@@ -222,8 +237,20 @@ class GameRoom {
         return timer
     }
     syncPlayersArrayWithRedux() {
-        const players = this.players.map(socket => Object.assign(socket.player, { isEliminated: false }))
-        this.messageGameRoom({ type: "SET_PLAYERS", payload: players })
+        this.playersRedux = this.players.map(socket => {
+            const player = this.playersRedux.find(player => player.username === socket.player.username)
+            console.log("LOOKING FOR PLAYER TO SYNC:", player)
+            const playerFromSocket = socket.player.isAGuest ? socket.player : socket.player._doc
+
+            return Object.assign(
+                {},
+                playerFromSocket,
+                { isEliminated: false },
+                { isReady: player ? player.isReady : false }
+            )
+        })
+
+        this.messageGameRoom({ type: "SET_PLAYERS", payload: this.playersRedux })
     }
     updatePlayersStats(player) {
         //Update players stats as long as they arent a guest

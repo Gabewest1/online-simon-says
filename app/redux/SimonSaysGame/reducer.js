@@ -34,7 +34,9 @@ const {
     createPrivateMatch,
     playerAcceptedChallenge,
     playerDeclinedChallenge,
-    playerQuitMatch
+    playerQuitMatch,
+    playerReady,
+    playerNotReady
 } = createActions(
     "SIMON_PAD_CLICKED",
     "ANIMATE_SIMON_PAD",
@@ -68,7 +70,9 @@ const {
     "CREATE_PRIVATE_MATCH",
     "PLAYER_ACCEPTED_CHALLENGE",
     "PLAYER_DECLINED_CHALLENGE",
-    "PLAYER_QUIT_MATCH"
+    "PLAYER_QUIT_MATCH",
+    "PLAYER_READY",
+    "PLAYER_NOT_READY"
 )
 
 export const actions = {
@@ -104,7 +108,9 @@ export const actions = {
     createPrivateMatch,
     playerAcceptedChallenge,
     playerDeclinedChallenge,
-    playerQuitMatch
+    playerQuitMatch,
+    playerReady,
+    playerNotReady
 }
 
 const padsReducerInitialState = [
