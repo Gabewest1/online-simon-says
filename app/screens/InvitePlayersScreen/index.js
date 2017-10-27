@@ -20,6 +20,15 @@ import {
 import { actions as navigatorActions } from "../../redux/Navigator"
 
 class InvitePlayersScreen extends React.Component {
+    static navigatorButtons = {
+        rightButtons: [
+            {
+                title: "Quit",
+                id: "quit"
+            }
+        ],
+        leftButtons: []
+    }
     constructor(props) {
         super(props)
 
@@ -29,7 +38,7 @@ class InvitePlayersScreen extends React.Component {
         props.navigator.setOnNavigatorEvent(this.handleBack)
     }
     handleBack({ id }) {
-        if (id === "backPress") {
+        if (id === "backPress" || id === "quit") {
             console.log("EXIT ACTION:", this.props)
             this.props.showBackoutWarningMessage({
                 stay: { type: "STAY", onPress: this.props.stay },

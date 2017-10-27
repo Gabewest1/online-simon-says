@@ -27,8 +27,12 @@ const Text = styled.Text`
     font-size: 14;
     font-weight: 100;
 `
-
 class QuitModal extends React.Component {
+    static navigatorStyle = {
+        screenBackgroundColor: 'transparent',
+        modalPresentationStyle: 'overFullScreen',
+        navBarHidden: true
+      }
     render() {
         const width = this.props.width || 250
         const height = this.props.height || 200

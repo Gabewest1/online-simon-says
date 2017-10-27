@@ -22,12 +22,12 @@ export const watchShowExitMessage = function* () {
 export const showExitMessageSaga = function* (action) {
     const { stay, exit } = action.payload
 
-    ReactNativeNavigator.showLightBox({
+    ReactNativeNavigator.showModal({
         screen: "QuitModal",
         passProps: { stay: stay.onPress, exit: exit.onPress },
         style: {
             backgroundBlur: "dark",
-            backgroundColor: "#00000080"
+            backgroundColor: "#0000060"
         }
     })
 
@@ -36,7 +36,7 @@ export const showExitMessageSaga = function* (action) {
         playerLeft: take(exit.type)
     })
 
-    ReactNativeNavigator.dismissLightBox()
+    ReactNativeNavigator.dismissModal()
 
     if (playerLeft) {
         ReactNativeNavigator.resetTo({
