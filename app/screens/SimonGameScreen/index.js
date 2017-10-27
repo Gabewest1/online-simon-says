@@ -84,6 +84,15 @@ const HighScores = ({ highScore }) => {
     )
 }
 class SimonGameScreen extends React.Component {
+    static navigatorButtons = {
+        rightButtons: [
+            {
+                title: "Quit",
+                id: "quit"
+            }
+        ],
+        leftButtons: [],
+    }
     componentWillMount() {
         this.props.startGame(this.props.gameMode)
 
@@ -92,7 +101,8 @@ class SimonGameScreen extends React.Component {
         this.props.navigator.setOnNavigatorEvent(this.handleBack)
     }
     handleBack({ id }) {
-        if (id === "backPress") {
+        console.log("BUTTON ID:", id)
+        if (id === "backPress" || id === "quit") {
             this.props.showBackoutWarningMessage({
                 stay: { type: "STAY", onPress: this.props.stay },
                 exit: { type: "PLAYER_QUIT_MATCH", onPress: this.props.playerQuitMatch }
