@@ -1,4 +1,6 @@
 const GameRoom = require("./GameRoom")
+const PrivateGameRoom = require("./PrivateGameRoom")
+const createHash = require('hash-generator')
 
 const TWO_PLAYER_GAME = 2
 const THREE_PLAYER_GAME = 3
@@ -7,13 +9,7 @@ const PRIVATE_GAME = 5
 
 class GameRoomManager {
     constructor(serverSocket) {
-        this.gameRooms = {
-            [TWO_PLAYER_GAME]: [],
-            [THREE_PLAYER_GAME]: [],
-            [FOUR_PLAYER_GAME]: []
-        }
-        this.privateGameRooms = []
-        this.gameRoomCounter = 0
+        this.gameRoomsById = {}
         this.socket = serverSocket
     }
 
@@ -32,41 +28,46 @@ class GameRoomManager {
     }
 
     createGameRoom(gameMode) {
-        const newGameRoom = new GameRoom(this.gameRoomCounter++, gameMode)
+        const id = createHash(8)
+        const newGameRoom = new GameRoom(id, gameMode)
 
-        this.gameRooms[gameMode].push(newGameRoom)
+        this.gameRoomsById[id] = newGameRoom
 
         return newGameRoom
     }
 
     createPrivateMatch(player) {
-        const newGameRoom = new GameRoom(this.gameRoomCounter++, PRIVATE_GAME)
+        const id = createHash(8)
+        const newGameRoom = new PrivateGameRoom(id, PRIVATE_GAME)
 
         newGameRoom.addPlayer(player)
 
-        this.privateGameRooms.push(newGameRoom)
+        this.gameRoomsById[id] = newGameRoom
     }
-    
-    getOpenGame(gameMode) {
-        const gameRooms = this.gameRooms[gameMode]
-        const openGameRoom = gameRooms.find(room => room.players.length < room.playersNeededToStart && !room.gameStarted)
 
-        return openGameRoom || this.createGameRoom(gameMode)
+    getOpenGame(gameMode) {
+        for (let id in this.gameRoomsById) {
+            const gameRoom = this.gameRoomsById[id]
+            const isGameRoomOpen = gameRoom.players.length < gameRoom.playersNeededToStart && !gameRoom.gameStarted
+
+            if (isGameRoomOpen) {
+                return gameRoom
+            }
+        }
+
+        return this.createGameRoom(gameMode)
     }
 
     findPlayersGameRoom(player) {
         console.log("LOOKING FOR PLAYERS GAME ROOM:", player.gameRoom)
         let gameRoom
+
         if (player.gameRoom) {
-            const { id, gameMode } = player.gameRoom
+            const { id } = player.gameRoom
 
-            if (gameMode === PRIVATE_GAME) {
-                gameRoom = this.privateGameRooms.find(room => room.id === id)
-            } else {
-                gameRoom = this.gameRooms[gameMode].find(room => room.id === id)
-            }
-
+            gameRoom = this.gameRoomsById[id]
         }
+
         console.log(`${gameRoom ? "found" : "No"} gameroom for player`)
 
         return gameRoom
