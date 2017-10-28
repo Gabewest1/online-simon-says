@@ -17,6 +17,9 @@ const Container = styled(Background)`
 `
 
 class StartingScreen extends React.Component {
+    static navigatorStyle = {
+        navBarHidden: true
+    }
     constructor(props) {
         super(props)
 
