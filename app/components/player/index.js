@@ -21,7 +21,7 @@ const Name = styled.Text`
 
 `
 const Image = styled.Image`
-    margin: 10px;
+    
 `
 
 class Player extends React.Component {
@@ -31,10 +31,10 @@ class Player extends React.Component {
         return (
             <PlayerView { ...this.props }>
                 <IconView>
-                    <Image source={ require("../../assets/images/level.png") } />
-                    <Level>{ level }</Level>
+                    <Image { ...this.props.icon } source={ require("../../assets/images/level.png") } />
+                    <Level { ...this.props.level }>{ level }</Level>
                 </IconView>
-                <Name>{ username }</Name>
+                <Name { ...this.props.name }>{ username }</Name>
             </PlayerView>
         )
     }
