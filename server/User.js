@@ -59,7 +59,7 @@ function generateLevelMap() {
         levelToXpMap[level] = fn(level)
     }
 
-    console.log("LEVELTOXP MAP:", levelToXpMap)
+    // console.log("LEVELTOXP MAP:", levelToXpMap)
 
     return levelToXpMap
 }
