@@ -5,7 +5,10 @@ class PrivateGameRoom extends GameRoom {
         super(id, gameMode)
     }
     isGameRoomReady() {
-        return !this.playersRedux.find(p => !p.isReady)
+        const thereIsMoreThanOnePlayer = this.playersRedux.length > 1
+        const numPlayersNotReady = this.playersRedux.filter(player => !player.isReady).length
+
+        return thereIsMoreThanOnePlayer && numPlayersNotReady === 0
     }
     playerReady(player) {
         this.playersRedux = this.playersRedux.map(p => {
