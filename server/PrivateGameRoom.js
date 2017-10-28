@@ -4,83 +4,46 @@ class PrivateGameRoom extends GameRoom {
     constructor(id, gameMode) {
         super(id, gameMode)
     }
-    animateSimonPad(pad) {
-        super.animateSimonPad(pad)
-    }
-    addNextMove(move) {
-        super.addNextMove(move)
-    }
-    addPlayer(player) {
-        super.addPlayer(player)
-    }
-    eliminatePlayer(playerToEliminate) {
-        super.eliminatePlayer(playerToEliminate)
-    }
-    endTurn() {
-        super.endTurn()
-    }
-    endGame() {
-        super.endGame()
-    }
-    handleSimonMove(playersMove) {
-        super.handleSimonMove(playersMove)
-    }
     isGameRoomReady() {
-        super.isGameRoomReady()
-    }
-    increaseRound() {
-        super.increaseRound()
-    }
-    isGameOver() {
-        super.isGameOver()
-    }
-    listenForNextMove() {
-        super.listenForNextMove()
-    }
-    messageGameRoom(action, filterPlayers) {
-        super.messageGameRoom(action, filterPlayers)
-    }
-    playerLostConnection(thisPlayer) {
-        super.playerLostConnection(thisPlayer)
-    }
-    playerTimedOut() {
-        super.playerTimedOut()
+        return !this.playersRedux.find(p => !p.isReady)
     }
     playerReady(player) {
-        super.playerReady(player)
+        this.playersRedux = this.playersRedux.map(p => {
+            if (p.username === player.player.username) {
+                return Object.assign(p, { isReady: true })
+            }
+
+            return p
+        })
+
+        super.syncPlayersArrayWithRedux()
+
+        if (this.isGameRoomReady()) {
+            this.startGame()
+        }
     }
     playerNotReady(player) {
-        super.playerNotReady(player)
-    }
-    playerReadyToStart(player) {
-        super.playerReadyToStart(player)
-    }
-    removePlayer(playerToRemove) {
-        super.removePlayer(playerToRemove)
-    }
-    setNextPlayer() {
-        super.setNextPlayer()
-    }
-    startGame() {
-        super.startGame()
-    }
-    startFirstTurn() {
-        super.startFirstTurn()
-    }
-    startNextTurn() {
-        super.startNextTurn()
-    }
-    startLongTimer() {
-        super.startLongTimer()
-    }
-    startShortTimer() {
-        super.startShortTimer()
-    }
-    syncPlayersArrayWithRedux() {
+        console.log("ENTERING PLAYER NOT READY".blue)
+        this.playersRedux = this.playersRedux.map(p => {
+            console.log(`${player.player.username} === ${p.username}`.america)
+            if (p.username === player.player.username) {
+                console.log("FOUND PLAYER TO MAKE NOT READY".green)
+                return Object.assign(p, { isReady: false })
+            }
+
+            return p
+        })
+
         super.syncPlayersArrayWithRedux()
     }
-    updatePlayersStats(player) {
-        super.updatePlayersStats(player)
+    startGame() {
+        console.log("STARTING THE GAME, IS IT READY:".yellow, this.gameStarted)
+        if (!this.gameStarted) {
+            this.gameStarted = true
+            this.performingPlayer = this.players[0]
+            this.gameMode = this.players.length
+            this.messageGameRoom({ type: "GO_TO_GAME_SCREEN", payload: this.gameMode })
+        }
     }
 }
 
