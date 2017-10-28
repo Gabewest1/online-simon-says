@@ -151,7 +151,8 @@ export const playerDisconnected = function* () {
         ScreenNavigator.showInAppNotification({
             screen: "PlayerDisconnectedMessage",
             passProps: { player: action.payload },
-            autoDismissTimerSec: 3
+            autoDismissTimerSec: 3,
+            position: "bottom"
         })
     }
 }
@@ -323,7 +324,8 @@ export const receiveGameInviteSaga = function* () {
         ScreenNavigator.showInAppNotification({
             screen: "GameInvitationNotification",
             passProps: { player },
-            autoDismissTimerSec: 7
+            autoDismissTimerSec: 7,
+            position: "bottom"
         })
 
         const { playerAccepted } = yield race({
