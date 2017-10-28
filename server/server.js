@@ -42,7 +42,7 @@ io.on("connection", socket => {
 
         //Cancel matchmaking if player was looking for a match
         if (gameRoom) {
-            if(!gameRoom.gameStarted) {
+            if (!gameRoom.gameStarted) {
                 gameRoomManager.cancelSearch(socket)
             } else {
                 gameRoom.playerLostConnection(socket)
