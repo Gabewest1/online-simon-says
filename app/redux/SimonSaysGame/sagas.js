@@ -16,7 +16,7 @@ const root = function* () {
     yield [
         cancelPrivateMatch(),
         watchSimonGameSaga(),
-        watchFindMatch(),
+        findMatchSaga(),
         watchAnimateSimonPadOnline(),
         getNavigator(),
         playerDisconnected(),
@@ -40,23 +40,22 @@ export const watchAnimateSimonPadOnline = function* () {
     }
 }
 
-export const watchFindMatch = function* () {
+export const findMatchSaga = function* () {
     while (true) {
         const { payload: gameMode } = yield take(actions.findMatch)
 
         yield put({ type: "server/FIND_MATCH", gameMode })
 
-        const { cancelSearch, foundMatch } = yield race({
+        const { cancelSearch, foundMatch, playerJoinedPrivateMatch } = yield race({
             cancelSearch: take(actions.cancelSearch),
-            foundMatch: take(actions.foundMatch)
+            foundMatch: take(actions.foundMatch),
+            playerJoinedPrivateMatch: take(actions.playerAcceptedChallenge)
         })
 
-        //I'm passing in the gameMode as a payload even though on the server my
-        //GameRoomManager doesn't use a gameMode to cancel a search. But, passing
-        //in the gameMode could be used a performance boost for finding the players
-        //game room and canceling their search.
-        if (cancelSearch) {
-            yield put({ type: "server/CANCEL_SEARCH", payload: gameMode })
+        console.log("RECIEVED THE PLAYER JOINED IN THE WATCHFINDMATCH")
+        if (cancelSearch || playerJoinedPrivateMatch) {
+            console.log("SENDING SERVER CANCEL_SEARCH")
+            yield put({ type: "server/CANCEL_SEARCH" })
         } else {
             ScreenNavigator.push({
                 screen: "SimonGameScreen",
@@ -333,13 +332,15 @@ export const receiveGameInviteSaga = function* () {
             playerDeclined: take(actions.playerDeclinedChallenge),
             playerDidntRespond: call(delay, 7000)
         })
-
+        console.log("ACCEPTED THE CHALLENGE AND DISMISSING THE NOTIFICATION")
         ScreenNavigator.dismissInAppNotification({
             screen: "GameInvitationNotification"
         })
-
+        console.log("THE NOTIFICATION HAS BEEN DISMISSED")
         if (playerAccepted) {
+            console.log("ABOUT THE SEND THE SERVER A JOIN_PRIVATE_MATCH")
             yield put({ type: "server/JOIN_PRIVATE_MATCH", payload: { gameRoom } })
+            console.log("WAITING FOR THE JOINED_PRIVATE_MATCH")
             yield take("JOINED_PRIVATE_MATCH")
             ScreenNavigator.push({
                 screen: "InvitePlayersScreen",
