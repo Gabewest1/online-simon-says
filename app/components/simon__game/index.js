@@ -155,7 +155,7 @@ class SimonGame extends React.Component {
 SimonGame.propTypes = {
     gameMode: PropTypes.number.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
-    onPressIn: PropTypes.func.isRequired,
+    onPress: PropTypes.func.isRequired,
     pads: PropTypes.array.isRequired,
     round: PropTypes.number.isRequired
 }
