@@ -1,3 +1,4 @@
+import { Platform } from "react-native"
 import { put, race, take, takeLatest } from "redux-saga/effects"
 import { actions } from "./reducer"
 
@@ -22,12 +23,24 @@ export const watchShowExitMessage = function* () {
 export const showExitMessageSaga = function* (action) {
     const { stay, exit } = action.payload
 
-    ReactNativeNavigator.showModal({
+    //Lightbox doesn't work properly on ios
+    //Modal doesn't work properly on android
+    const showModalOrLightbox = Platform.select({
+        ios: ReactNativeNavigator.showModal,
+        android: ReactNativeNavigator.showLightBox
+    })
+
+    const dismissModalOrLightbox = Platform.select({
+        ios: ReactNativeNavigator.dismissModal,
+        android: ReactNativeNavigator.dismissLightBox
+    })
+
+    showModalOrLightbox({
         screen: "QuitModal",
         passProps: { stay: stay.onPress, exit: exit.onPress },
         style: {
             backgroundBlur: "dark",
-            backgroundColor: "#0000060"
+            backgroundColor: "#00000060"
         }
     })
 
@@ -36,7 +49,7 @@ export const showExitMessageSaga = function* (action) {
         playerLeft: take(exit.type)
     })
 
-    ReactNativeNavigator.dismissModal()
+    dismissModalOrLightbox()
 
     if (playerLeft) {
         ReactNativeNavigator.resetTo({
