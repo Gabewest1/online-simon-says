@@ -97,7 +97,7 @@ export const multiplayerGameSaga = function* (gameMode) {
     yield put({ type: "server/PLAYER_READY_TO_START" })
     yield takeEvery("PERFORM_YOUR_TURN", performTurnSaga)
     yield take("GAME_OVER")
-    
+
     const winner = yield select(selectors.getWinner)
 
     ScreenNavigator.resetTo({
