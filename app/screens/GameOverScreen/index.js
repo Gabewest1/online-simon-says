@@ -27,7 +27,7 @@ class GameOverScreen extends React.Component {
         this.props.resetGame()
     }
     findNextMatch() {
-        this.props.navigator.resetTo({
+        this.props.navigator.push({
             screen: "FindMatchScreen",
             title: "",
             animated: true,
