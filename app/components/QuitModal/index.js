@@ -32,7 +32,7 @@ class QuitModal extends React.Component {
         screenBackgroundColor: 'transparent',
         modalPresentationStyle: 'overFullScreen',
         navBarHidden: true
-      }
+    }
     render() {
         const width = this.props.width || 250
         const height = this.props.height || 200
