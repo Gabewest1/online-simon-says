@@ -1,4 +1,5 @@
 import React from "react"
+import { TouchableOpacity, InteractionManager } from "react-native"
 import PropTypes from "prop-types"
 import styled from "styled-components/native"
 import { connect } from "react-redux"
@@ -25,6 +26,11 @@ const Buttons = styled.View`
 `
 
 class GameInvitationNotification extends React.Component {
+    handleOnPress(fn) {
+        InteractionManager.runAfterInteractions(() => {
+            fn()
+        })
+    }
     render() {
         const { player, playerAcceptedChallenge, playerDeclinedChallenge } = this.props
 
@@ -33,13 +39,17 @@ class GameInvitationNotification extends React.Component {
                 <Player player={ player } />
                 <Buttons>
                     <Button
-                        buttonStyle={{ backgroundColor: "green" }}
+                        Component={ TouchableOpacity }
+                        backgroundColor="green"
                         title="Accept"
-                        onPress={ playerAcceptedChallenge } />
+                        raised
+                        onPress={ () => this.handleOnPress(playerAcceptedChallenge) } />
                     <Button
-                        buttonStyle={{ backgroundColor: "red" }}
+                        Component={ TouchableOpacity }
+                        backgroundColor="red"
                         title="Decline"
-                        onPress={ playerDeclinedChallenge } />
+                        raised
+                        onPress={ () => this.handleOnPress(playerDeclinedChallenge) } />
                 </Buttons>
             </Message>
         )
