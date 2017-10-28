@@ -24,12 +24,6 @@ import { selectors as userSelectors } from "../../redux/Auth"
 const InvitedPlayerView = styled.View`
 
 `
-const Countdown = styled.View`
-
-`
-const TimeLeft = styled.Text`
-
-`
 
 class InvitePlayersScreen extends React.Component {
     static navigatorButtons = {
@@ -44,22 +38,10 @@ class InvitePlayersScreen extends React.Component {
     constructor(props) {
         super(props)
 
-        this.state = {
-            timeLeft: 3,
-        }
-
-        this.timer = undefined
         this.validate = this.validate.bind(this)
         this.handleBack = this.handleBack.bind(this)
-        this.handleTimer = this.handleTimer.bind(this)
 
         props.navigator.setOnNavigatorEvent(this.handleBack)
-    }
-    arePlayersReadyToStart() {
-        const thereIsMoreThanOnePlayer = this.props.players.length > 1
-        const numPlayersNotReady = this.props.players.filter(player => !player.isReady).length
-
-        return thereIsMoreThanOnePlayer && numPlayersNotReady === 0
     }
     handleBack({ id }) {
         if (id === "backPress" || id === "quit") {
@@ -68,16 +50,6 @@ class InvitePlayersScreen extends React.Component {
                 stay: { type: "STAY", onPress: this.props.stay },
                 exit: { type: "CANCEL_PRIVATE_MATCH", onPress: this.props.cancelPrivateMatch }
             })
-        }
-    }
-    handleTimer() {
-        const timeLeft = this.state.timeLeft - 1
-
-        if (timeLeft >= 0) {
-            this.setState({ timeLeft })
-        } else {
-            this.timer = clearInterval(this.timer)
-            this.props.dispatch({ type: "server/START_GAME" })
         }
     }
     validate(values) {
@@ -97,25 +69,9 @@ class InvitePlayersScreen extends React.Component {
             throw new SubmissionError(errors)
         }
     }
-    shouldRenderCountdown() {
-        const hasTheTimerStarted = this.timer
-        const isEveryoneReady = this.arePlayersReadyToStart()
-
-        if (isEveryoneReady && !hasTheTimerStarted) {
-            this.timer = setInterval(this.handleTimer, 1000)
-
-            return true
-        } else if (!isEveryoneReady && hasTheTimerStarted) {
-            this.timer = clearInterval(this.timer)
-            this.setState({ timeLeft: 3 })
-        }
-
-        return false
-    }
     render() {
         return (
             <Background>
-                { this.shouldRenderCountdown() && this.renderCountdown() }
                 <Field
                     searchBar
                     name="username"
@@ -147,13 +103,6 @@ class InvitePlayersScreen extends React.Component {
                         this.props.playerNotReady
                     } />
             </InvitedPlayerView>)
-        )
-    }
-    renderCountdown() {
-        return (
-            <Countdown>
-                <TimeLeft>{ this.state.timeLeft }</TimeLeft>
-            </Countdown>
         )
     }
 }
