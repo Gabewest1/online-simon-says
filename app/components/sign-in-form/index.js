@@ -17,7 +17,7 @@ const Form = styled.View`
     justify-content: center;
     width: 280;
 `
-const SignUpText = styled.Text`
+const PlayAsGuest = styled.Text`
     color: white;
     border-bottom-width: 2;
     border-color: white;
@@ -42,8 +42,9 @@ class SignInForm extends React.Component {
     }
     validate(values) {
         Keyboard.dismiss()
-        values.username = values.username.toLowerCase().trim()
-        values.password = values.password.toLowerCase().trim()
+
+        values.username = values.username && values.username.toLowerCase().trim()
+        values.password = values.password && values.password.toLowerCase().trim()
 
         let errors = {}
 
@@ -71,7 +72,6 @@ class SignInForm extends React.Component {
                     type="password"
                     component={ Input }
                     placeholder="password" />
-                <SignUpText onPress={ () => this.props.playAsGuest() }>Play as Guest</SignUpText>
                 <ListItem
                     style={{ marginTop: 25 }}
                     onPress={ handleSubmit(this.validate) }
@@ -79,11 +79,13 @@ class SignInForm extends React.Component {
                         Login
                 </ListItem>
                 <ListItem
-                    style={{ marginTop: 15 }}
+                    style={{ marginVertical: 25 }}
                     onPress={ this.gotoSignUpScreen }
                     icon={{name: "border-color"}}>
                             Sign Up
                 </ListItem>
+
+                <PlayAsGuest onPress={ () => this.props.playAsGuest() }>Play as Guest</PlayAsGuest>
             </Form>
         )
     }
