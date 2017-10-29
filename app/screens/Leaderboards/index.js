@@ -1,5 +1,5 @@
 import React from "react"
-import { Dimensions, StyleSheet } from "react-native"
+import { Dimensions, StyleSheet, FlatList } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
@@ -17,6 +17,8 @@ const Container = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    borderWidth: 1;
+    borderColor: black;
 `
 const PlayerStatsWrapper = styled.View`
     alignItems: center;
@@ -33,7 +35,7 @@ const RankWrapper = styled.View`
     align-items: center;
     flex-direction: row;
     justify-content: center;
-    width: 30;
+    width: 40;
 `
 const Rank = styled.Text`
     color: black;
@@ -42,6 +44,13 @@ const styles = StyleSheet.create({
     icon: {
         marginHorizontal: 10,
         marginVertical: 10
+    },
+    list: {
+        backgroundColor: "white",
+        width: Dimensions.get("window").width
+    },
+    name: {
+        color: "black"
     }
 })
 
@@ -63,23 +72,30 @@ class Leaderboards extends React.Component {
     }
     renderLeaderboard() {
         return (
-            <List style={{ backgroundColor: "white", width: Dimensions.get("window").width }}>
-                {
-                    this.props.players.map((player, index) => (
-                        <Container key={ player.username }>
-                            <RankWrapper>
-                                <Rank>{ index + 1}</Rank>
-                            </RankWrapper>
-                            <PlayerStatsWrapper>
-                                <Player
-                                    player={ player }
-                                    icon={{ style: styles.icon }} />
-                                <Stats>Highscore: { player.statsByGameMode[1].highScore }</Stats>
-                            </PlayerStatsWrapper>
-                        </Container>
-                    ))
-                }
+            <List style={ styles.list }>
+                <FlatList
+                    data={ this.props.players }
+                    renderItem={ this.renderPlayer } />
+
             </List>
+        )
+    }
+    renderPlayer({ item, index }) {
+        console.log("PLAYER:", item)
+
+        return (
+            <Container key={ item.username }>
+                <RankWrapper>
+                    <Rank>{ index + 1}</Rank>
+                </RankWrapper>
+                <PlayerStatsWrapper>
+                    <Player
+                        player={ item }
+                        icon={{ style: styles.icon }}
+                        name={{ style: styles.name }} />
+                    <Stats>Highscore: { item.statsByGameMode[1].highScore }</Stats>
+                </PlayerStatsWrapper>
+            </Container>
         )
     }
 }
