@@ -1,5 +1,5 @@
 import React from "react"
-import { Dimensions } from "react-native"
+import { Dimensions, StyleSheet } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
@@ -38,6 +38,12 @@ const RankWrapper = styled.View`
 const Rank = styled.Text`
     color: black;
 `
+const styles = StyleSheet.create({
+    icon: {
+        marginHorizontal: 10,
+        marginVertical: 10
+    }
+})
 
 class Leaderboards extends React.Component {
     componentWillMount() {
@@ -65,7 +71,9 @@ class Leaderboards extends React.Component {
                                 <Rank>{ index + 1}</Rank>
                             </RankWrapper>
                             <PlayerStatsWrapper>
-                                <Player player={ player } />
+                                <Player
+                                    player={ player }
+                                    icon={{ style: styles.icon }} />
                                 <Stats>Highscore: { player.statsByGameMode[1].highScore }</Stats>
                             </PlayerStatsWrapper>
                         </Container>
