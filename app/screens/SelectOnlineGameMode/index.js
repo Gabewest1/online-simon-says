@@ -37,12 +37,6 @@ class SelectOnlineGameMode extends React.Component {
             <Container>
                 <List>
                     <ListItem
-                        onPress={ () => this.props.createPrivateMatch() }
-                        style={{ marginBottom: 35 }}
-                        icon={{ name: "looks-two" }}>
-                        Challenge a friend
-                    </ListItem>
-                    <ListItem
                         onPress={ () => this.gotoGameScreen(TWO_PLAYER_GAME) }
                         style={{ marginBottom: 35 }}
                         icon={{ name: "looks-two" }}>
@@ -55,9 +49,16 @@ class SelectOnlineGameMode extends React.Component {
                         Three Player
                     </ListItem>
                     <ListItem
+                        style={{ marginBottom: 35 }}                
                         onPress={ () => this.gotoGameScreen(FOUR_PLAYER_GAME) }
                         icon={{ name: "looks-4" }}>
                         Four Player
+                    </ListItem>
+                    <ListItem
+                        inverted
+                        onPress={ () => this.props.createPrivateMatch() }
+                        icon={{ name: "looks-two" }}>
+                        Private Match
                     </ListItem>
                 </List>
             </Container>
