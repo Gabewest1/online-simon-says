@@ -5,9 +5,6 @@ const stopSubmit = require("redux-form").stopSubmit
 const User = require("./User.js")
 const colors = require("colors")
 
-//constant used in the socket action handlers
-const SINGLE_PLAYER = 1
-
 const app = express()
 
 const db = mongoose.connect("mongodb://gabewest1:490501GG@ds149134.mlab.com:49134/simon-says",{ useMongoClient: true }, () => {
@@ -65,8 +62,11 @@ io.on("connection", socket => {
     socket.on("action", action => {
         console.log("ACTION:", action)
 
-        switch (action.type) {
-            case "server/LOGIN": {
+        //constant used in the socket action handlers
+        const SINGLE_PLAYER = 1
+
+        const routes = {
+            ["server/LOGIN"]: (action) => {
                 const { payload: credentials } = action
                 const query = {
                     $or: [
@@ -102,9 +102,8 @@ io.on("connection", socket => {
 
                 })
 
-                break
-            }
-            case "server/REGISTER": {
+            },
+            ["server/REGISTER"]: (action) => {
                 const { payload: credentials } = action
                 const query = { $or: [
                     { username: credentials.username },
@@ -144,9 +143,8 @@ io.on("connection", socket => {
                     
                 })
 
-                break
-            }
-            case "server/LOGOUT": {
+            },
+            ["server/LOGOUT"]: (action) => {
                 User.findOneAndUpdate({ username: socket.player.username }, { loggedIn: false }, (err, user) => {
                     if (err) {
                         console.log(err)
@@ -155,9 +153,8 @@ io.on("connection", socket => {
                     console.log("USER LOGGED OUT:", user)
                 })
 
-                break
-            }
-            case "server/FETCH_LEADERBOARD_DATA": {
+            },
+            ["server/FETCH_LEADERBOARD_DATA"]: (action) => {
                 User.find({}).sort({"statsByGameMode.1.highScore": -1}).limit(10).exec((err, users) => {
                     if (err) {
                         console.log(err)
@@ -166,9 +163,8 @@ io.on("connection", socket => {
                     console.log("SENDING THE USER LEADERBOARDS:", users)
                     socket.emit("action", { type: "FETCH_LEADERBOARD_DATA_SUCCESS", payload: users })
                 })
-                break
-            }
-            case "server/UPDATE_SINGLE_PLAYER_STATS": {
+            },
+            ["server/UPDATE_SINGLE_PLAYER_STATS"]: (action) => {
                 User.findOne({ username: socket.player.username }, (err, user) => {
                     if (err) {
                         console.log(err)
@@ -200,9 +196,8 @@ io.on("connection", socket => {
                     })
                 })
 
-                break
-            }
-            case "server/UPDATE_MULITPLAYER_STATS": {
+            },
+            ["server/UPDATE_MULITPLAYER_STATS"]: (action) => {
                 User.findOne({ username: socket.player.username }, (err, user) => {
                     if (err) {
                         console.log(err)
@@ -240,28 +235,23 @@ io.on("connection", socket => {
                     })
                 })
 
-                break
-            }
-            case "server/PLAY_AS_GUEST": {
+            },
+            ["server/PLAY_AS_GUEST"]: (action) => {
                 socket.player = action.payload
 
-                break
-            }
-            case "server/FIND_MATCH": {
+            },
+            ["server/FIND_MATCH"]: (action) => {
                 const { gameMode } = action
                 gameRoomManager.findMatch(socket, gameMode)
-                break
-            }
-            case "server/CANCEL_SEARCH": {
+            },
+            ["server/CANCEL_SEARCH"]: (action) => {
                 gameRoomManager.cancelSearch(socket)
-                break
-            }
-            case "server/CREATE_PRIVATE_MATCH": {
+            },
+            ["server/CREATE_PRIVATE_MATCH"]: (action) => {
                 gameRoomManager.createPrivateMatch(socket)
                 socket.emit("action", { type: "PRIVATE_MATCH_CREATED" })
-                break
-            }
-            case "server/INVITE_PLAYER": {
+            },
+            ["server/INVITE_PLAYER"]: (action) => {
                 const playerToInviteID = Object.keys(io.sockets.sockets).find(socketID => {
                     const socket = io.sockets.sockets[socketID]
                     console.log("SOCKET:", socket.player)
@@ -273,55 +263,48 @@ io.on("connection", socket => {
                     const payload = { player: socket.player, gameRoom: socket.gameRoom }
                     playersSocket.emit("action", { type: "RECEIVE_INVITE", payload })
                 }
-                break
-            }
-            case "server/JOIN_PRIVATE_MATCH": {
+            },
+            ["server/JOIN_PRIVATE_MATCH"]: (action) => {
                 const gameRoom = gameRoomManager.findPlayersGameRoom(action.payload)
                 gameRoom.addPlayer(socket)
                 socket.emit("action", { type: "JOINED_PRIVATE_MATCH" })
-                break
-            }
-            case "server/CANCEL_PRIVATE_MATCH": {
+            },
+            ["server/CANCEL_PRIVATE_MATCH"]: (action) => {
                 const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.removePlayer(socket)
                 gameRoom.syncPlayersArrayWithRedux()
-                break
-            }
-            case "server/PLAYER_QUIT_MATCH": {
+            },
+            ["server/PLAYER_QUIT_MATCH"]: (action) => {
                 const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.playerLostConnection(socket)
-                break
-            }
-            case "server/ANIMATE_SIMON_PAD": {
+            },
+            ["server/ANIMATE_SIMON_PAD"]: (action) => {
                 const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.handleSimonMove(action.payload)
-                break
-            }
-            case "server/PLAYER_READY": {
+            },
+            ["server/PLAYER_READY"]: (action) => {
                 const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.playerReady(socket)
-                break
-            }
-            case "server/PLAYER_NOT_READY": {
+            },
+            ["server/PLAYER_NOT_READY"]: (action) => {
                 const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.playerNotReady(socket)
-                break
-            }
-            case "server/PLAYER_READY_TO_START": {
+            },
+            ["server/PLAYER_READY_TO_START"]: (action) => {
                 const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 gameRoom.playerReadyToStart(socket)
-                break
-            }
-            case "server/START_GAME": {
+            },
+            ["server/START_GAME"]: (action) => {
                 const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
                 const gameMode = gameRoom.players.length
                 gameRoom.startGame()
                 socket.emit("action", { type: "GO_TO_GAME_SCREEN", payload: gameMode })
-                break
             }
-            default:
-                break
         }
+
+        const routeHandler = routes[action.type]
+
+        routeHandler(action)
     })
 })
 
