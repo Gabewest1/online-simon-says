@@ -1,6 +1,6 @@
 import React from "react"
 import { FormInput, FormValidationMessage } from "react-native-elements"
-import { Keyboard, View, Text } from "react-native"
+import { Dimensions, Keyboard, View, Text } from "react-native"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
@@ -14,15 +14,12 @@ import Input from "../input"
 import { actions as authActions } from "../../redux/Auth"
 
 const Form = styled.View`
-    justify-content: center;
-    width: 280;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 600px;
 `
-const PlayAsGuest = styled.Text`
-    color: white;
-    border-bottom-width: 2;
-    border-color: white;
-    align-self: flex-end;
-    margin-top: 5;
+const Buttons = styled.View`
+    justify-content: space-around;
 `
 
 class SignInForm extends React.Component {
@@ -58,10 +55,10 @@ class SignInForm extends React.Component {
         }
     }
     render() {
-        let { handleSubmit } = this.props
+        let { handleSubmit, style } = this.props
 
         return (
-            <Form>
+            <Form style={ style }>
                 <Field
                     name="username"
                     type="text"
@@ -72,20 +69,28 @@ class SignInForm extends React.Component {
                     type="password"
                     component={ Input }
                     placeholder="password" />
-                <ListItem
-                    style={{ marginTop: 25 }}
-                    onPress={ handleSubmit(this.validate) }
-                    icon={{name: "airplay" }}>
-                        Login
-                </ListItem>
-                <ListItem
-                    style={{ marginVertical: 25 }}
-                    onPress={ this.gotoSignUpScreen }
-                    icon={{name: "border-color"}}>
-                            Sign Up
-                </ListItem>
+                
+                <Buttons>
+                    <ListItem
+                        style={{ marginVertical: 15 }}
+                        onPress={ handleSubmit(this.validate) }
+                        icon={{name: "airplay" }}>
+                            Login
+                    </ListItem>
+                    <ListItem
+                        style={{ marginBottom: 15 }}
+                        onPress={ () => this.props.playAsGuest() }
+                        icon={{name: "border-color"}}>
+                                Play as Guest
+                    </ListItem>
+                    <ListItem
+                        inverted
+                        onPress={ this.gotoSignUpScreen }
+                        icon={{name: "border-color"}}>
+                                Sign Up
+                    </ListItem>
+                </Buttons>
 
-                <PlayAsGuest onPress={ () => this.props.playAsGuest() }>Play as Guest</PlayAsGuest>
             </Form>
         )
     }
