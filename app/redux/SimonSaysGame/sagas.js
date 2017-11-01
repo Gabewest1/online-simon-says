@@ -263,7 +263,7 @@ export const performPlayersTurn = function* () {
     }
 
     //Give a little pause before starting the next turn
-    yield delay(500)
+    yield delay(100)
 
     return true
 }
