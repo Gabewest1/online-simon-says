@@ -101,50 +101,34 @@ class SimonGame extends React.Component {
                 <SimonPad
                     style={{top: 0, left: 0}}
                     index={ 0 }
-                    source={ pad0.isAnimating || pads[0].isAnimating ?
-                        require("../../assets/images/top_left_pad_active.png") :
-                        require("../../assets/images/top_left_pad.png")
-                    }
+                    source={ require("../../assets/images/top_left_pad.png") }
+                    sourceActive={ require("../../assets/images/top_left_pad_active.png") }
                     isAnimating={ pad0.isAnimating || pads[0].isAnimating }
-                    onPress={ () => this.handlePadPress(0) }
-                    onPressIn={ () => this.setState({ pad0: { isAnimating: true } })}
-                    onPressOut={ () => this.setState({ pad0: { isAnimating: false }}) } />
+                    onPress={ () => this.handlePadPress(0) } />
 
                 <SimonPad
                     style={{top: 0, right: 0}}
                     index={ 1 }
-                    source={ pad1.isAnimating || pads[1].isAnimating ?
-                        require("../../assets/images/top_right_pad_active.png") :
-                        require("../../assets/images/top_right_pad.png")
-                    }
+                    source={ require("../../assets/images/top_right_pad.png") }
+                    sourceActive={ require("../../assets/images/top_right_pad_active.png") }
                     isAnimating={ pad1.isAnimating || pads[1].isAnimating }
-                    onPress={ () => this.handlePadPress(1) }
-                    onPressIn={ () => this.setState({ pad1: { isAnimating: true } })}
-                    onPressOut={ () => this.setState({ pad1: { isAnimating: false }}) } />
+                    onPress={ () => this.handlePadPress(1) } />
 
                 <SimonPad
                     style={{bottom: 0, left: 0}}
                     index={ 2 }
-                    source={ pad2.isAnimating || pads[2].isAnimating ?
-                        require("../../assets/images/bottom_left_pad_active.png") :
-                        require("../../assets/images/bottom_left_pad.png")
-                    }
+                    source={ require("../../assets/images/bottom_left_pad.png") }
+                    sourceActive={ require("../../assets/images/bottom_left_pad_active.png") }
                     isAnimating={ pad2.isAnimating || pads[2].isAnimating }
-                    onPress={ () => this.handlePadPress(2) }
-                    onPressIn={ () => this.setState({ pad2: { isAnimating: true } })}
-                    onPressOut={ () => this.setState({ pad2: { isAnimating: false }}) } />
+                    onPress={ () => this.handlePadPress(2) } />
 
                 <SimonPad
                     style={{bottom: 0, right: 0}}
                     index={ 3 }
-                    source={ pad3.isAnimating || pads[3].isAnimating ?
-                        require("../../assets/images/bottom_right_pad_active.png") :
-                        require("../../assets/images/bottom_right_pad.png")
-                    }
+                    source={ require("../../assets/images/bottom_right_pad.png") }
+                    sourceActive={ require("../../assets/images/bottom_right_pad_active.png") }
                     isAnimating={ pad3.isAnimating || pads[3].isAnimating }
-                    onPress={ () => this.handlePadPress(3) }
-                    onPressIn={ () => this.setState({ pad3: { isAnimating: true } })}
-                    onPressOut={ () => this.setState({ pad3: { isAnimating: false }}) } />
+                    onPress={ () => this.handlePadPress(3) } />
 
                 <TintedBG show={ isScreenDarkened } />
             </SimonGameContainer>

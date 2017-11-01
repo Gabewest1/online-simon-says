@@ -1,4 +1,5 @@
 import React from "react"
+import { InteractionManager } from "react-native"
 import styled from "styled-components/native"
 import PropTypes from "prop-types"
 import Sound from "react-native-sound"
@@ -17,20 +18,6 @@ const padAudioFiles = {
     3: pad3Audio
 }
 
-const PadView = styled.Image`
-    max-width: 100%;
-    max-height: 100%;
-    height: ${320 / 2};
-    width: ${320 / 2};
-    ${({ isAnimating, index }) => {
-        if (isAnimating) {
-            playAudio(index)
-
-            return "z-index: 2;"
-        }
-    }}
-`
-
 function playAudio(padIndex) {
     const audio = padAudioFiles[padIndex]
     console.log("AUDIO:", padIndex, audio)
@@ -45,6 +32,31 @@ function playAudio(padIndex) {
     })
 
 }
+const PadsView = styled.View`
+    position: relative;    
+`
+const Container = styled.View`
+    position: absolute;    
+`
+const PadStyle = styled.Image`
+    max-width: 100%;
+    max-height: 100%;
+    height: ${320 / 2};
+    width: ${320 / 2};
+`
+const PadView = styled(PadStyle)`
+    position: absolute;
+    ${({ isAnimating, index }) => {
+        if (isAnimating) {
+            playAudio(index)
+
+            return "z-index: 2;"
+        }
+    }}
+`
+const PadViewActive = styled(PadStyle)`
+    position: absolute;
+`
 
 const Touchable = styled.TouchableOpacity`
     position: absolute;
@@ -54,11 +66,25 @@ const Touchable = styled.TouchableOpacity`
 `
 
 class Pad extends React.Component {
+    onPress() {
+        InteractionManager.runAfterInteractions(() => {
+            this.props.onPress()
+        })
+    }
     render() {
+        const { source, sourceActive } = this.props
+        
         return (
-            <Touchable { ...this.props } activeOpacity={ 1 } >
-                <PadView { ...this.props } />
-            </Touchable>
+            <Container style={ this.props.style }>
+                <PadsView>
+                    <PadViewActive style={ this.props.style } source={ sourceActive } />
+
+                    <Touchable { ...this.props } >
+                        <PadView { ...this.props } source={ source } />
+                    </Touchable>
+                    
+                </PadsView>
+            </Container>
         )
     }
 }
