@@ -62,7 +62,12 @@ const Timer = styled.Text`
     color: black;
 `
 const HighScoresView = styled.View`
-    
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 15px;
+    position: absolute;
+    top: 0;
+    width: 100%;
 `
 const Score = styled.Text`
     color: white;
