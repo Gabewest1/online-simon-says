@@ -4,7 +4,7 @@ import { actions, selectors } from "./index"
 import { selectors as userSelectors } from "../Auth"
 import { actions as navigatorActions } from "../Navigator"
 
-export const ANIMATION_DURATION = 100
+export const ANIMATION_DURATION = 70
 export const TIMEOUT_TIME = 3
 const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
@@ -184,7 +184,7 @@ export const displayMovesToPerform = function* () {
 
     for (let move of movesToPerform) {
         yield call(animateSimonPad, { pad: move, isValid: true })
-        yield call(delay, 500) //Wait half a second between each move
+        yield call(delay, 250) //Wait between each move
     }
 
     yield put(actions.setIsScreenDarkened(false))
