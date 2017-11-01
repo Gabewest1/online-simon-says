@@ -67,19 +67,20 @@ const Touchable = styled.TouchableOpacity`
 
 class Pad extends React.Component {
     onPress() {
+        playAudio(this.props.index)
         InteractionManager.runAfterInteractions(() => {
             this.props.onPress()
         })
     }
     render() {
         const { source, sourceActive } = this.props
-        
+
         return (
             <Container style={ this.props.style }>
                 <PadsView>
                     <PadViewActive style={ this.props.style } source={ sourceActive } />
 
-                    <Touchable { ...this.props } >
+                    <Touchable { ...this.props } onPress={ this.onPress.bind(this) } >
                         <PadView { ...this.props } source={ source } />
                     </Touchable>
                     
