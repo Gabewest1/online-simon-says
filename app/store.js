@@ -5,15 +5,8 @@ import logger from 'redux-logger'
 import { reducer as form } from "redux-form"
 import rootSaga from "./rootSaga"
 import reducers from "./rootReducer"
+import socket from "./socket"
 
-if (!window.navigator.userAgent) {
-    window.navigator.userAgent = "react-native"
-}
-const io = require("react-native-socket.io-client/socket.io")
-
-const PORT = "https://simon-says-online.herokuapp.com/"
-const socket = io(PORT, { jsonp: false, transports: ['websocket'] })
-console.log("CONNECTING TO PORT:", PORT, socket)
 const socketIoMiddleware = createSocketIoMiddleware(socket, "server/")
 
 const sagaMiddleware = createSagaMiddleware()
