@@ -2,7 +2,9 @@ import { delay } from "redux-saga"
 import { all, call, cancel, fork, put, race, select, take, takeEvery, takeLatest } from "redux-saga/effects"
 import { actions, selectors } from "./index"
 import { selectors as userSelectors } from "../Auth"
+
 import { actions as navigatorActions } from "../Navigator"
+import { navigateScreens } from "../Navigator/sagas"
 
 export const ANIMATION_DURATION = 70
 export const TIMEOUT_TIME = 3
@@ -57,7 +59,7 @@ export const findMatchSaga = function* () {
             console.log("SENDING SERVER CANCEL_SEARCH")
             yield put({ type: "server/CANCEL_SEARCH" })
         } else {
-            ScreenNavigator.push({
+            const navigationOptions = {
                 screen: "SimonGameScreen",
                 title: "",
                 animated: true,
@@ -65,7 +67,9 @@ export const findMatchSaga = function* () {
                 passProps: { gameMode },
                 overrideBackPress: true,
                 backButtonHidden: true
-            })
+            }
+
+            yield call(navigateScreens, "push", navigationOptions)
         }
 
     }
@@ -99,14 +103,16 @@ export const multiplayerGameSaga = function* (gameMode) {
 
     const winner = yield select(selectors.getWinner)
 
-    ScreenNavigator.resetTo({
+    const navigationOptions = {
         screen: "GameOverScreen",
         title: "Game Over",
         passProps: { gameMode, winner },
         animationType: 'slide-up',
         overrideBackPress: true,
         backButtonHidden: true
-    })
+    }
+
+    yield call(navigateScreens, "resetTo", navigationOptions)
 }
 
 export const performTurnSaga = function* () {
@@ -167,14 +173,16 @@ export const singlePlayerGameSaga = function* () {
 
     yield call(updateSinglePlayerStats)
 
-    ScreenNavigator.push({
+    const navigationOptions = {
         screen: "GameOverScreen",
         title: "Game Over",
         passProps: { gameMode: SINGLE_PLAYER },
         animationType: 'slide-up',
         overrideBackPress: true,
         backButtonHidden: true
-    })
+    }
+
+    yield call(navigateScreens, "push", navigationOptions)
 }
 
 export const displayMovesToPerform = function* () {
@@ -291,12 +299,14 @@ export const createPrivateMatchSaga = function* () {
         yield put({ type: "server/CREATE_PRIVATE_MATCH" })
         yield take("PRIVATE_MATCH_CREATED")
 
-        ScreenNavigator.push({
+        const navigationOptions = {
             screen: "InvitePlayersScreen",
             title: "",
             animationType: 'slide-up',
             overrideBackPress: true
-        })
+        }
+
+        yield call(navigateScreens, "push", navigationOptions)
     }
 }
 
@@ -385,11 +395,13 @@ export const gotoGameScreenSaga = function* () {
     while (true) {
         const { payload: gameMode } = yield take("GO_TO_GAME_SCREEN")
 
-        ScreenNavigator.push({
+        const navigationOptions = {
             screen: "SimonGameScreen",
             passProps: { gameMode },
             overrideBackPress: true
-        })
+        }
+
+        yield call(navigateScreens, "push", navigationOptions)
     }
 }
 export const updateSinglePlayerStats = function* () {

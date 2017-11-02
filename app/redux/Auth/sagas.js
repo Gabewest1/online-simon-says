@@ -1,12 +1,10 @@
 import { call, put, race, take, takeEvery } from "redux-saga/effects"
 import { delay } from "redux-saga"
 import { actions } from "./reducer"
-
-let NavigatorActions
+import { navigateScreens } from "../Navigator/sagas"
 
 const root = function* () {
     yield [
-        getNavigatorActions(),
         handleSuccessfulSignIn(),
         watchLogin(),
         watchLogout(),
@@ -15,10 +13,6 @@ const root = function* () {
     ]
 }
 
-export const getNavigatorActions = function* () {
-    let action = yield take(actions.giveSagasNavigator)
-    NavigatorActions = action.payload
-}
 export const watchLogin = function* () {
     yield takeEvery(actions.login, login)
 }
@@ -74,13 +68,15 @@ export const handleSuccessfulSignIn = function* () {
     while (yield take(actions.loginSuccess)) {
         console.log("USER LOGGED IN AND IM ABOUT TO NAVIGATE!")
 
-        NavigatorActions.push({
+        const navigationOptions = {
             screen: "SelectGameMode",
             title: "Play",
             animated: true,
             animationType: "slide-horizontal",
             backButtonHidden: true
-        })
+        }
+
+        yield call(navigateScreens, "resetTo", navigationOptions)
     }
 }
 
