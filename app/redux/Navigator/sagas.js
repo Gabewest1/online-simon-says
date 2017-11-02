@@ -1,13 +1,22 @@
-import { Platform } from "react-native"
-import { put, race, take, takeLatest } from "redux-saga/effects"
+import { AppState, Platform } from "react-native"
+import { call, put, race, take, takeLatest } from "redux-saga/effects"
 import { actions } from "./reducer"
+
+/*** 
+ * I couldn't find a way to import the navigator object from react-native-navigation
+ * so i could change screens from within the sagas.
+ * 
+ * Instead, i had the <StartingScreen/> dispatch an action with the navigator object
+ * as a payload, which i assign to ReactNativeNavigator variable below.
+ ***/
 
 let ReactNativeNavigator
 
 const root = function* () {
     yield [
         getNavigatorSaga(),
-        watchShowExitMessage()
+        watchShowExitMessage(),
+        watchPlayerDisconnected()
     ]
 }
 
@@ -58,5 +67,21 @@ export const showExitMessageSaga = function* (action) {
     }
 }
 
+export const watchPlayerDisconnected = function* () {
+    yield take("PLAYER_DISCONNECTED")
+    console.log("I GOT THE ACTION IN PLAYER DISCONNECTED SAGA")
+    
+    yield call(navigateScreens, "resetTo", { screen: "StartingScreen" })
+}
+
+export const navigateScreens = function* (fn, options) {
+    if (AppState.currentState !== "active") {
+        console.log("WAITING FOR THE APP TO GO ACTIVE")
+        yield take("APP_ACTIVE")
+    }
+
+    ReactNativeNavigator[fn](options)
+    console.log("END OF navigateScreens* ()")     
+}
 
 export default root
