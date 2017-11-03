@@ -151,6 +151,7 @@ class GameRoom {
             this.playersReadyToStart.push(player)
 
             if (this.playersReadyToStart.length === this.players.length) {
+                this.timer = clearTimeout(this.timer)
                 this.playersReadyToStart = []
                 this.startFirstTurn()
             }
@@ -161,9 +162,6 @@ class GameRoom {
         playerToRemove.gameRoom = undefined
     }
     setNextPlayer() {
-        if (this.isGameOver()) {
-            return this.endGame()
-        }
         let indexOfCurrentPlayer = this.players.indexOf(this.performingPlayer)
         let counter = 1
         let nextPlayerToPerform = this.players[(indexOfCurrentPlayer + counter) % this.players.length]
@@ -177,15 +175,15 @@ class GameRoom {
         console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.player.username)
     }
     startGame() {
-        console.log("STARTING THE GAME, IS IT READY:".yellow, this.gameStarted)
         if (!this.gameStarted) {
             this.gameStarted = true
-            console.log("I BETTER SEE THIS ONCE".yellow)
-            this.performingPlayer = this.players[0]
+            this.performingPlayer = this.players[0]    
             this.messageGameRoom({ type: "FOUND_MATCH" })
+            this.timer = this.startJoinMatchTimer()
         }
     }
     startFirstTurn() {
+        this.messageGameRoom({ type: "SET_PERFORMING_PLAYER", payload: this.performingPlayer.player })
         this.listenForNextMove()
         this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
@@ -197,6 +195,37 @@ class GameRoom {
         this.listenForNextMove()
         this.messageGameRoom({ type: "SET_PERFORMING_PLAYER", payload: this.performingPlayer.player })
         this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
+    }
+    startJoinMatchTimer() {
+        const timeTillPlayerTimesout = 5000
+        const notReady = ({ player }) =>
+            !this.playersReadyToStart.find(socket => socket.player.username === player.username)
+
+        console.log("STARTING JOIN MATCH TIMER".green)
+        return setTimeout(() => {
+            this.timer = undefined
+            const playersNotReady = this.players.filter(notReady)
+            console.log("PLAYERS NOT READY:".yellow, playersNotReady.length)
+            playersNotReady.forEach((player) => {
+                this.playerLostConnection(player)
+
+                const payload =  {
+                    fn: "resetTo",
+                    navigationOptions: {
+                        screen: "StartingScreen"
+                    }
+                }
+                const action = { type: "NAVIGATE_TO_SCREEN", payload }
+                
+                player.emit("action", action)
+            })
+            
+            if (this.isGameOver()) {
+                this.endGame()
+            } else {
+                this.startFirstTurn()
+            }
+        }, timeTillPlayerTimesout) 
     }
     startLongTimer() {
         let timeTillPlayerTimesout = 15

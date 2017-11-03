@@ -46,6 +46,7 @@ class PrivateGameRoom extends GameRoom {
             this.performingPlayer = this.players[0]
             this.gameMode = this.players.length
             this.messageGameRoom({ type: "GO_TO_GAME_SCREEN", payload: this.gameMode })
+            this.timer = super.startJoinMatchTimer()
         }
     }
 }
