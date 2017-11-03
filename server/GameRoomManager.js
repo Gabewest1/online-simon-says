@@ -15,7 +15,10 @@ class GameRoomManager {
 
     cancelSearch(player) {
         const playersGameRoom = this.findPlayersGameRoom(player)
-        playersGameRoom.removePlayer(player)
+
+        if (playersGameRoom && !playersGameRoom.gameStarted) {
+            playersGameRoom.removePlayer(player)
+        }
     }
 
     findMatch(player, gameMode) {
