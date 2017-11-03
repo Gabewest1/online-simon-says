@@ -38,13 +38,13 @@ io.on("connection", socket => {
     socket.on("disconnect", reason => {
         console.log(`${socket.id} disconnected bc: ${reason}`)
 
-        let gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+        const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
         //Cancel matchmaking if player was looking for a match
         if (gameRoom) {
             if (!gameRoom.gameStarted) {
                 gameRoomManager.cancelSearch(socket)
-            } else {
+            } else if (!gameRoom.isGameOver()) {
                 gameRoom.playerLostConnection(socket)
             }
         }
@@ -59,7 +59,6 @@ io.on("connection", socket => {
                 console.log("USER LOGGED OUT:", user)
             })
         }
-
     })
 
     socket.on("action", action => {
