@@ -291,42 +291,63 @@ function createRouteHandlers(socket) {
         },
         ["server/JOIN_PRIVATE_MATCH"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(action.payload)
-            gameRoom.addPlayer(socket)
-            socket.emit("action", { type: "JOINED_PRIVATE_MATCH" })
+            if (gameRoom) {
+                gameRoom.addPlayer(socket)
+                socket.emit("action", { type: "JOINED_PRIVATE_MATCH" })
+            }
         },
         ["server/CANCEL_PRIVATE_MATCH"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
-            gameRoom.removePlayer(socket)
-            gameRoom.syncPlayersArrayWithRedux()
+            if (gameRoom) {
+                gameRoom.removePlayer(socket)
+                gameRoom.syncPlayersArrayWithRedux()
+            }
         },
         ["server/PLAYER_QUIT_MATCH"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
-            gameRoom.playerLostConnection(socket)
+            if (gameRoom) {
+                gameRoom.playerLostConnection(socket)
+            }
         }
     }
 
     const simonGameRoutes = {
         ["server/ANIMATE_SIMON_PAD"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
-            gameRoom.handleSimonMove(action.payload)
+            
+            if (gameRoom) {
+                gameRoom.handleSimonMove(action.payload)
+            }
         },
         ["server/PLAYER_READY"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
-            gameRoom.playerReady(socket)
+            
+            if (gameRoom) {
+                gameRoom.playerReady(socket)
+            }
         },
         ["server/PLAYER_NOT_READY"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
-            gameRoom.playerNotReady(socket)
+            
+            if (gameRoom) {
+                gameRoom.playerNotReady(socket)
+            }   
         },
         ["server/PLAYER_READY_TO_START"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
-            gameRoom.playerReadyToStart(socket)
+            
+            if (gameRoom) {
+                gameRoom.playerReadyToStart(socket)
+            }
         },
         ["server/START_GAME"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
-            const gameMode = gameRoom.players.length
-            gameRoom.startGame()
-            socket.emit("action", { type: "GO_TO_GAME_SCREEN", payload: gameMode })
+
+            if (gameRoom) {
+                const gameMode = gameRoom.players.length
+                gameRoom.startGame()
+                socket.emit("action", { type: "GO_TO_GAME_SCREEN", payload: gameMode })
+            }
         }
     }
 
