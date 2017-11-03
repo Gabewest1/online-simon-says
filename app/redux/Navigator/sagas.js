@@ -1,7 +1,7 @@
 import { AppState, Platform } from "react-native"
 import { call, put, race, take, takeLatest } from "redux-saga/effects"
 import { actions } from "./reducer"
-
+import { actions as simonGameActions } from "../SimonSaysGame"
 /*** 
  * I couldn't find a way to import the navigator object from react-native-navigation
  * so i could change screens from within the sagas.
@@ -15,6 +15,7 @@ let ReactNativeNavigator
 const root = function* () {
     yield [
         getNavigatorSaga(),
+        kickInactivePlayerSaga(),
         watchShowExitMessage(),
         watchSocketDisconnected(),
         watchNavigateScreens()
@@ -68,6 +69,34 @@ export const showExitMessageSaga = function* (action) {
     }
 }
 
+export const kickInactivePlayerSaga = function* () {
+    while (true) {
+        yield take("KICK_INACTIVE_PLAYER")
+
+        const payload =  {
+            fn: "resetTo",
+            navigationOptions: {
+                screen: "SelectGameMode"
+            }
+        }
+        
+        yield put(actions.navigateToScreen(payload))
+
+        const displayNotificationAction = {
+            payload: {
+                fn: "showInAppNotification",
+                navigationOptions: {
+                    screen: "InactivePlayerNotification",
+                    autoDismissTimerSec: 7,
+                    position: "bottom"
+                }
+            }
+        }
+        yield call(navigateScreens, displayNotificationAction)
+        yield put(simonGameActions.resetGame())
+        yield put(simonGameActions.cancelSimonGameSaga())
+    }
+}
 export const watchSocketDisconnected = function* () {
     while (true) {
         yield take("SOCKET_DISCONNECTED")
