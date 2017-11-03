@@ -209,15 +209,7 @@ class GameRoom {
             playersNotReady.forEach((player) => {
                 this.playerLostConnection(player)
 
-                const payload =  {
-                    fn: "resetTo",
-                    navigationOptions: {
-                        screen: "StartingScreen"
-                    }
-                }
-                const action = { type: "NAVIGATE_TO_SCREEN", payload }
-                
-                player.emit("action", action)
+                player.emit("action", { type: "KICK_INACTIVE_PLAYER" })
             })
             
             if (this.isGameOver()) {
@@ -225,6 +217,7 @@ class GameRoom {
             } else {
                 this.startFirstTurn()
             }
+
         }, timeTillPlayerTimesout) 
     }
     startLongTimer() {
