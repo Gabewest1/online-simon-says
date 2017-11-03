@@ -68,8 +68,9 @@ export const findMatchSaga = function* () {
                 overrideBackPress: true,
                 backButtonHidden: true
             }
+            const payload = { fn: "push", navigationOptions }
 
-            yield call(navigateScreens, "push", navigationOptions)
+            yield put(navigatorActions.navigateToScreen(payload))
         }
 
     }
@@ -112,7 +113,8 @@ export const multiplayerGameSaga = function* (gameMode) {
         backButtonHidden: true
     }
 
-    yield call(navigateScreens, "resetTo", navigationOptions)
+    const payload = { fn: "resetTo", navigationOptions}
+    yield put(navigatorActions.navigateToScreen(payload))
 }
 
 export const performTurnSaga = function* () {
@@ -182,7 +184,8 @@ export const singlePlayerGameSaga = function* () {
         backButtonHidden: true
     }
 
-    yield call(navigateScreens, "push", navigationOptions)
+    const payload = { fn: "push", navigationOptions}
+    yield put(navigatorActions.navigateToScreen(payload))
 }
 
 export const displayMovesToPerform = function* () {
@@ -306,7 +309,8 @@ export const createPrivateMatchSaga = function* () {
             overrideBackPress: true
         }
 
-        yield call(navigateScreens, "push", navigationOptions)
+        const payload = { fn: "push", navigationOptions}
+        yield put(navigatorActions.navigateToScreen(payload))
     }
 }
 
@@ -352,12 +356,17 @@ export const receiveGameInviteSaga = function* () {
             yield put({ type: "server/JOIN_PRIVATE_MATCH", payload: { gameRoom } })
             console.log("WAITING FOR THE JOINED_PRIVATE_MATCH")
             yield take("JOINED_PRIVATE_MATCH")
-            ScreenNavigator.push({
+            
+            const navigationOptions = {
                 screen: "InvitePlayersScreen",
                 title: "",
                 animationType: 'slide-up',
                 overrideBackPress: true,
-            })
+            }
+
+            const payload = { fn: "push", navigationOptions }
+
+            yield put(navigatorActions.navigateToScreen(payload))
         }
     }
 }
@@ -401,7 +410,8 @@ export const gotoGameScreenSaga = function* () {
             overrideBackPress: true
         }
 
-        yield call(navigateScreens, "push", navigationOptions)
+        const payload = { fn: "push", navigationOptions}
+        yield put(navigatorActions.navigateToScreen(payload))
     }
 }
 export const updateSinglePlayerStats = function* () {

@@ -1,7 +1,7 @@
 import { call, put, race, take, takeEvery } from "redux-saga/effects"
 import { delay } from "redux-saga"
 import { actions } from "./reducer"
-import { navigateScreens } from "../Navigator/sagas"
+import { actions as navigatorActions } from "../Navigator"
 
 const root = function* () {
     yield [
@@ -76,7 +76,9 @@ export const handleSuccessfulSignIn = function* () {
             backButtonHidden: true
         }
 
-        yield call(navigateScreens, "resetTo", navigationOptions)
+        const payload = { fn: "resetTo", navigationOptions }
+
+        yield put(navigatorActions.navigateToScreen(payload))
     }
 }
 
