@@ -16,7 +16,8 @@ const root = function* () {
     yield [
         getNavigatorSaga(),
         watchShowExitMessage(),
-        watchPlayerDisconnected()
+        watchSocketDisconnected(),
+        watchNavigateScreens()
     ]
 }
 
@@ -67,20 +68,31 @@ export const showExitMessageSaga = function* (action) {
     }
 }
 
-export const watchPlayerDisconnected = function* () {
-    yield take("PLAYER_DISCONNECTED")
-    console.log("I GOT THE ACTION IN PLAYER DISCONNECTED SAGA")
-    
-    yield call(navigateScreens, "resetTo", { screen: "StartingScreen" })
+export const watchSocketDisconnected = function* () {
+    while (true) {
+        yield take("SOCKET_DISCONNECTED")
+        console.log("I GOT THE ACTION IN SOCKET DISCONNECTED SAGA")
+        
+        const navigationOptions = { screen: "StartingScreen" }
+        const payload = { fn: "resetTo", navigationOptions }
+
+        yield put(actions.navigateToScreen(payload))
+    }
 }
 
-export const navigateScreens = function* (fn, options) {
+export const watchNavigateScreens = function* () {
+    yield takeLatest(actions.navigateToScreen, navigateScreens)
+}
+
+export const navigateScreens = function* (action) {
+    const { fn, navigationOptions } = action.payload
+
     if (AppState.currentState !== "active") {
         console.log("WAITING FOR THE APP TO GO ACTIVE")
         yield take("APP_ACTIVE")
     }
 
-    ReactNativeNavigator[fn](options)
+    ReactNativeNavigator[fn](navigationOptions)
     console.log("END OF navigateScreens* ()")     
 }
 
