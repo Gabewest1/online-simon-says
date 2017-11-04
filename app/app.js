@@ -16,8 +16,7 @@ import InvitePlayersScreen from "./screens/InvitePlayersScreen"
 import PlayerDisconnectedMessage from "./components/playerDisconnectedMessage"
 import GameInvitationNotification from "./components/gameInvitationNotification"
 import QuitModal from "./components/QuitModal"
-import InactivePlayerNotification from "./components/InactivePlayerNotification"
-import LostInternetConnectionNotification from "./components/LostInternetConnectionNotification"
+import Notification from "./components/Notification"
 
 console.log("STARTING UP MY APP")
 console.disableYellowBox = true
@@ -36,7 +35,7 @@ Navigation.registerComponent("PlayerDisconnectedMessage", () => PlayerDisconnect
 Navigation.registerComponent("GameInvitationNotification", () => GameInvitationNotification, store, Provider)
 Navigation.registerComponent("QuitModal", () => QuitModal, store, Provider)
 Navigation.registerComponent("InactivePlayerNotification", () => InactivePlayerNotification, store, Provider)
-Navigation.registerComponent("LostInternetConnectionNotification", () => LostInternetConnectionNotification, store, Provider)
+Navigation.registerComponent("Notification", () => Notification, store, Provider)
 
 Navigation.startSingleScreenApp({
     screen: {

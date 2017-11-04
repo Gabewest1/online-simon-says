@@ -13,10 +13,10 @@ const Text = styled.Text`
     padding-bottom: 15;    
 `
 
-export default LostInternetConnectionNotification = props => {
+export default Notification = props => {
     return (
-        <Message>
-            <Text>Internet Connection has been Lost...</Text>
+        <Message { ...props.container }>
+            <Text { ...props.text }>{ props.message }</Text>
         </Message>
     )
 }
