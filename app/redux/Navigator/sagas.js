@@ -15,10 +15,11 @@ let ReactNativeNavigator
 const root = function* () {
     yield [
         getNavigatorSaga(),
-        kickInactivePlayerSaga(),
-        watchShowExitMessage(),
+        watchNavigateScreens(),
+        watchShowInAppNotification(),
         watchSocketDisconnected(),
-        watchNavigateScreens()
+        watchShowExitMessage(),
+        kickInactivePlayerSaga()
     ]
 }
 
@@ -30,7 +31,6 @@ export const getNavigatorSaga = function* () {
 export const watchShowExitMessage = function* () {
     yield takeLatest(actions.showBackoutWarningMessage, showExitMessageSaga)
 }
-
 export const showExitMessageSaga = function* (action) {
     const { stay, exit } = action.payload
 
@@ -69,6 +69,43 @@ export const showExitMessageSaga = function* (action) {
     }
 }
 
+export const watchShowInAppNotification = function* () {
+    yield takeLatest(actions.showInAppNotification, showInAppNotificationSaga)
+}
+export const showInAppNotificationSaga = function* () {
+    const { fn, navigationOptions } = action.payload
+    
+    if (AppState.currentState !== "active") {
+        yield take("APP_ACTIVE")
+    }
+
+    ReactNativeNavigator[fn](navigationOptions)
+}
+export const showInactivityMessageSaga = function* () {
+    const payload = {
+        fn: "showInAppNotification",
+        navigationOptions: {
+            screen: "InactivePlayerNotification",
+            autoDismissTimerSec: 7,
+            position: "bottom"
+        }
+    }
+
+    yield put(actions.showInAppNotification(payload))
+}
+export const showLostInternetConnectionNotificationSaga = function* () {
+    const payload = {
+        fn: "showInAppNotification",
+        navigationOptions: {
+            screen: "LostInternetConnectionNotification",
+            autoDismissTimerSec: 10,
+            position: "bottom"
+        }
+    }
+
+    yield put(actions.showInAppNotification(payload))
+}
+
 export const kickInactivePlayerSaga = function* () {
     while (true) {
         yield take("KICK_INACTIVE_PLAYER")
@@ -81,18 +118,8 @@ export const kickInactivePlayerSaga = function* () {
         }
         
         yield put(actions.navigateToScreen(payload))
-
-        const displayNotificationAction = {
-            payload: {
-                fn: "showInAppNotification",
-                navigationOptions: {
-                    screen: "InactivePlayerNotification",
-                    autoDismissTimerSec: 7,
-                    position: "bottom"
-                }
-            }
-        }
-        yield call(navigateScreens, displayNotificationAction)
+        yield call(showInactivityMessageSaga)
+        
         yield put(simonGameActions.resetGame())
         yield put(simonGameActions.cancelSimonGameSaga())
     }
@@ -106,6 +133,10 @@ export const watchSocketDisconnected = function* () {
         const payload = { fn: "resetTo", navigationOptions }
 
         yield put(actions.navigateToScreen(payload))
+        yield call(showLostInternetConnectionMessageSaga)
+
+        yield put(simonGameActions.resetGame())
+        yield put(simonGameActions.cancelSimonGameSaga())
     }
 }
 

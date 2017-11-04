@@ -5,13 +5,15 @@ const {
     giveSagasNavigator,
     showBackoutWarningMessage,
     stay,
-    navigateToScreen
+    navigateToScreen,
+    showInAppNotification
 } = createActions(
     "EXIT",
     "GIVE_SAGAS_NAVIGATOR",
     "SHOW_BACKOUT_WARNING_MESSAGE",
     "STAY",
     "NAVIGATE_TO_SCREEN",
+    "SHOW_IN_APP_NOTIFICATION"
 )
 
 export const actions = {
@@ -19,7 +21,8 @@ export const actions = {
     giveSagasNavigator,
     showBackoutWarningMessage,
     stay,
-    navigateToScreen
+    navigateToScreen,
+    showInAppNotification
 }
 
 const initialState = {
