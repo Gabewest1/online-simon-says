@@ -3,6 +3,7 @@ import { Dimensions } from "react-native"
 import { FormInput, FormValidationMessage } from "react-native-elements"
 import styled from "styled-components/native"
 import { SearchBar } from "react-native-elements"
+import { BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
 
 const FormInputView = styled(FormInput)`
     color: white;
@@ -36,8 +37,8 @@ class Input extends React.Component {
                     inputStyle={ this.props.inputStyle }
                     icon={ this.props.icon }
                     shake={ meta.error }
-                    placeholderTextColor="gray"
-                    underlineColorAndroid="white"
+                    placeholderTextColor={ SECONDARY_COLOR }
+                    underlineColorAndroid={ SECONDARY_COLOR }
                     onChangeText={ onChange }
                     secureTextEntry={ shouldHideText }
                     placeholder={ placeholder } />
@@ -48,17 +49,26 @@ class Input extends React.Component {
     renderSearchBar() {
         const { meta, placeholder, type, input: { onChange, ...restInput }} = this.props
         const shouldHideText = type === "password" && !meta.error
+        const containerStyle = {
+            backgroundColor: SECONDARY_COLOR,
+            borderRadius: 6,
+            ...this.props.containerStyle
+        }
+        const inputStyle = {
+            backgroundColor: BACKGROUND_COLOR,
+            ...this.props.inputStyle
+        }
 
         return (
             <SearchBarContainer>
                 <SearchBar
                     { ...restInput }
-                    containerStyle={ this.props.containerStyle }
-                    inputStyle={ this.props.inputStyle }
-                    icon={ this.props.icon }
+                    containerStyle={ containerStyle }
+                    inputStyle={ inputStyle }
+                    icon={{ color: SECONDARY_COLOR }}
                     shake={ meta.error }
-                    placeholderTextColor="gray"
-                    underlineColorAndroid="white"
+                    placeholderTextColor={ SECONDARY_COLOR }
+                    underlineColorAndroid={ SECONDARY_COLOR }
                     onChangeText={ onChange }
                     secureTextEntry={ shouldHideText }
                     placeholder={ placeholder } />

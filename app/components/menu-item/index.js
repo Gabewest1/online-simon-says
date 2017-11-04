@@ -1,16 +1,16 @@
 import React from "react"
 import { Dimensions } from "react-native"
 import { Button } from "react-native-elements"
-import { BACKGROUND_COLOR } from "../../constants"
+import { BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
 
 class MenuItem extends React.Component {
     render() {
         const { children, icon, inverted, fontSize, onPress, style, title } = this.props
 
         const borderStyles = {
-            borderColor: inverted ? BACKGROUND_COLOR : "white",
+            borderColor: inverted ? BACKGROUND_COLOR : SECONDARY_COLOR,
             borderRadius: 30,
-            borderWidth: .3
+            borderWidth: 1
         }
 
         const width = Dimensions.get("window").width
@@ -19,14 +19,14 @@ class MenuItem extends React.Component {
             || width > 500 ? 26
             : 18
 
-        const color = inverted ? BACKGROUND_COLOR : "white"
+        const color = inverted ? BACKGROUND_COLOR : SECONDARY_COLOR
 
         return (
             <Button
                 raised
                 fontSize={ FONT_SIZE }
                 color={ color }
-                backgroundColor={ inverted ? "white" : BACKGROUND_COLOR }
+                backgroundColor={ inverted ? SECONDARY_COLOR : BACKGROUND_COLOR }
                 icon={{ ...icon, style: { position: "absolute", left: "10%", color, fontSize: FONT_SIZE } }}
                 buttonStyle={{
                     ...borderStyles,
