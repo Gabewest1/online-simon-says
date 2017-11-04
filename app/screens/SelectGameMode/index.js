@@ -68,6 +68,7 @@ class SelectGameMode extends React.Component {
                         Leaderboards
                     </ListItem>
                     <ListItem
+                        inverted
                         onPress={ () => {
                             this.props.logout()
                             this.props.navigator.resetTo({
