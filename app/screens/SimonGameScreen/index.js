@@ -3,8 +3,9 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
-import Player from "../../components/player"
+import { SECONDARY_COLOR } from "../../constants"
 
+import Player from "../../components/player"
 import SimonGame from "../../components/simon__game"
 import Background from "../../components/background"
 
@@ -28,7 +29,7 @@ const Container = styled(Background)`
 const TintedBG = styled.View`
     width: 100%;
     height: 100%;
-    backgroundColor: rgba(0,0,0,.5);
+    backgroundColor: rgba(0,0,0,.7);
     position: absolute;
     ${({ show }) => {
         if (show) {
@@ -70,7 +71,7 @@ const HighScoresView = styled.View`
     width: 100%;
 `
 const Score = styled.Text`
-    color: white;
+    color: ${ SECONDARY_COLOR };
     font-size: 24
 `
 const Players = ({ player1, player2, performingPlayer }) => {
