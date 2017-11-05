@@ -1,6 +1,6 @@
 import { AppState, Platform } from "react-native"
-import { call, put, race, take, takeEvery, takeLatest } from "redux-saga/effects"
-import { actions } from "./reducer"
+import { call, put, race, select, take, takeEvery, takeLatest } from "redux-saga/effects"
+import { actions, selectors } from "./index"
 import { actions as simonGameActions } from "../SimonSaysGame"
 /*** 
  * I couldn't find a way to import the navigator object from react-native-navigation
@@ -64,9 +64,13 @@ export const showExitMessageSaga = function* (action) {
     dismissModalOrLightbox()
 
     if (playerLeft) {
-        ReactNativeNavigator.resetTo({
+        const navigationOptions = {
             screen: "SelectGameMode"
-        })
+        }
+
+        const action = { payload: { fn: "resetTo", navigationOptions }}
+
+        yield call(navigateScreens, action)
     }
 }
 
@@ -77,7 +81,7 @@ export const showInAppNotificationSaga = function* (action) {
     const { fn, navigationOptions } = action.payload
     
     if (AppState.currentState !== "active") {
-        yield take("APP_ACTIVE")
+        yield take("APP_STATE_ACTIVE")
     }
 
     ReactNativeNavigator[fn](navigationOptions)
@@ -178,13 +182,25 @@ export const watchNavigateScreens = function* () {
 export const navigateScreens = function* (action) {
     const { fn, navigationOptions } = action.payload
 
+    const currentScreenName = yield select(selectors.getCurrentScreenName)
+    const nextScreenName = navigationOptions.screen
+
+    console.log(`Going from ${currentScreenName} to ${nextScreenName}`)
+
+    if (currentScreenName === nextScreenName) {
+        return
+    }
+
     if (AppState.currentState !== "active") {
         console.log("WAITING FOR THE APP TO GO ACTIVE")
-        yield take("APP_ACTIVE")
+        yield take("APP_STATE_ACTIVE")
     }
 
     ReactNativeNavigator[fn](navigationOptions)
-    console.log("END OF navigateScreens* ()")     
+
+    yield put(actions.setCurrentScreenName(nextScreenName))
+
+    console.log("END OF navigateScreens* ()")
 }
 
 export default root
