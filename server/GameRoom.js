@@ -162,17 +162,17 @@ class GameRoom {
         playerToRemove.gameRoom = undefined
     }
     setNextPlayer() {
-        let indexOfCurrentPlayer = this.players.indexOf(this.performingPlayer)
+        let indexOfCurrentPlayer = this.playersRedux.findIndex(player => player.username === this.performingPlayer.player.username)
         let counter = 1
-        let nextPlayerToPerform = this.players[(indexOfCurrentPlayer + counter) % this.players.length]
-        console.log("About to set the next player...", this.players.filter(({ player }) => !player.isEliminated).length)
-        while (nextPlayerToPerform.player.isEliminated) {
+        let nextPlayerToPerform = this.playersRedux[(indexOfCurrentPlayer + counter) % this.playersRedux.length]
+        console.log("About to set the next player...", this.playersRedux.filter(player => !player.isEliminated).length)
+        while (nextPlayerToPerform.isEliminated) {
             counter++
-            nextPlayerToPerform = this.players[(indexOfCurrentPlayer + counter) % this.players.length]
+            nextPlayerToPerform = this.playersRedux[(indexOfCurrentPlayer + counter) % this.playersRedux.length]
         }
 
-        this.performingPlayer = nextPlayerToPerform
-        console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.player.username)
+        this.performingPlayer = this.players.find(({ player }) => player.username === nextPlayerToPerform.username)
+        console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.username)
     }
     startGame() {
         if (!this.gameStarted) {
