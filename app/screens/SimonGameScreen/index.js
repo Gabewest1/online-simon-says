@@ -3,7 +3,6 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
-import { SECONDARY_COLOR } from "../../constants"
 
 import Player from "../../components/player"
 import SimonGame from "../../components/simon__game"
@@ -20,7 +19,7 @@ import {
     actions as navigatorActions,
 } from "../../redux/Navigator"
 
-import { SINGLE_PLAYER_GAME, BACKGROUND_COLOR } from "../../constants"
+import { SINGLE_PLAYER_GAME, BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
 
 const Container = styled(Background)`
     justify-content: center;
@@ -71,7 +70,7 @@ const HighScoresView = styled.View`
     width: 100%;
 `
 const Score = styled.Text`
-    color: ${ SECONDARY_COLOR };
+    color: ${({ isScreenDarkened }) => isScreenDarkened ? BACKGROUND_COLOR : SECONDARY_COLOR };
     font-size: 24
 `
 const Players = ({ player1, player2, performingPlayer }) => {
@@ -82,10 +81,12 @@ const Players = ({ player1, player2, performingPlayer }) => {
         </PlayersView>
     )
 }
-const HighScores = ({ highScore }) => {
+const HighScores = ({ highScore, isScreenDarkened }) => {
     return (
         <HighScoresView>
-            <Score>High Score: { highScore }</Score>
+            <Score isScreenDarkened={ isScreenDarkened }>
+                High Score: { highScore }
+            </Score>
         </HighScoresView>
     )
 }
@@ -129,7 +130,9 @@ class SimonGameScreen extends React.Component {
             )
         } else {
             return (
-                <HighScores highScore={ this.props.highScore } />
+                <HighScores
+                    isScreenDarkened={ this.props.isScreenDarkened }
+                    highScore={ this.props.highScore } />
             )
         }
     }
