@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 import PropTypes from "prop-types"
 import Spinner from "react-native-spinkit"
+import { SECONDARY_COLOR } from "../../constants"
 
 import Background from "../../components/background"
 
@@ -20,7 +21,7 @@ const Container = styled(Background)`
 `
 
 const Text = styled.Text`
-    color: white;
+    color: ${ SECONDARY_COLOR };
     margin-top: 30;
 `
 
@@ -52,7 +53,7 @@ class FindMatchScreen extends React.Component {
         return (
             <Container>
                 { !this.props.hasFoundMatch &&
-                    <Spinner isVisible={ true } size={ 100 } type="Wave" color="white" />
+                    <Spinner isVisible={ true } size={ 120 } type="Wave" color={ SECONDARY_COLOR } />
                 }
                 <Text>{this.props.hasFoundMatch ? "Found Match!" : "Looking for Match..."}</Text>
             </Container>
