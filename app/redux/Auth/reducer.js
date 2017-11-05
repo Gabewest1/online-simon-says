@@ -5,7 +5,6 @@ const {
     loginError,
     loginSuccess,
     logout,
-    giveSagasNavigator,
     playAsGuest,
     register,
     updateStats
@@ -14,7 +13,6 @@ const {
     "LOGIN_ERROR",
     "LOGIN_SUCCESS",
     "LOGOUT",
-    "GIVE_SAGAS_NAVIGATOR",
     "PLAY_AS_GUEST",
     "REGISTER",
     "UPDATE_STATS"
@@ -25,7 +23,6 @@ export const actions = {
     loginError,
     loginSuccess,
     logout,
-    giveSagasNavigator,
     playAsGuest,
     register,
     updateStats
