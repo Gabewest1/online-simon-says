@@ -1,17 +1,17 @@
 import React from "react"
-import { AppState, View } from "react-native"
+import { AppState } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import styled from  "styled-components/native"
+import styled from "styled-components/native"
 import PropTypes from "prop-types"
 import socket from "../../socket"
 
 import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
 import SignInForm from "../../components/sign-in-form"
-import SimonGameBoard from "../../components/simon__game"
 
 import { actions as userActions } from "../../redux/Auth"
+import { actions as navigatorActions } from "../../redux/Navigator"
 
 const SignInFormFlex = styled(SignInForm)`
     flex-grow: 2;
@@ -37,7 +37,7 @@ class StartingScreen extends React.Component {
         super(props)
 
         //Injects Navigator sagas with the navigator object so I can
-        //perform screen navigations and display notifications from
+        //dispatch screen navigations and notifications from
         //within my sagas.
         props.giveSagasNavigator(props.navigator)
     }
@@ -46,6 +46,9 @@ class StartingScreen extends React.Component {
         if (!areEventHandlersConnected) {
             AppState.addEventListener('change', this.handleAppStateChange)
 
+            socket.on("connect", () => {
+                this.props.socketConnected()
+            })
             socket.on("disconnect", () => {
                 console.log("I DISCONNECTED DDDDDD:")
                 this.props.socketDisconnected()
@@ -63,10 +66,10 @@ class StartingScreen extends React.Component {
             areEventHandlersConnected = true
         }
     }
-    handleAppStateChange = (nextAppState) => {
+    handleAppStateChange = nextAppState => {
         if (nextAppState === "active") {
             console.log("ACTIVATING THE APP")
-            this.props.appActive()
+            this.props.appStateActive()
         }
     }
     render() {
@@ -86,17 +89,17 @@ function mapStateToProps() {
 }
 
 function mapDispatchToProps(dispatch) {
-    const appActive = () => ({ type: "APP_ACTIVE" })
-    const socketDisconnected = () => ({ type: "SOCKET_DISCONNECTED" })
-    const socketReconnected = () => ({ type: "SOCKET_RECONNECTED" })
-
-    return bindActionCreators({ ...userActions, appActive, socketDisconnected, socketReconnected }, dispatch)
+    return bindActionCreators({ ...userActions, ...navigatorActions }, dispatch)
 }
 
 StartingScreen.propTypes = {
+    appStateActive: PropTypes.func.isRequired,
     giveSagasNavigator: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired,
-    playAsGuest: PropTypes.func.isRequired
+    playAsGuest: PropTypes.func.isRequired,
+    socketConnected: PropTypes.func.isRequired,
+    socketDisconnected: PropTypes.func.isRequired,
+    socketReconnected: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StartingScreen)
