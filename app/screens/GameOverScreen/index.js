@@ -30,7 +30,7 @@ class GameOverScreen extends React.Component {
     findNextMatch() {
         this.props.navigateToScreen({
             fn: "push",
-            navigationOpations: {
+            navigationOptions: {
                 screen: "FindMatchScreen",
                 title: "",
                 animated: true,
