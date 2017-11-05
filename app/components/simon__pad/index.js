@@ -92,7 +92,7 @@ class Pad extends React.Component {
 
 Pad.propTypes = {
     source: PropTypes.any.isRequired,
-    onPressIn: PropTypes.func.isRequired
+    onPress: PropTypes.func.isRequired
 }
 
 export default Pad
