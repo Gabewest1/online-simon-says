@@ -4,7 +4,6 @@ import { actions, selectors } from "./index"
 import { selectors as userSelectors } from "../Auth"
 
 import { actions as navigatorActions } from "../Navigator"
-import { navigateScreens } from "../Navigator/sagas"
 
 export const ANIMATION_DURATION = 70
 export const TIMEOUT_TIME = 3
@@ -12,7 +11,6 @@ const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
 
 let GAME_MODE
-let ScreenNavigator
 
 const root = function* () {
     yield [
@@ -20,7 +18,6 @@ const root = function* () {
         watchSimonGameSaga(),
         findMatchSaga(),
         watchAnimateSimonPadOnline(),
-        getNavigator(),
         playerDisconnected(),
         createPrivateMatchSaga(),
         invitePlayerSaga(),
@@ -31,10 +28,7 @@ const root = function* () {
         gotoGameScreenSaga()
     ]
 }
-export const getNavigator = function* () {
-    const action = yield take("GIVE_SAGAS_NAVIGATOR")
-    ScreenNavigator = action.payload
-}
+
 export const watchAnimateSimonPadOnline = function* () {
     while (true) {
         const { payload } = yield take("ANIMATE_SIMON_PAD_ONLINE")
@@ -54,9 +48,7 @@ export const findMatchSaga = function* () {
             playerJoinedPrivateMatch: take(actions.playerAcceptedChallenge)
         })
 
-        console.log("RECIEVED THE PLAYER JOINED IN THE WATCHFINDMATCH")
         if (cancelSearch || playerJoinedPrivateMatch) {
-            console.log("SENDING SERVER CANCEL_SEARCH")
             yield put({ type: "server/CANCEL_SEARCH" })
         } else {
             const navigationOptions = {
@@ -155,12 +147,17 @@ export const playerDisconnected = function* () {
         const action = yield take("PLAYER_DISCONNECTED")
 
         console.log("HHHEEEEEYYYYYY IM DISCONNECTION SOMEBODY")
-        ScreenNavigator.showInAppNotification({
+        const navigationOptions = {
             screen: "PlayerDisconnectedMessage",
             passProps: { player: action.payload },
             autoDismissTimerSec: 3,
             position: "bottom"
-        })
+        }
+
+        yield put(navigatorActions.showInAppNotification({
+            fn: "showInAppNotification",
+            navigationOptions
+        }))
     }
 }
 
@@ -334,29 +331,39 @@ export const receiveGameInviteSaga = function* () {
         const action = yield take("RECEIVE_INVITE")
         const { player, gameRoom } = action.payload
 
-        ScreenNavigator.showInAppNotification({
+        const navigationOptions = {
             screen: "GameInvitationNotification",
             passProps: { player },
             autoDismissTimerSec: 7,
             position: "bottom"
-        })
+        }
+
+        yield put(navigatorActions.showInAppNotification({
+            fn: "showInAppNotification",
+            navigationOptions
+        }))
 
         const { playerAccepted } = yield race({
             playerAccepted: take(actions.playerAcceptedChallenge),
             playerDeclined: take(actions.playerDeclinedChallenge),
             playerDidntRespond: call(delay, 7000)
         })
+
         console.log("ACCEPTED THE CHALLENGE AND DISMISSING THE NOTIFICATION")
-        ScreenNavigator.dismissInAppNotification({
-            screen: "GameInvitationNotification"
-        })
+        yield put(navigatorActions.showInAppNotification({
+            fn: "dismissInAppNotification",
+            navigationOptions: {
+                screen: "GameInvitationNotification"
+            }
+        }))
+
         console.log("THE NOTIFICATION HAS BEEN DISMISSED")
         if (playerAccepted) {
             console.log("ABOUT THE SEND THE SERVER A JOIN_PRIVATE_MATCH")
             yield put({ type: "server/JOIN_PRIVATE_MATCH", payload: { gameRoom } })
             console.log("WAITING FOR THE JOINED_PRIVATE_MATCH")
             yield take("JOINED_PRIVATE_MATCH")
-            
+
             const navigationOptions = {
                 screen: "InvitePlayersScreen",
                 title: "",
