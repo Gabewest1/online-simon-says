@@ -12,6 +12,7 @@ import Input from "../input"
 
 
 import { actions as authActions } from "../../redux/Auth"
+import { actions as navigatorActions } from "../../redux/Navigator"
 
 const Form = styled.View`
     justify-content: space-between;
@@ -30,11 +31,14 @@ class SignInForm extends React.Component {
         this.gotoSignUpScreen = this.gotoSignUpScreen.bind(this)
     }
     gotoSignUpScreen() {
-        this.props.navigator.push({
-            screen: "SignUpScreen",
-            title: "Sign Up",
-            animated: true,
-            animationType: "slide-horizontal",
+        this.props.navigateToScreen({
+            fn: "push",
+            navigationOptions: {
+                screen: "SignUpScreen",
+                title: "Sign Up",
+                animated: true,
+                animationType: "slide-horizontal",
+            }
         })
     }
     validate(values) {
@@ -69,7 +73,7 @@ class SignInForm extends React.Component {
                     type="password"
                     component={ Input }
                     placeholder="password" />
-                
+
                 <Buttons>
                     <ListItem
                         style={{ marginVertical: 15 }}
@@ -101,14 +105,16 @@ function mapStateToProps() {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(authActions, dispatch)
+    return bindActionCreators({ ...authActions, ...navigatorActions }, dispatch)
 }
 
 SignInForm.propTypes = {
     login: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    navigateToScreen: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired,
-    playAsGuest: PropTypes.func.isRequired
+    playAsGuest: PropTypes.func.isRequired,
+    style: PropTypes.object
 }
 
 export default reduxForm({

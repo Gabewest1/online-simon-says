@@ -9,6 +9,7 @@ import { SINGLE_PLAYER_GAME } from "../../constants"
 import ListItem from "../../components/menu-item"
 
 import { actions as simonGameActions } from "../../redux/SimonSaysGame"
+import { actions as navigatorActions } from "../../redux/Navigator"
 
 const Container = styled.View`
     width: 80%;
@@ -27,28 +28,39 @@ class GameOverScreen extends React.Component {
         this.props.resetGame()
     }
     findNextMatch() {
-        this.props.navigator.push({
-            screen: "FindMatchScreen",
-            title: "",
-            animated: true,
-            animationType: 'slide-horizontal',
-            overrideBackPress: true,
-            passProps: { gameMode: this.props.gameMode }
+        this.props.navigateToScreen({
+            fn: "push",
+            navigationOpations: {
+                screen: "FindMatchScreen",
+                title: "",
+                animated: true,
+                animationType: 'slide-horizontal',
+                overrideBackPress: true,
+                passProps: { gameMode: this.props.gameMode }
+            }
         })
     }
     playAgain() {
-        this.props.navigator.push({
-            screen: "SimonGameScreen",
-            title: "",
-            animated: true,
-            animationType: 'slide-horizontal',
-            overrideBackPress: true,
-            passProps: { gameMode: this.props.gameMode }
+        this.props.navigateToScreen({
+            fn: "push",
+            navigationOptions: {
+                screen: "SimonGameScreen",
+                title: "",
+                animated: true,
+                animationType: 'slide-horizontal',
+                overrideBackPress: true,
+                passProps: { gameMode: this.props.gameMode }
+            }
         })
     }
     render() {
-        const onPress = this.props.gameMode === SINGLE_PLAYER_GAME ? this.playAgain.bind(this) : this.findNextMatch.bind(this)
-        const playAgainText = this.props.gameMode === SINGLE_PLAYER_GAME ? "Play Again" : "Find Next Match"
+        const onPress = this.props.gameMode === SINGLE_PLAYER_GAME
+            ? this.playAgain.bind(this)
+            : this.findNextMatch.bind(this)
+
+        const playAgainText = this.props.gameMode === SINGLE_PLAYER_GAME
+            ? "Play Again"
+            : "Find Next Match"
 
         return (
             <Background centered>
@@ -62,13 +74,16 @@ class GameOverScreen extends React.Component {
                         onPress={ () => onPress() } />
                     <ListItem
                         title="Quit"
-                        onPress={ () => this.props.navigator.resetTo({
-                            screen: "SelectGameMode",
-                            title: "",
-                            animated: true,
-                            animationType: 'slide-horizontal',
-                            overrideBackPress: true,
-                            backButtonHidden: true
+                        onPress={ () => this.props.navigateToScreen({
+                            fn: "resetTo",
+                            navigationOptions: {
+                                screen: "SelectGameMode",
+                                title: "",
+                                animated: true,
+                                animationType: 'slide-horizontal',
+                                overrideBackPress: true,
+                                backButtonHidden: true
+                            }
                         }) } />
                 </Container>
             </Background>
@@ -81,11 +96,12 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ ...simonGameActions }, dispatch)
+    return bindActionCreators({ ...simonGameActions, ...navigatorActions }, dispatch)
 }
 
 GameOverScreen.propTypes = {
     gameMode: PropTypes.number.isRequired,
+    navigateToScreen: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired,
     resetGame: PropTypes.func.isRequired,
     winner: PropTypes.object

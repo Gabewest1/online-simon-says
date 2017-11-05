@@ -10,6 +10,7 @@ import Background from "../../components/background"
 
 import { SINGLE_PLAYER_GAME } from "../../constants"
 import { actions as userActions } from "../../redux/Auth"
+import { actions as navigatorActions } from "../../redux/Navigator"
 
 const MARGIN_BOTTOM = 35
 
@@ -31,13 +32,16 @@ class SelectGameMode extends React.Component {
                 <List>
                     <ListItem
                         style={{ marginBottom: MARGIN_BOTTOM }}
-                        onPress={ () => this.props.navigator.push({
-                            screen: "SimonGameScreen",
-                            title: "",
-                            animated: true,
-                            animationType: 'slide-horizontal',
-                            passProps: { gameMode: SINGLE_PLAYER_GAME },
-                            overrideBackPress: true
+                        onPress={ () => this.props.navigateToScreen({
+                            fn: "push",
+                            navigationOptions: {
+                                screen: "SimonGameScreen",
+                                title: "",
+                                animated: true,
+                                animationType: 'slide-horizontal',
+                                passProps: { gameMode: SINGLE_PLAYER_GAME },
+                                overrideBackPress: true
+                            }
                         }) }
                         color={ "red" }
                         icon={{ name: "person" }}>
@@ -45,11 +49,14 @@ class SelectGameMode extends React.Component {
                     </ListItem>
                     <ListItem
                         style={{ marginBottom: MARGIN_BOTTOM }}
-                        onPress={ () => this.props.navigator.push({
-                            screen: "SelectOnlineGameMode",
-                            title: "",
-                            animated: true,
-                            animationType: 'slide-horizontal'
+                        onPress={ () => this.props.navigateToScreen({
+                            fn: "push",
+                            navigationOptions: {
+                                screen: "SelectOnlineGameMode",
+                                title: "",
+                                animated: true,
+                                animationType: 'slide-horizontal'
+                            }
                         }) }
                         color={ "blue" }
                         icon={{ name: "language" }}>
@@ -57,11 +64,14 @@ class SelectGameMode extends React.Component {
                     </ListItem>
                     <ListItem
                         style={{ marginBottom: MARGIN_BOTTOM }}
-                        onPress={ () => this.props.navigator.push({
-                            screen: "Leaderboards",
-                            title: "Leaderboards",
-                            animated: true,
-                            animationType: 'slide-horiontal'
+                        onPress={ () => this.props.navigateToScreen({
+                            fn: "push",
+                            navigationOptions: {
+                                screen: "Leaderboards",
+                                title: "Leaderboards",
+                                animated: true,
+                                animationType: 'slide-horiontal'
+                            }
                         }) }
                         color={ "green" }
                         icon={{ name: "view-list" }}>
@@ -71,11 +81,14 @@ class SelectGameMode extends React.Component {
                         inverted
                         onPress={ () => {
                             this.props.logout()
-                            this.props.navigator.resetTo({
-                                screen: "StartingScreen",
-                                title: "Home",
-                                animated: true,
-                                animationType: 'slide-horiontal'
+                            this.props.navigateToScreen({
+                                fn: "resetTo",
+                                navigationOptions: {
+                                    screen: "StartingScreen",
+                                    title: "Home",
+                                    animated: true,
+                                    animationType: 'slide-horiontal'
+                                }
                             })
                         } }
                         color={ "green" }
@@ -93,11 +106,12 @@ function mapStateToProps() {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ ...userActions }, dispatch)
+    return bindActionCreators({ ...userActions, ...navigatorActions }, dispatch)
 }
 
 SelectGameMode.propTypes = {
     logout: PropTypes.func.isRequired,
+    navigateToScreen: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired
 }
 

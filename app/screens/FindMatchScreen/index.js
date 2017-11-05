@@ -7,6 +7,8 @@ import Spinner from "react-native-spinkit"
 
 import Background from "../../components/background"
 
+import { actions as navigatorActions } from "../../redux/Navigator"
+
 import {
     actions as simonGameActions,
     selectors as simonGameSelectors
@@ -21,7 +23,6 @@ const Text = styled.Text`
     color: white;
     margin-top: 30;
 `
-let IS_TRANSITIONING = false
 
 class FindMatchScreen extends React.Component {
     constructor(props) {
@@ -36,9 +37,12 @@ class FindMatchScreen extends React.Component {
     handleBack({ id }) {
         if (id === "backPress") {
             this.props.cancelSearch()
-            this.props.navigator.resetTo({
-                screen: "SelectGameMode",
-                backButtonHidden: true
+            this.props.navigateToScreen({
+                fn: "resetTo",
+                navigationOptions: {
+                    screen: "SelectGameMode",
+                    backButtonHidden: true
+                }
             })
         }
 
@@ -63,14 +67,16 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({...simonGameActions}, dispatch)
+    return bindActionCreators({ ...simonGameActions, ...navigatorActions }, dispatch)
 }
 
 FindMatchScreen.propTypes = {
     cancelSearch: PropTypes.func.isRequired,
     findMatch: PropTypes.func.isRequired,
+    gameMode: PropTypes.number.isRequired,
     hasFoundMatch: PropTypes.bool.isRequired,
-    gameMode: PropTypes.number.isRequired
+    navigator: PropTypes.object.isRequired,
+    navigateToScreen: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FindMatchScreen)

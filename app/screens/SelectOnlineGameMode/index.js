@@ -10,6 +10,7 @@ import Background from "../../components/background"
 
 import { TWO_PLAYER_GAME, THREE_PLAYER_GAME, FOUR_PLAYER_GAME } from "../../constants"
 import { actions as simonGameActions } from "../../redux/SimonSaysGame"
+import { actions as navigatorActions } from "../../redux/Navigator"
 
 const Container = styled(Background)`
     justify-content: space-around;
@@ -20,17 +21,18 @@ const List = styled.View`
     width: 80%;
 `
 
-
 class SelectOnlineGameMode extends React.Component {
     gotoGameScreen(gameMode) {
-        this.props.navigator.push({
+        const navigationOptions = {
             screen: "FindMatchScreen",
             title: "",
             animated: true,
             animationType: 'slide-horizontal',
             passProps: { gameMode },
             overrideBackPress: true
-        })
+        }
+
+        this.props.navigateToScreen({ fn: "push", navigationOptions })
     }
     render() {
         return (
@@ -71,7 +73,7 @@ function mapStateToProps() {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ ...simonGameActions }, dispatch)
+    return bindActionCreators({ ...simonGameActions, ...navigatorActions }, dispatch)
 }
 
 SelectOnlineGameMode.propTypes = {
