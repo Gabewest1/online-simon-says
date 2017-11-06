@@ -16,7 +16,7 @@ import {
 import { selectors as userSelectors } from "../../redux/Auth"
 
 import {
-    actions as navigatorActions,
+    actions as navigatorActions
 } from "../../redux/Navigator"
 
 import { SINGLE_PLAYER_GAME, BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
@@ -48,18 +48,25 @@ const PlayersView = styled.View`
     justify-content: space-between;
     padding: 15px;
     position: absolute;
-    top: 0;
+    ${({ bottom }) => bottom ? "bottom: 0;" : "top: 0;" }
     width: 100%;
 `
 const PlayerView = styled(Player)`
-    backgroundColor: ${({ isItMyTurn }) => isItMyTurn ? "gold" : "white"};
-    borderRadius: 330px;
-    padding: 0 10px;
+    ${({ isItMyTurn, player }) => {
+        if (player.isEliminated) {
+            return `backgroundColor: black; color: red;`
+        } else if (isItMyTurn) {
+            return `backgroundColor: gold; color: ${ BACKGROUND_COLOR };`
+        } else {
+            return `backgroundColor: ${ BACKGROUND_COLOR }; color: ${ SECONDARY_COLOR };`
+        }
+    }};
+    borderRadius: 50;
 `
 const Timer = styled.Text`
-    width: 100%;
-    text-align: center;
-    color: black;
+    color: ${ SECONDARY_COLOR };
+    font-size: 24px;
+    padding-bottom: 10px;
 `
 const HighScoresView = styled.View`
     flex-direction: row;
@@ -71,13 +78,15 @@ const HighScoresView = styled.View`
 `
 const Score = styled.Text`
     color: ${({ isScreenDarkened }) => isScreenDarkened ? BACKGROUND_COLOR : SECONDARY_COLOR };
-    font-size: 24
+    font-size: 18px;
 `
-const Players = ({ player1, player2, performingPlayer }) => {
+const Players = ({ player1, player2, performingPlayer, bottom }) => {
     return (
-        <PlayersView>
+        <PlayersView bottom={ bottom }>
             <PlayerView player={ player1 } isItMyTurn={ performingPlayer.username === player1.username } />
-            <PlayerView player={ player2 } isItMyTurn={ performingPlayer.username === player2.username } />
+            { player2 &&
+                <PlayerView player={ player2 } isItMyTurn={ performingPlayer.username === player2.username } />
+            }
         </PlayersView>
     )
 }
@@ -98,7 +107,7 @@ class SimonGameScreen extends React.Component {
                 id: "quit"
             }
         ],
-        leftButtons: [],
+        leftButtons: []
     }
     componentWillMount() {
         this.props.startGame(this.props.gameMode)
@@ -144,6 +153,13 @@ class SimonGameScreen extends React.Component {
                 { this.renderHUD() }
                 <Timer>{ this.props.timer }</Timer>
                 <SimonGame { ...this.props } onPress={ this.handlePadClick.bind(this) } />
+                { this.props.players.length > 2
+                    && <Players
+                        bottom
+                        player1={ this.props.players[2] }
+                        player2={ this.props.players[3] }
+                        performingPlayer={ this.props.performingPlayer } />
+                }
             </Container>
         )
     }
