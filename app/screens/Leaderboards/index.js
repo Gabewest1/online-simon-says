@@ -12,6 +12,7 @@ import Background from "../../components/background"
 import Player from "../../components/player"
 
 import { actions as leaderboardActions, selectors as leaderboardSelectors } from "../../redux/Leaderboards"
+import { actions as navigatorActions } from "../../redux/Navigator"
 
 const Container = styled.View`
     flex-direction: row;
@@ -55,8 +56,27 @@ const styles = StyleSheet.create({
 })
 
 class Leaderboards extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.handleBack = this.handleBack.bind(this)
+        this.props.navigator.setOnNavigatorEvent(this.handleBack)
+    }
     componentWillMount() {
         this.props.fetchLeaderboardData()
+    }
+    handleBack({ id }) {
+        if (id === "backPress") {
+            this.props.navigateToScreen({
+                fn: "pop",
+                navigationOptions: {
+                    screen: "SelectGameMode",
+                    backButtonHidden: true
+                }
+            })
+        }
+
+        return true
     }
     render() {
         console.log("PLAYERSL:", this.props.players)
@@ -108,12 +128,14 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ ...leaderboardActions }, dispatch)
+    return bindActionCreators({ ...leaderboardActions, ...navigatorActions }, dispatch)
 }
 
 Leaderboards.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     fetchLeaderboardData: PropTypes.func.isRequired,
+    navigateToScreen: PropTypes.func.isRequired,
+    navigator: PropTypes.object.isRequired,
     players: PropTypes.array.isRequired
 }
 

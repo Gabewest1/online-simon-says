@@ -22,6 +22,25 @@ const List = styled.View`
 `
 
 class SelectOnlineGameMode extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.handleBack = this.handleBack.bind(this)
+        this.props.navigator.setOnNavigatorEvent(this.handleBack)
+    }
+    handleBack({ id }) {
+        if (id === "backPress") {
+            this.props.navigateToScreen({
+                fn: "pop",
+                navigationOptions: {
+                    screen: "SelectGameMode",
+                    backButtonHidden: true
+                }
+            })
+        }
+
+        return true
+    }
     gotoGameScreen(gameMode) {
         const navigationOptions = {
             screen: "FindMatchScreen",
@@ -78,6 +97,7 @@ function mapDispatchToProps(dispatch) {
 
 SelectOnlineGameMode.propTypes = {
     createPrivateMatch: PropTypes.func.isRequired,
+    navigateToScreen: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired
 }
 
