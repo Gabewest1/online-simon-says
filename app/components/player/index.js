@@ -18,7 +18,7 @@ const Level = styled.Text`
     background-color: transparent;
 `
 const Name = styled.Text`
-
+    margin-horizontal: 4;
 `
 const Image = styled.Image`
     
@@ -34,7 +34,7 @@ class Player extends React.Component {
                     <Image { ...this.props.icon } source={ require("../../assets/images/level.png") } />
                     <Level { ...this.props.level }>{ level }</Level>
                 </IconView>
-                <Name { ...this.props.name }>{ username }</Name>
+                <Name { ...this.props } { ...this.props.name }>{ username }</Name>
             </PlayerView>
         )
     }
