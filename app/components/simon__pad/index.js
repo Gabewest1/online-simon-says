@@ -6,10 +6,10 @@ import Sound from "react-native-sound"
 
 Sound.setCategory("Playback")
 
-const pad0Audio = new Sound("a_sharp.wav", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
-const pad1Audio = new Sound("c_sharp.wav", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
-const pad2Audio = new Sound("d_sharp.wav", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
-const pad3Audio = new Sound("f_sharp.wav", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
+const pad0Audio = new Sound("simon_sound1.mp3", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
+const pad1Audio = new Sound("simon_sound2.mp3", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
+const pad2Audio = new Sound("simon_sound3.mp3", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
+const pad3Audio = new Sound("simon_sound4.mp3", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
 
 const padAudioFiles = {
     0: pad0Audio,
