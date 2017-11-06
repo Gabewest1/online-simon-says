@@ -1,7 +1,11 @@
 import React from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 import { Dimensions } from "react-native"
 import { Button } from "react-native-elements"
 import { BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
+
+import { selectors as navigatorSelectors } from "../../redux/Navigator"
 
 class MenuItem extends React.Component {
     constructor(props) {
@@ -12,7 +16,7 @@ class MenuItem extends React.Component {
             debounceTime: 2000
         }
     }
-    debounceDecorator = (fn) => () => {
+    debounceDecorator = fn => () => {
         if (!this.state.debouncing) {
             fn()
             this.setState({ debouncing: true })
@@ -38,10 +42,15 @@ class MenuItem extends React.Component {
             : 18
 
         const color = inverted ? BACKGROUND_COLOR : SECONDARY_COLOR
+        const didPlayerPassInDisabledProp = this.props.disabled !== undefined
+        const disabled = didPlayerPassInDisabledProp 
+            ? this.props.disabled
+            : !this.props.doesPlayerHaveInternet
 
         return (
             <Button
                 raised
+                disabled={ disabled }
                 fontSize={ FONT_SIZE }
                 color={ color }
                 backgroundColor={ inverted ? SECONDARY_COLOR : BACKGROUND_COLOR }
@@ -58,4 +67,15 @@ class MenuItem extends React.Component {
     }
 }
 
-export default MenuItem
+
+function mapStateToProps(state) {
+    return {
+        doesPlayerHaveInternet: navigatorSelectors.doesPlayerHaveInternet(state)
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MenuItem)
