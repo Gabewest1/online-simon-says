@@ -31,6 +31,7 @@ class SelectGameMode extends React.Component {
             <Container>
                 <List>
                     <ListItem
+                        disabled={ false }
                         style={{ marginBottom: MARGIN_BOTTOM }}
                         onPress={ () => this.props.navigateToScreen({
                             fn: "push",
@@ -55,7 +56,8 @@ class SelectGameMode extends React.Component {
                                 screen: "SelectOnlineGameMode",
                                 title: "",
                                 animated: true,
-                                animationType: 'slide-horizontal'
+                                animationType: 'slide-horizontal',
+                                overrideBackPress: true
                             }
                         }) }
                         color={ "blue" }
@@ -70,7 +72,8 @@ class SelectGameMode extends React.Component {
                                 screen: "Leaderboards",
                                 title: "Leaderboards",
                                 animated: true,
-                                animationType: 'slide-horiontal'
+                                animationType: 'slide-horiontal',
+                                overrideBackPress: true
                             }
                         }) }
                         color={ "green" }
@@ -79,6 +82,7 @@ class SelectGameMode extends React.Component {
                     </ListItem>
                     <ListItem
                         inverted
+                        disabled={ false }
                         onPress={ () => {
                             this.props.logout()
                             this.props.navigateToScreen({

@@ -82,6 +82,7 @@ class SignInForm extends React.Component {
                             Login
                     </ListItem>
                     <ListItem
+                        disabled={ false }
                         style={{ marginBottom: 15 }}
                         onPress={ () => this.props.playAsGuest() }
                         icon={{name: "border-color"}}>

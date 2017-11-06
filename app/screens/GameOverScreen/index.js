@@ -69,10 +69,12 @@ class GameOverScreen extends React.Component {
                 }
                 <Container>
                     <ListItem
+                        disabled={ false }
                         title={ playAgainText }
                         style={{ marginBottom: 35 }}
                         onPress={ () => onPress() } />
                     <ListItem
+                        disabled={ false }
                         title="Quit"
                         onPress={ () => this.props.navigateToScreen({
                             fn: "resetTo",
