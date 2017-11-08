@@ -15,6 +15,7 @@ const {
     eliminatePlayer,
     restartGame,
     addNextMove,
+    setMoveIndex,
     increaseMoveCounter,
     resetMoveCounter,
     setPlayers,
@@ -51,6 +52,7 @@ const {
     "ELIMINATE_PLAYER",
     "RESTART_GAME",
     "ADD_NEXT_MOVE",
+    "SET_MOVE_INDEX",
     "INCREASE_MOVE_COUNTER",
     "RESET_MOVE_COUNTER",
     "SET_PLAYERS",
@@ -93,6 +95,7 @@ export const actions = {
     resetMoveCounter,
     setPlayers,
     addPlayer,
+    setMoveIndex,
     removePlayer,
     setPerformingPlayer,
     increaseRoundCounter,
@@ -143,6 +146,7 @@ const gameReducerInitialState = {
     isScreenDarkened: false,
     performingPlayer: undefined,
     round: 0,
+    moveIndex: 0,
     timer: 15,   //seconds
     winner: undefined
 }
@@ -155,6 +159,7 @@ export const gameReducer = handleActions({
     [decreaseTimer]: (state, action) => ({ ...state, timer: state.timer - 1 }),
     [setPerformingPlayer]: (state, action) => ({ ...state, performingPlayer: action.payload }),
     [resetTimer]: (state, action) => ({ ...state, timer: 15 }),
+    [setMoveIndex]: (state, action) => ({ ...state, moveIndex: action.payload }),
     [setWinner]: (state, action) => ({ ...state, winner: action.payload }),
     [resetGame]: (state, action) => ({ ...gameReducerInitialState })
 }, gameReducerInitialState)

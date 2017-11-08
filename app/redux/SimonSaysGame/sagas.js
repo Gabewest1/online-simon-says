@@ -239,7 +239,7 @@ export const startShortTimer = function* () {
 export const performPlayersTurn = function* () {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
-    yield put(actions.setMoveindex(0))
+    yield put(actions.setMoveIndex(0))
 
     while (movesPerformed < movesToPerform.length) {
         let isPlayersFirstMove = movesPerformed === 0
@@ -269,7 +269,7 @@ export const performPlayersTurn = function* () {
         }
 
         movesPerformed++
-        yield put(actions.setMoveindex(movesPerformed))
+        yield put(actions.setMoveIndex(movesPerformed))
     }
 
     //Give a little pause before starting the next turn
