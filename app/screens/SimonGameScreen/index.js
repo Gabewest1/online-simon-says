@@ -127,7 +127,8 @@ class SimonGameScreen extends React.Component {
     }
     handlePadClick(pad) {
         console.log("PAD CLICKED", pad)
-        this.props.simonPadClicked(pad)
+        const { simonPadClicked } = this.props
+        simonPadClicked(pad)
     }
     renderHUD() {
         if (this.props.gameMode !== SINGLE_PLAYER_GAME && this.props.players.length > 0) {
@@ -167,11 +168,14 @@ class SimonGameScreen extends React.Component {
 
 function mapStateToProps(state) {
     return {
+        disableOnPress: simonGameSelectors.disableOnPress(state),
         hasGameStarted: simonGameSelectors.hasGameStarted(state),
         highScore: userSelectors.getHighScore(state),
         isGameOver: simonGameSelectors.isGameOver(state),
         isItMyTurn: simonGameSelectors.isItMyTurn(state),
         isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
+        moveIndex: simonGameSelectors.getMoveIndex(state),
+        numberOfMoves: simonGameSelectors.numberOfMoves(state),
         pads: simonGameSelectors.getPads(state),
         performingPlayer: simonGameSelectors.selectPerformingPlayer(state),
         players: simonGameSelectors.getPlayers(state),
@@ -187,6 +191,7 @@ function mapDispatchToProps(dispatch) {
 
 SimonGameScreen.propTypes = {
     animateSimonPad: PropTypes.func.isRequired,
+    disableOnPress: PropTypes.bool.isRequired,
     gameMode: PropTypes.number.isRequired,
     hasGameStarted: PropTypes.bool.isRequired,
     highScore: PropTypes.number.isRequired,
@@ -194,6 +199,7 @@ SimonGameScreen.propTypes = {
     isGameOver: PropTypes.bool.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
     navigator: PropTypes.object.isRequired,
+    numberOfMoves: PropTypes.number.isRequired,
     pads: PropTypes.array.isRequired,
     performingPlayer: PropTypes.object.isRequired,
     players: PropTypes.array.isRequired,

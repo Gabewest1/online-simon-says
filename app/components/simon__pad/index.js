@@ -6,10 +6,10 @@ import Sound from "react-native-sound"
 
 Sound.setCategory("Playback")
 
-const pad0Audio = new Sound("simon_sound1.mp3", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
-const pad1Audio = new Sound("simon_sound2.mp3", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
-const pad2Audio = new Sound("simon_sound3.mp3", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
-const pad3Audio = new Sound("simon_sound4.mp3", Sound.MAIN_BUNDLE, (err) => err && console.log(err))
+const pad0Audio = new Sound("simon_sound1.mp3", Sound.MAIN_BUNDLE, err => err && console.log(err))
+const pad1Audio = new Sound("simon_sound2.mp3", Sound.MAIN_BUNDLE, err => err && console.log(err))
+const pad2Audio = new Sound("simon_sound3.mp3", Sound.MAIN_BUNDLE, err => err && console.log(err))
+const pad3Audio = new Sound("simon_sound4.mp3", Sound.MAIN_BUNDLE, err => err && console.log(err))
 
 const padAudioFiles = {
     0: pad0Audio,
@@ -67,23 +67,28 @@ const Touchable = styled.TouchableOpacity`
 
 class Pad extends React.Component {
     onPress() {
-        playAudio(this.props.index)
         InteractionManager.runAfterInteractions(() => {
             this.props.onPress()
         })
     }
     render() {
-        const { source, sourceActive } = this.props
+        const { disableOnPress, source, sourceActive } = this.props
 
         return (
             <Container style={ this.props.style }>
                 <PadsView>
                     <PadViewActive style={ this.props.style } source={ sourceActive } />
 
-                    <Touchable { ...this.props } onPress={ this.onPress.bind(this) } >
+                    <Touchable
+                        { ...this.props }
+                        activeOpacity={ disableOnPress ? 1 : .2 }
+                        onPress={ !disableOnPress && this.onPress.bind(this) }
+                        onPressIn={ () => !disableOnPress && playAudio(this.props.index) }>
+
                         <PadView { ...this.props } source={ source } />
+
                     </Touchable>
-                    
+
                 </PadsView>
             </Container>
         )

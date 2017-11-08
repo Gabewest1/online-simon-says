@@ -88,7 +88,7 @@ class SimonGame extends React.Component {
         //Pads that come from this.props are used to animate the moves of opponents in
         //online matches. Pads from this.state are used on the clients side to optimize
         //the animations speed and responsivensss.
-        const { pads, isScreenDarkened } = this.props
+        const { disableOnPress, isScreenDarkened, pads } = this.props
         const { pad0, pad1, pad2, pad3 } = this.state
 
         return (
@@ -104,6 +104,7 @@ class SimonGame extends React.Component {
                     source={ require("../../assets/images/top_left_pad.png") }
                     sourceActive={ require("../../assets/images/top_left_pad_active.png") }
                     isAnimating={ pad0.isAnimating || pads[0].isAnimating }
+                    disableOnPress={ disableOnPress }
                     onPress={ () => this.handlePadPress(0) } />
 
                 <SimonPad
@@ -112,6 +113,7 @@ class SimonGame extends React.Component {
                     source={ require("../../assets/images/top_right_pad.png") }
                     sourceActive={ require("../../assets/images/top_right_pad_active.png") }
                     isAnimating={ pad1.isAnimating || pads[1].isAnimating }
+                    disableOnPress={ disableOnPress }
                     onPress={ () => this.handlePadPress(1) } />
 
                 <SimonPad
@@ -120,6 +122,7 @@ class SimonGame extends React.Component {
                     source={ require("../../assets/images/bottom_left_pad.png") }
                     sourceActive={ require("../../assets/images/bottom_left_pad_active.png") }
                     isAnimating={ pad2.isAnimating || pads[2].isAnimating }
+                    disableOnPress={ disableOnPress }
                     onPress={ () => this.handlePadPress(2) } />
 
                 <SimonPad
@@ -128,6 +131,7 @@ class SimonGame extends React.Component {
                     source={ require("../../assets/images/bottom_right_pad.png") }
                     sourceActive={ require("../../assets/images/bottom_right_pad_active.png") }
                     isAnimating={ pad3.isAnimating || pads[3].isAnimating }
+                    disableOnPress={ disableOnPress }
                     onPress={ () => this.handlePadPress(3) } />
 
                 <TintedBG show={ isScreenDarkened } />
