@@ -192,7 +192,7 @@ export const displayMovesToPerform = function* () {
 
     for (let move of movesToPerform) {
         yield call(animateSimonPad, { pad: move, isValid: true })
-        yield call(delay, 250) //Wait between each move
+        yield call(delay, 100) //Wait between each move
     }
 
     yield put(actions.setIsScreenDarkened(false))
@@ -239,6 +239,7 @@ export const startShortTimer = function* () {
 export const performPlayersTurn = function* () {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
+    yield put(actions.setMoveindex(0))
 
     while (movesPerformed < movesToPerform.length) {
         let isPlayersFirstMove = movesPerformed === 0
@@ -268,6 +269,7 @@ export const performPlayersTurn = function* () {
         }
 
         movesPerformed++
+        yield put(actions.setMoveindex(movesPerformed))
     }
 
     //Give a little pause before starting the next turn
