@@ -71,7 +71,7 @@ const TintedBG = styled.View`
         }
     }}
 `
-class SimonGame extends React.Component {
+class SimonGame extends React.PureComponent {
     constructor() {
         super()
         this.state = {

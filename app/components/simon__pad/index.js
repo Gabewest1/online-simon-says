@@ -65,7 +65,7 @@ const Touchable = styled.TouchableOpacity`
     ${({ isAnimating }) => isAnimating && "z-index: 2;"}
 `
 
-class Pad extends React.Component {
+class Pad extends React.PureComponent {
     onPress() {
         InteractionManager.runAfterInteractions(() => {
             this.props.onPress()
