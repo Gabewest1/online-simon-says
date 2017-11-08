@@ -46,6 +46,10 @@ class StartingScreen extends React.Component {
         if (!areEventHandlersConnected) {
             AppState.addEventListener('change', this.handleAppStateChange)
 
+            if (socket.connected) {
+                this.props.socketConnected()
+            }
+
             socket.on("connect", () => {
                 this.props.socketConnected()
             })
