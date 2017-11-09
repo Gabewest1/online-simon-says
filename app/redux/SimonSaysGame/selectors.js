@@ -35,4 +35,4 @@ export const hasGameStarted = state => getMoves(state).length > 0
 export const numberOfMoves = state => getMoves(state).length
 export const getMoveIndex = state => state.simonSays.game.moveIndex
 export const disableOnPress = state =>
-    !isItMyTurn(state) || isScreenDarkened(state) || getMoveIndex(state) >= numberOfMoves(state)
+    !isItMyTurn(state) || isScreenDarkened(state) || (numberOfMoves(state) > 0 && getMoveIndex(state) >= numberOfMoves(state))
