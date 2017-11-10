@@ -5,12 +5,13 @@ import { selectors as userSelectors } from "../Auth"
 
 import { actions as navigatorActions } from "../Navigator"
 
-export const ANIMATION_DURATION = 70
+export const ANIMATION_DURATION = 200
 export const TIMEOUT_TIME = 3
 const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
 
 let GAME_MODE
+let movesQueue = []   //Opponents moves to be displayed that come from the server
 
 const root = function* () {
     yield [
@@ -18,6 +19,7 @@ const root = function* () {
         watchSimonGameSaga(),
         findMatchSaga(),
         watchAnimateSimonPadOnline(),
+        displayMovesQueue(),
         playerDisconnected(),
         createPrivateMatchSaga(),
         invitePlayerSaga(),
@@ -30,9 +32,21 @@ const root = function* () {
 }
 
 export const watchAnimateSimonPadOnline = function* () {
+    const queueOpponentsMove = function* ({ payload }) { movesQueue.push(payload) }
+
+    yield takeEvery("ANIMATE_SIMON_PAD_ONLINE", queueOpponentsMove)
+}
+
+export const displayMovesQueue = function* () {
+    let moveToPerform
+
     while (true) {
-        const { payload } = yield take("ANIMATE_SIMON_PAD_ONLINE")
-        yield fork(animateSimonPad, payload)
+        yield take("ANIMATE_SIMON_PAD_ONLINE")
+        
+        while ((moveToPerform = movesQueue.shift())) {
+            yield delay(ANIMATION_DURATION)
+            yield call(animateSimonPad, { payload: moveToPerform })
+        }
     }
 }
 
@@ -191,7 +205,7 @@ export const displayMovesToPerform = function* () {
     yield call(delay, 1000)
 
     for (let move of movesToPerform) {
-        yield call(animateSimonPad, { pad: move, isValid: true })
+        yield call(animateSimonPad, { payload: move })
         yield call(delay, 200) //Wait between each move
     }
 
@@ -288,7 +302,8 @@ export const endTurn = function* (didPlayerPassTurn) {
     }
 }
 
-export const animateSimonPad = function* ({ pad, isValid }) {
+export const animateSimonPad = function* (action) {
+    const pad = action.payload
     console.log("Animating Simon Pad!!:", pad)
     yield put(actions.animateSimonPad(pad))
     yield call(delay, ANIMATION_DURATION)
