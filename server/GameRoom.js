@@ -1,10 +1,12 @@
+const SimonGame = require("./SimonGame")
+
 class GameRoom {
     constructor(id, gameMode) {
         this.id = id
         this.gameMode = gameMode
+        this.game = new SimonGame()
         this.playersNeededToStart = gameMode
-        this.players = []
-        this.playersRedux = []
+        this.lobby = []
         this.playersReady = []
         this.playersReadyToStart = []
         this.eliminatedPlayers = []
@@ -27,17 +29,17 @@ class GameRoom {
         this.messageGameRoom({ type: "ADD_NEXT_MOVE", payload: move })
         console.log("ADDING NEXT MOVE:", move, len, this.movesToPerform.length)
     }
-    addPlayer(player) {
+    addPlayer(playerSocket) {
         /*** Important to remeber!!! This is where i assign the clients property info about their current game room ***/
-        this.players.push(player)
+        this.lobby.push(playerSocket)
 
-        player.gameRoom = { id: this.id, gameMode: this.gameMode }
+        playerSocket.gameRoom = { id: this.id, gameMode: this.gameMode }
 
         this.syncPlayersArrayWithRedux()
-        player.emit("action", { type: "SET_GAME_MODE", payload: this.gameMode })
+        playerSocket.emit("action", { type: "SET_GAME_MODE", payload: this.gameMode })
     }
     eliminatePlayer(playerToEliminate) {
-        const player = this.playersRedux.find(player => player.username === playerToEliminate.player.username)
+        const player = this.game.players.find(player => player.username === playerToEliminate.player.username)
         const theGameIsNotOver = !this.isGameOver()
         const thePlayerHasntBeenEliminatedYet = !player.isEliminated
 
@@ -62,8 +64,8 @@ class GameRoom {
     }
     endGame() {
         this.timer = clearInterval(this.timer)
-        const winner = this.playersRedux.find(player => !player.isEliminated)
-        this.winner = this.players.find(socket => socket.player.username === winner.username)
+        const winner = this.game.players.find(player => !player.isEliminated)
+        this.winner = this.lobby.find(socket => socket.player.username === winner.username)
         console.log("ENDING GAME:", this.winner.player.username + " Won!".cyan)
         this.messageGameRoom({ type: "SET_WINNER", payload: this.winner.player })
         this.messageGameRoom({ type: "GAME_OVER" })
@@ -89,14 +91,14 @@ class GameRoom {
         }
     }
     isGameRoomReady() {
-        return this.players.length === this.playersNeededToStart
+        return this.lobby.length === this.playersNeededToStart
     }
     increaseRound() {
         this.round++
         this.messageGameRoom({ type: "INCREASE_ROUND_COUNTER" })
     }
     isGameOver() {
-        const numPlayersLeft = this.playersRedux.filter(player => !player.isEliminated).length
+        const numPlayersLeft = this.game.players.filter(player => !player.isEliminated).length
         console.log("NUMBER OF PLAYERS LEFT:", numPlayersLeft)
         if (numPlayersLeft <= 1) {
             return true
@@ -121,11 +123,11 @@ class GameRoom {
     }
     messageGameRoom(action, filterPlayers) {
         if (filterPlayers) {
-            this.players
+            this.lobby
                 .filter(filterPlayers)
                 .forEach(player => player.emit("action", action))
         } else {
-            this.players.forEach(player => {
+            this.lobby.forEach(player => {
                 player.emit("action", action)
             })
         }
@@ -150,7 +152,7 @@ class GameRoom {
         if (this.playersReadyToStart.indexOf(player) === -1) {
             this.playersReadyToStart.push(player)
 
-            if (this.playersReadyToStart.length === this.players.length) {
+            if (this.playersReadyToStart.length === this.lobby.length) {
                 this.timer = clearTimeout(this.timer)
                 this.playersReadyToStart = []
                 this.startFirstTurn()
@@ -158,26 +160,26 @@ class GameRoom {
         }
     }
     removePlayer(playerToRemove) {
-        this.players = this.players.filter(player => player !== playerToRemove)
+        this.lobby = this.lobby.filter(player => player !== playerToRemove)
         playerToRemove.gameRoom = undefined
     }
     setNextPlayer() {
-        let indexOfCurrentPlayer = this.playersRedux.findIndex(player => player.username === this.performingPlayer.player.username)
+        let indexOfCurrentPlayer = this.game.players.findIndex(player => player.username === this.performingPlayer.player.username)
         let counter = 1
-        let nextPlayerToPerform = this.playersRedux[(indexOfCurrentPlayer + counter) % this.playersRedux.length]
-        console.log("About to set the next player...", this.playersRedux.filter(player => !player.isEliminated).length)
+        let nextPlayerToPerform = this.game.players[(indexOfCurrentPlayer + counter) % this.game.players.length]
+        console.log("About to set the next player...", this.game.players.filter(player => !player.isEliminated).length)
         while (nextPlayerToPerform.isEliminated) {
             counter++
-            nextPlayerToPerform = this.playersRedux[(indexOfCurrentPlayer + counter) % this.playersRedux.length]
+            nextPlayerToPerform = this.game.players[(indexOfCurrentPlayer + counter) % this.game.players.length]
         }
 
-        this.performingPlayer = this.players.find(({ player }) => player.username === nextPlayerToPerform.username)
+        this.performingPlayer = this.lobby.find(({ player }) => player.username === nextPlayerToPerform.username)
         console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.username)
     }
     startGame() {
         if (!this.gameStarted) {
             this.gameStarted = true
-            this.performingPlayer = this.players[0]    
+            this.performingPlayer = this.lobby[0]    
             this.messageGameRoom({ type: "FOUND_MATCH" })
             this.timer = this.startJoinMatchTimer()
         }
@@ -204,7 +206,7 @@ class GameRoom {
         console.log("STARTING JOIN MATCH TIMER".green)
         return setTimeout(() => {
             this.timer = undefined
-            const playersNotReady = this.players.filter(notReady)
+            const playersNotReady = this.lobby.filter(notReady)
             console.log("PLAYERS NOT READY:".yellow, playersNotReady.length)
             playersNotReady.forEach((player) => {
                 this.playerLostConnection(player)
@@ -250,8 +252,8 @@ class GameRoom {
         return timer
     }
     syncPlayersArrayWithRedux() {
-        this.playersRedux = this.players.map(socket => {
-            const player = this.playersRedux.find(player => player.username === socket.player.username)
+        this.game.players = this.lobby.map(socket => {
+            const player = this.game.players.find(player => player.username === socket.player.username)
             console.log("LOOKING FOR PLAYER TO SYNC:", player && player.username)
             const playerFromSocket = socket.player.isAGuest ? socket.player : socket.player._doc
 
@@ -263,7 +265,7 @@ class GameRoom {
             )
         })
 
-        this.messageGameRoom({ type: "SET_PLAYERS", payload: this.playersRedux })
+        this.messageGameRoom({ type: "SET_PLAYERS", payload: this.game.players })
     }
     updatePlayersStats(player) {
         //Update players stats as long as they arent a guest

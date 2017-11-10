@@ -344,7 +344,7 @@ function createRouteHandlers(socket) {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 
             if (gameRoom) {
-                const gameMode = gameRoom.players.length
+                const gameMode = gameRoom.lobby.length
                 gameRoom.startGame()
                 socket.emit("action", { type: "GO_TO_GAME_SCREEN", payload: gameMode })
             }

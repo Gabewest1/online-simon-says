@@ -5,13 +5,13 @@ class PrivateGameRoom extends GameRoom {
         super(id, gameMode)
     }
     isGameRoomReady() {
-        const thereIsMoreThanOnePlayer = this.playersRedux.length > 1
-        const numPlayersNotReady = this.playersRedux.filter(player => !player.isReady).length
+        const thereIsMoreThanOnePlayer = this.game.players.length > 1
+        const numPlayersNotReady = this.game.players.filter(player => !player.isReady).length
 
         return thereIsMoreThanOnePlayer && numPlayersNotReady === 0
     }
     playerReady(player) {
-        this.playersRedux = this.playersRedux.map(p => {
+        this.game.players = this.game.players.map(p => {
             if (p.username === player.player.username) {
                 return Object.assign(p, { isReady: true })
             }
@@ -27,7 +27,7 @@ class PrivateGameRoom extends GameRoom {
     }
     playerNotReady(player) {
         console.log("ENTERING PLAYER NOT READY".blue)
-        this.playersRedux = this.playersRedux.map(p => {
+        this.game.players = this.game.players.map(p => {
             console.log(`${player.player.username} === ${p.username}`.america)
             if (p.username === player.player.username) {
                 console.log("FOUND PLAYER TO MAKE NOT READY".green)
@@ -43,8 +43,8 @@ class PrivateGameRoom extends GameRoom {
         console.log("STARTING THE GAME, IS IT READY:".yellow, this.gameStarted)
         if (!this.gameStarted) {
             this.gameStarted = true
-            this.performingPlayer = this.players[0]
-            this.gameMode = this.players.length
+            this.performingPlayer = this.lobby[0]
+            this.gameMode = this.lobby.length
             this.messageGameRoom({ type: "GO_TO_GAME_SCREEN", payload: this.gameMode })
             this.timer = super.startJoinMatchTimer()
         }

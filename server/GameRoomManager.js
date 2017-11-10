@@ -52,7 +52,7 @@ class GameRoomManager {
         for (let id in this.gameRoomsById) {
             const gameRoom = this.gameRoomsById[id]
             const isGameRoomOpen =
-                gameRoom.players.length < gameRoom.playersNeededToStart
+                gameRoom.lobby.length < gameRoom.playersNeededToStart
                 && !gameRoom.gameStarted
                 && gameRoom.gameMode === gameMode
 

@@ -204,7 +204,7 @@ describe("GameManager", () => {
         gameRoomManager.findMatch(client, TWO_PLAYER_GAME)
         const gameRoom = gameRoomManager.findPlayersGameRoom(client)
 
-        if (gameRoom.players.indexOf(client) !== -1) {
+        if (gameRoom.lobby.indexOf(client) !== -1) {
             foundGameRoom = true
         } else {
             foundGameRoom = false
