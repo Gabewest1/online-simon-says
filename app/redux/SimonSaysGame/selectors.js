@@ -36,3 +36,4 @@ export const numberOfMoves = state => getMoves(state).length
 export const getMoveIndex = state => state.simonSays.game.moveIndex
 export const disableOnPress = state =>
     !isItMyTurn(state) || isScreenDarkened(state) || (numberOfMoves(state) > 0 && getMoveIndex(state) >= numberOfMoves(state))
+export const getAnimatingPadIndex = state => state.simonSays.pads.lit
