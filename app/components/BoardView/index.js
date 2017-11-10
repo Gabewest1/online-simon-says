@@ -57,11 +57,10 @@ class BoardView extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (this.props.lit !== nextProps.lit || this.state.lit !== nextState.lit) {
-      return true
-    }
+    const tileWasPressed = this.props.lit !== nextProps.lit || this.state.lit !== nextState.lit
+    const onPressDisabledChanged = this.props.disableOnPress !== nextProps.disableOnPress
 
-    return false
+    return tileWasPressed || onPressDisabledChanged
   }
 
   render() {
@@ -105,10 +104,11 @@ class BoardView extends Component {
       <TouchableOpacity
           style={[ styles.tile, position, { backgroundColor } ]}
           isAnimating={ isLit }
+          activeOpacity={ this.props.disableOnPress ? 1 : .2 }
           index={ id }
           tile={ this.tiles[id] }
           key={ id }
-          onPress={() => this._onPress(id) }
+          onPress={() => !this.props.disableOnPress && this._onPress(id) }
           ref={ tile => this.tiles[id] = tile } />
     )
   }
