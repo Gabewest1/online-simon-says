@@ -32,10 +32,10 @@ class GameRoom {
     addPlayer(playerSocket) {
         /*** Important to remeber!!! This is where i assign the clients property info about their current game room ***/
         this.lobby.push(playerSocket)
+        this.game.addPlayer(playerSocket.player)
 
         playerSocket.gameRoom = { id: this.id, gameMode: this.gameMode }
 
-        this.syncPlayersArrayWithRedux()
         playerSocket.emit("action", { type: "SET_GAME_MODE", payload: this.gameMode })
     }
     eliminatePlayer(playerToEliminate) {
@@ -252,19 +252,6 @@ class GameRoom {
         return timer
     }
     syncPlayersArrayWithRedux() {
-        this.game.players = this.lobby.map(socket => {
-            const player = this.game.players.find(player => player.username === socket.player.username)
-            console.log("LOOKING FOR PLAYER TO SYNC:", player && player.username)
-            const playerFromSocket = socket.player.isAGuest ? socket.player : socket.player._doc
-
-            return Object.assign(
-                {},
-                playerFromSocket,
-                { isEliminated: false },
-                { isReady: player ? player.isReady : false }
-            )
-        })
-
         this.messageGameRoom({ type: "SET_PLAYERS", payload: this.game.players })
     }
     updatePlayersStats(player) {

@@ -10,14 +10,8 @@ class PrivateGameRoom extends GameRoom {
 
         return thereIsMoreThanOnePlayer && numPlayersNotReady === 0
     }
-    playerReady(player) {
-        this.game.players = this.game.players.map(p => {
-            if (p.username === player.player.username) {
-                return Object.assign(p, { isReady: true })
-            }
-
-            return p
-        })
+    playerReady(playerSocket) {
+        this.game.playerReady(playerSocket.player)
 
         super.syncPlayersArrayWithRedux()
 
@@ -25,17 +19,8 @@ class PrivateGameRoom extends GameRoom {
             this.startGame()
         }
     }
-    playerNotReady(player) {
-        console.log("ENTERING PLAYER NOT READY".blue)
-        this.game.players = this.game.players.map(p => {
-            console.log(`${player.player.username} === ${p.username}`.america)
-            if (p.username === player.player.username) {
-                console.log("FOUND PLAYER TO MAKE NOT READY".green)
-                return Object.assign(p, { isReady: false })
-            }
-
-            return p
-        })
+    playerNotReady(playerSocket) {
+        this.game.playerNotReady(playerSocket.player)
 
         super.syncPlayersArrayWithRedux()
     }

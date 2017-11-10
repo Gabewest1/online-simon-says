@@ -44,8 +44,19 @@ class GameRoomManager {
         const newGameRoom = new PrivateGameRoom(id, PRIVATE_GAME)
 
         newGameRoom.addPlayer(player)
+        newGameRoom.syncPlayersArrayWithRedux()
 
         this.gameRoomsById[id] = newGameRoom
+    }
+
+    cancelPrivateMatch(socket) {
+        const gameRoom = this.findPlayersGameRoom(socket)
+
+        if (gameRoom) {
+            gameRoom.removePlayer(socket)
+            gameRoom.game.removePlayer(socket.player)
+            newGameRoom.syncPlayersArrayWithRedux()    
+        }
     }
 
     getOpenGame(gameMode) {

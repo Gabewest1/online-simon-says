@@ -294,14 +294,11 @@ function createRouteHandlers(socket) {
             if (gameRoom) {
                 gameRoom.addPlayer(socket)
                 socket.emit("action", { type: "JOINED_PRIVATE_MATCH" })
+                gameRoom.syncPlayersArrayWithRedux()
             }
         },
         ["server/CANCEL_PRIVATE_MATCH"]: action => {
-            const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
-            if (gameRoom) {
-                gameRoom.removePlayer(socket)
-                gameRoom.syncPlayersArrayWithRedux()
-            }
+            gameRoomManager.cancelPrivateMatch(socket)
         },
         ["server/PLAYER_QUIT_MATCH"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
