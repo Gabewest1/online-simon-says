@@ -73,7 +73,7 @@ class GameRoom {
     }
     handleSimonMove(playersMove) {
         this.timer = clearInterval(this.timer)
-        this.animateSimonPad(playersMove)
+        this.animateSimonPad(playersMove.pad)
 
         //If the player performed all their moves then this next move will be
         //the newest move for the next player to perform. This is where the logic
@@ -83,7 +83,7 @@ class GameRoom {
             this.endTurn()
         } else if (this.currentMovesIndex === this.movesToPerform.length) {
             this.addNextMove(playersMove.pad)
-            setTimeout(() => this.endTurn(), 1)
+            setTimeout(() => this.endTurn(), 1000)
         } else {
             this.currentMovesIndex++
 
