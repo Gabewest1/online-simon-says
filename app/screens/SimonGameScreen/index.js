@@ -7,6 +7,7 @@ import styled from "styled-components/native"
 import Player from "../../components/player"
 import SimonGame from "../../components/simon__game"
 import Background from "../../components/background"
+import BoardView from "../../components/BoardView"
 
 import {
     actions as simonGameActions,
@@ -127,8 +128,10 @@ class SimonGameScreen extends React.Component {
     }
     handlePadClick(pad) {
         console.log("PAD CLICKED", pad)
-        const { simonPadClicked } = this.props
-        simonPadClicked(pad)
+        const { simonPadClicked, disableOnPress } = this.props
+        if (!disableOnPress) {
+            simonPadClicked(pad)
+        }
     }
     renderHUD() {
         if (this.props.gameMode !== SINGLE_PLAYER_GAME && this.props.players.length > 0) {
@@ -153,7 +156,7 @@ class SimonGameScreen extends React.Component {
                 <TintedBG show={ this.props.isScreenDarkened } />
                 { this.renderHUD() }
                 <Timer>{ this.props.timer }</Timer>
-                <SimonGame { ...this.props } onPress={ this.handlePadClick.bind(this) } />
+                <BoardView { ...this.props } onPress={ this.handlePadClick.bind(this) } />
                 { this.props.players.length > 2
                     && <Players
                         bottom
@@ -174,6 +177,7 @@ function mapStateToProps(state) {
         isGameOver: simonGameSelectors.isGameOver(state),
         isItMyTurn: simonGameSelectors.isItMyTurn(state),
         isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
+        lit: simonGameSelectors.getAnimatingPadIndex(state),
         moveIndex: simonGameSelectors.getMoveIndex(state),
         numberOfMoves: simonGameSelectors.numberOfMoves(state),
         pads: simonGameSelectors.getPads(state),
