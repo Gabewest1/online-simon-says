@@ -116,15 +116,11 @@ export const actions = {
     playerNotReady
 }
 
-const padsReducerInitialState = [
-    { isAnimating: false, isValid: undefined },
-    { isAnimating: false, isValid: undefined },
-    { isAnimating: false, isValid: undefined },
-    { isAnimating: false, isValid: undefined }
-]
+const padsReducerInitialState = {
+    lit: 0
+}
 export const padsReducer = handleActions({
-    [animateSimonPad]: (state, { payload: { pad, isValid } }) =>
-        state.map((p, i) => pad == i ? { isAnimating: !state[i].isAnimating, isValid } : p)
+    [animateSimonPad]: (state, { payload }) => ({ ...state, lit: payload }) 
 }, padsReducerInitialState)
 
 export const movesReducer = handleActions({
