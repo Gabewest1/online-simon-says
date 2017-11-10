@@ -127,11 +127,7 @@ class SimonGameScreen extends React.Component {
         }
     }
     handlePadClick(pad) {
-        console.log("PAD CLICKED", pad)
-        const { simonPadClicked, disableOnPress } = this.props
-        if (!disableOnPress) {
-            simonPadClicked(pad)
-        }
+        this.props.simonPadClicked(pad)
     }
     renderHUD() {
         if (this.props.gameMode !== SINGLE_PLAYER_GAME && this.props.players.length > 0) {
