@@ -192,7 +192,7 @@ export const displayMovesToPerform = function* () {
 
     for (let move of movesToPerform) {
         yield call(animateSimonPad, { pad: move, isValid: true })
-        yield call(delay, 100) //Wait between each move
+        yield call(delay, 200) //Wait between each move
     }
 
     yield put(actions.setIsScreenDarkened(false))
@@ -201,7 +201,7 @@ export const displayMovesToPerform = function* () {
 export const setNextMove = function* () {
     if (GAME_MODE === SINGLE_PLAYER) {
         //Moves are numbers 0-3 representing the index of the pad
-        let nextMove = Math.floor(Math.random() * 4)
+        let nextMove = Math.floor(Math.random() * 4) + 1
         yield put(actions.addNextMove(nextMove))
     } else {
         let { payload } = yield take(actions.simonPadClicked)
@@ -290,9 +290,9 @@ export const endTurn = function* (didPlayerPassTurn) {
 
 export const animateSimonPad = function* ({ pad, isValid }) {
     console.log("Animating Simon Pad!!:", pad)
-    yield put(actions.animateSimonPad({ pad, isValid }))
+    yield put(actions.animateSimonPad(pad))
     yield call(delay, ANIMATION_DURATION)
-    yield put(actions.animateSimonPad({ pad, isValid }))
+    yield put(actions.animateSimonPad(0))
 }
 
 export const createPrivateMatchSaga = function* () {
