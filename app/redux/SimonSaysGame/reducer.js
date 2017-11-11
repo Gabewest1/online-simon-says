@@ -134,6 +134,8 @@ export const movesReducer = handleActions({
 
 export const playersReducer = handleActions({
     [resetGame]: (state, action) => [],
+    [cancelSearch]: (state, action) => [],
+    [cancelPrivateMatch]: (state, action) => [],
     [setPlayers]: (state, action) => action.payload,
     [addPlayer]: (state, { payload }) => state.concat(payload),
     [removePlayer]: (state, { payload }) => state.filter(player => player.username !== payload.username ),
