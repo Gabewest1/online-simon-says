@@ -28,6 +28,8 @@ class GameRoomManager {
         if (gameRoom.isGameRoomReady()) {
             gameRoom.startGame()
         }
+
+        gameRoom.syncPlayersArrayWithRedux()
     }
 
     createGameRoom(gameMode) {
@@ -55,7 +57,7 @@ class GameRoomManager {
         if (gameRoom) {
             gameRoom.removePlayer(socket)
             gameRoom.game.removePlayer(socket.player)
-            newGameRoom.syncPlayersArrayWithRedux()    
+            gameRoom.syncPlayersArrayWithRedux()
         }
     }
 
