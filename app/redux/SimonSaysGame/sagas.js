@@ -31,7 +31,7 @@ const root = function* () {
 export const listenForOpponentsMoveSaga = function* () {
     const numberOfMoves = yield select(selectors.numberOfMoves)
 
-    let movesQueue = []   //Opponents moves to be displayed that come from the server
+    let movesQueue = [] //Opponents moves to be displayed that come from the server
     let movesPerformed = 0
     let didPerformingPlayerFail = false
 
@@ -63,10 +63,7 @@ export const listenForOpponentsMoveSaga = function* () {
     while (!isTurnOver()) {
         if (movesQueue.length === 0) {
             console.log("WAITING FOR ANIMATE_SIMON_PAD_ONLINE")
-            yield race({
-                getOpponentsMove: take("ANIMATE_SIMON_PAD_ONLINE"),
-                delay: delay(3000)
-            })
+            yield delay(500)
         }
 
         yield call(dequeueOpponentsMoves)
