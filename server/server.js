@@ -337,6 +337,13 @@ function createRouteHandlers(socket) {
                 gameRoom.playerReadyToStart(socket)
             }
         },
+        ["server/READY_FOR_NEXT_TURN"]: action => {
+            const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+            
+            if (gameRoom) {
+                gameRoom.playerReadyForNextTurn(socket)
+            }
+        },
         ["server/START_GAME"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
 

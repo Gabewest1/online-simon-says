@@ -8,6 +8,8 @@ class GameRoom {
         this.playersNeededToStart = gameMode
         this.lobby = []
         this.playersReady = []
+        this.playersReadyForNextTurn = []
+        this.acceptPlayersReadyForNextTurn = false
         this.playersReadyToStart = []
         this.eliminatedPlayers = []
         this.gameStarted = false
@@ -54,6 +56,8 @@ class GameRoom {
     }
     endTurn() {
         this.timer = clearInterval(this.timer)
+        this.playersReadyForNextTurn = []
+        this.acceptPlayersReadyForNextTurn = false
 
         if (this.isGameOver()) {
             this.endGame()
@@ -73,17 +77,17 @@ class GameRoom {
     }
     handleSimonMove(playersMove) {
         this.timer = clearInterval(this.timer)
-        this.animateSimonPad(playersMove.pad)
+        this.animateSimonPad(playersMove)
 
         //If the player performed all their moves then this next move will be
         //the newest move for the next player to perform. This is where the logic
         //for ending the game or moving to the next player turn happens.
         if (!playersMove.isValid) {
             this.eliminatePlayer(this.performingPlayer)
-            this.endTurn()
+            this.waitForPlayersToReadyUp()
         } else if (this.currentMovesIndex === this.movesToPerform.length) {
             this.addNextMove(playersMove.pad)
-            setTimeout(() => this.endTurn(), 1000)
+            this.waitForPlayersToReadyUp()
         } else {
             this.currentMovesIndex++
 
@@ -113,8 +117,6 @@ class GameRoom {
             return
         }
 
-        console.log("STARTING THE TIMER AND LISTENING FOR THE NEXT MOVE".magenta, this.timer)
-
         if (this.currentMovesIndex === 0) {
             this.timer = this.startLongTimer()
         } else {
@@ -141,16 +143,22 @@ class GameRoom {
             this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: thisPlayer.player })
         }
     }
-    playerTimedOut() {
-        console.log("Player timed out:", this.performingPlayer.player.username)
-        this.timer = clearInterval(this.timer)
-        this.messageGameRoom({ type: "PLAYER_TIMEDOUT" })
-        this.eliminatePlayer(this.performingPlayer)
-        this.endTurn()
+    playerReadyForNextTurn(playerSocket) {
+        const isPlayerAlreadyReady = this.playersReadyForNextTurn.indexOf(playerSocket) >= 0
+
+        if (this.acceptPlayersReadyForNextTurn && !isPlayerAlreadyReady) {
+            this.playersReadyForNextTurn.push(playerSocket)
+
+            //Check if this is the last player to ready up and end turn if so.
+            if (this.playersReadyForNextTurn.length === this.lobby.length) {
+                this.timer = clearTimeout(this.timer)
+                this.endTurn()
+            }
+        }
     }
-    playerReadyToStart(player) {
-        if (this.playersReadyToStart.indexOf(player) === -1) {
-            this.playersReadyToStart.push(player)
+    playerReadyToStart(playerSocket) {
+        if (this.playersReadyToStart.indexOf(playerSocket) === -1) {
+            this.playersReadyToStart.push(playerSocket)
 
             if (this.playersReadyToStart.length === this.lobby.length) {
                 this.timer = clearTimeout(this.timer)
@@ -158,6 +166,13 @@ class GameRoom {
                 this.startFirstTurn()
             }
         }
+    }
+    playerTimedOut() {
+        console.log("Player timed out:", this.performingPlayer.player.username)
+        this.timer = clearInterval(this.timer)
+        this.messageGameRoom({ type: "PLAYER_TIMEDOUT" })
+        this.eliminatePlayer(this.performingPlayer)
+        this.endTurn()
     }
     removePlayer(playerToRemove) {
         this.lobby = this.lobby.filter(player => player !== playerToRemove)
@@ -167,12 +182,13 @@ class GameRoom {
         let indexOfCurrentPlayer = this.game.players.findIndex(player => player.username === this.performingPlayer.player.username)
         let counter = 1
         let nextPlayerToPerform = this.game.players[(indexOfCurrentPlayer + counter) % this.game.players.length]
+        console.log("PLAYERS:".red, this.game.players)
         console.log("About to set the next player...", this.game.players.filter(player => !player.isEliminated).length)
         while (nextPlayerToPerform.isEliminated) {
             counter++
             nextPlayerToPerform = this.game.players[(indexOfCurrentPlayer + counter) % this.game.players.length]
         }
-
+        console.log("NEXT PLAYER:".blue, nextPlayerToPerform)
         this.performingPlayer = this.lobby.find(({ player }) => player.username === nextPlayerToPerform.username)
         console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.username)
     }
@@ -186,16 +202,26 @@ class GameRoom {
     }
     startFirstTurn() {
         this.messageGameRoom({ type: "SET_PERFORMING_PLAYER", payload: this.performingPlayer.player })
+        this.messageGameRoom(
+            { type: "LISTEN_FOR_OPPONENTS_MOVES" },
+            (playerSocket) => playerSocket.player.username !== this.performingPlayer.player.username
+        )
         this.listenForNextMove()
         this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
     startNextTurn() {
-        console.log("STARTING NEXT PLAYERS TURN:", this.performingPlayer.player.username)
+        console.log("ERROR IS HERE".red, this.performingPlayer)
+        console.log("STARTING NEXT PLAYERS TURN:".america, this.performingPlayer.player.username)
         this.currentMovesIndex = 0
         this.increaseRound()
         this.messageGameRoom({ type: "RESET_TIMER" })
         this.listenForNextMove()
         this.messageGameRoom({ type: "SET_PERFORMING_PLAYER", payload: this.performingPlayer.player })
+        this.messageGameRoom({ type: "START_NEXT_TURN" })
+        this.messageGameRoom(
+            { type: "LISTEN_FOR_OPPONENTS_MOVES" },
+            (playerSocket) => playerSocket.player.username !== this.performingPlayer.player.username
+        )
         this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
     startJoinMatchTimer() {
@@ -203,17 +229,16 @@ class GameRoom {
         const notReady = ({ player }) =>
             !this.playersReadyToStart.find(socket => socket.player.username === player.username)
 
-        console.log("STARTING JOIN MATCH TIMER".green)
         return setTimeout(() => {
             this.timer = undefined
             const playersNotReady = this.lobby.filter(notReady)
             console.log("PLAYERS NOT READY:".yellow, playersNotReady.length)
-            playersNotReady.forEach((player) => {
+            playersNotReady.forEach(player => {
                 this.playerLostConnection(player)
 
                 player.emit("action", { type: "KICK_INACTIVE_PLAYER" })
             })
-            
+
             if (this.isGameOver()) {
                 this.endGame()
             } else {
@@ -269,6 +294,12 @@ class GameRoom {
 
             player.emit("action", { type: "server/UPDATE_MULITPLAYER_STATS", payload: { didPlayerWin, gameMode, xpGained } })
         }
+    }
+    waitForPlayersToReadyUp() {
+        this.acceptPlayersReadyForNextTurn = true
+        this.timer = setTimeout(() => {
+            this.endTurn()
+        }, 8500)
     }
 }
 
