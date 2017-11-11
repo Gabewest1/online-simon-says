@@ -8,6 +8,9 @@ class SimonGame {
         this.performingPlayer
     }
     addPlayer(player) {
+        //Guests and Real Users have different object structures
+        player = player.isAGuest ? player : player._doc
+
         this.players.push(
             Object.assign(
                 {},
@@ -16,7 +19,6 @@ class SimonGame {
                 { isReady: false }
             )
         )
-
     }
     removePlayer(player) {
         //This method should only be called for private matches and before they've started
