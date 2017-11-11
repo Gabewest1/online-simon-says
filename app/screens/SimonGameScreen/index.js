@@ -111,6 +111,11 @@ class SimonGameScreen extends React.Component {
         leftButtons: []
     }
     componentWillMount() {
+        //Server emits a SET_GAME_MODE for multiplayer games.
+        //Need to emit that this is a single player game if not a multiplayer one.
+        if (this.props.gameMode === SINGLE_PLAYER_GAME) {
+            this.props.setGameMode(SINGLE_PLAYER_GAME)
+        }
         this.props.startGame(this.props.gameMode)
 
         this.handleBack = this.handleBack.bind(this)
@@ -204,6 +209,7 @@ SimonGameScreen.propTypes = {
     performingPlayer: PropTypes.object.isRequired,
     players: PropTypes.array.isRequired,
     round: PropTypes.number.isRequired,
+    setGameMode: PropTypes.func.isRequired,
     showBackoutWarningMessage: PropTypes.func.isRequired,
     simonPadClicked: PropTypes.func.isRequired,
     startGame: PropTypes.func.isRequired,
