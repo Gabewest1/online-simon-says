@@ -2,6 +2,7 @@ import { createActions, handleActions } from "redux-actions"
 import { combineReducers } from "redux"
 
 const {
+    setGameMode,
     simonPadClicked,
     animateSimonPad,
     startGame,
@@ -39,6 +40,7 @@ const {
     playerReady,
     playerNotReady
 } = createActions(
+    "SET_GAME_MODE",
     "SIMON_PAD_CLICKED",
     "ANIMATE_SIMON_PAD",
     "START_GAME",
@@ -78,6 +80,7 @@ const {
 )
 
 export const actions = {
+    setGameMode,
     simonPadClicked,
     animateSimonPad,
     startGame,
@@ -120,6 +123,7 @@ const padsReducerInitialState = {
     lit: 0
 }
 export const padsReducer = handleActions({
+    [resetGame]: (state, action) => padsReducerInitialState,
     [animateSimonPad]: (state, { payload }) => ({ ...state, lit: payload }) 
 }, padsReducerInitialState)
 
@@ -137,6 +141,7 @@ export const playersReducer = handleActions({
 }, [])
 
 const gameReducerInitialState = {
+    gameMode: 1,
     hasFoundMatch: false,
     isGameOver: false,
     isScreenDarkened: false,
@@ -149,14 +154,16 @@ const gameReducerInitialState = {
 
 export const gameReducer = handleActions({
     [gameOver]: (state, action) => ({ ...state, isGameOver: true }),
-    [increaseRoundCounter]: (state, action) => ({ ...state, round: state.round + 1}),
+    [increaseRoundCounter]: (state, action) => ({ ...state, round: state.round + 1, moveIndex: 0 }),
     [foundMatch]: (state, action) => ({ ...state, hasFoundMatch: true }),
     [setIsScreenDarkened]: (state, action) => ({ ...state, isScreenDarkened: action.payload }),
     [decreaseTimer]: (state, action) => ({ ...state, timer: state.timer - 1 }),
+    [setGameMode]: (state, action) => ({ ...state, gameMode: action.payload }),
     [setPerformingPlayer]: (state, action) => ({ ...state, performingPlayer: action.payload }),
     [resetTimer]: (state, action) => ({ ...state, timer: 15 }),
     [setMoveIndex]: (state, action) => ({ ...state, moveIndex: action.payload }),
     [setWinner]: (state, action) => ({ ...state, winner: action.payload }),
+    [simonPadClicked]: (state, action) => ({ ...state, moveIndex: state.moveIndex + 1 }),
     [resetGame]: (state, action) => ({ ...gameReducerInitialState })
 }, gameReducerInitialState)
 
