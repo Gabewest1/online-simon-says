@@ -155,6 +155,8 @@ const gameReducerInitialState = {
 }
 
 export const gameReducer = handleActions({
+    [cancelSearch]: (state, action) => gameReducerInitialState,
+    [cancelPrivateMatch]: (state, action) => gameReducerInitialState,
     [gameOver]: (state, action) => ({ ...state, isGameOver: true }),
     [increaseRoundCounter]: (state, action) => ({ ...state, round: state.round + 1, moveIndex: 0 }),
     [foundMatch]: (state, action) => ({ ...state, hasFoundMatch: true }),
@@ -166,7 +168,8 @@ export const gameReducer = handleActions({
     [setMoveIndex]: (state, action) => ({ ...state, moveIndex: action.payload }),
     [setWinner]: (state, action) => ({ ...state, winner: action.payload }),
     [simonPadClicked]: (state, action) => ({ ...state, moveIndex: state.moveIndex + 1 }),
-    [resetGame]: (state, action) => ({ ...gameReducerInitialState })
+    [resetGame]: (state, action) => ({ ...gameReducerInitialState, gameMode: state.gameMode })  //I keep the game mode soley for when a guest loses internet connection on the game over 
+                                                                                                //screen, so they can access the gameMode state from the Navigator sagas to determine where to redirect.
 }, gameReducerInitialState)
 
 export default combineReducers({
