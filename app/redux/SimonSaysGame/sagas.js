@@ -11,15 +11,12 @@ const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
 
 let GAME_MODE
-let movesQueue = []   //Opponents moves to be displayed that come from the server
 
 const root = function* () {
     yield [
         cancelPrivateMatch(),
         watchSimonGameSaga(),
         findMatchSaga(),
-        watchAnimateSimonPadOnline(),
-        displayMovesQueue(),
         playerDisconnected(),
         createPrivateMatchSaga(),
         invitePlayerSaga(),
@@ -31,23 +28,57 @@ const root = function* () {
     ]
 }
 
-export const watchAnimateSimonPadOnline = function* () {
-    const queueOpponentsMove = function* ({ payload }) { movesQueue.push(payload) }
+export const listenForOpponentsMoveSaga = function* () {
+    const numberOfMoves = yield select(selectors.numberOfMoves)
 
-    yield takeEvery("ANIMATE_SIMON_PAD_ONLINE", queueOpponentsMove)
-}
+    let movesQueue = []   //Opponents moves to be displayed that come from the server
+    let movesPerformed = 0
+    let didPerformingPlayerFail = false
 
-export const displayMovesQueue = function* () {
-    let moveToPerform
+    const isTurnOver = () => movesPerformed >= numberOfMoves || didPerformingPlayerFail
+    const opponentTimedout = function* () { didPerformingPlayerFail = true }
+    const queueOpponentsMove = function* ({ payload }) {
+        if (didPerformingPlayerFail) {
+            return
+        }
 
-    while (true) {
-        yield take("ANIMATE_SIMON_PAD_ONLINE")
-        
+        if (!payload.isValid) {
+            didPerformingPlayerFail = true
+        }
+
+        movesQueue.push(payload.pad)
+        movesPerformed++
+    }
+    const dequeueOpponentsMoves = function* () {
+        let moveToPerform
         while ((moveToPerform = movesQueue.shift())) {
-            yield delay(ANIMATION_DURATION)
             yield call(animateSimonPad, { payload: moveToPerform })
+            yield delay(ANIMATION_DURATION)
         }
     }
+
+    const listenForOpponentsMovesTask = yield takeEvery("ANIMATE_SIMON_PAD_ONLINE", queueOpponentsMove)
+    const listenForOpponentTimeoutTask = yield takeLatest("PLAYER_TIMEDOUT", opponentTimedout)
+
+    while (!isTurnOver()) {
+        if (movesQueue.length === 0) {
+            console.log("WAITING FOR ANIMATE_SIMON_PAD_ONLINE")
+            yield race({
+                getOpponentsMove: take("ANIMATE_SIMON_PAD_ONLINE"),
+                delay: delay(3000)
+            })
+        }
+
+        yield call(dequeueOpponentsMoves)
+    }
+
+    if (movesQueue.length > 0) {
+        console.log(`LETS DEQUE THE REMAINING ${movesQueue.length} MOVES!!!!`)
+        yield call(dequeueOpponentsMoves)
+    }
+
+    yield cancel(listenForOpponentsMovesTask)
+    yield cancel(listenForOpponentTimeoutTask)
 }
 
 export const findMatchSaga = function* () {
@@ -105,8 +136,30 @@ export const simonGameSaga = function* (action) {
 
 export const multiplayerGameSaga = function* (gameMode) {
     yield put({ type: "server/PLAYER_READY_TO_START" })
-    yield takeEvery("PERFORM_YOUR_TURN", performTurnSaga)
+
+    //Client switches between performing their turn and listening to the turns
+    //of their opponents. This continues utill a GAME_OVER is emiited.
+    const startTurn = function* () {
+        const { performYourTurn, listenForOpponentsMove } = yield race({
+            performYourTurn: take("PERFORM_YOUR_TURN"),
+            listenForOpponentsMove: take("LISTEN_FOR_OPPONENTS_MOVES")
+        })
+
+        if (performYourTurn) {
+            yield call(performTurnSaga)
+        } else if (listenForOpponentsMove) {
+            yield call(listenForOpponentsMoveSaga)
+        }
+
+        yield put({ type: "server/READY_FOR_NEXT_TURN" }) //All players must alert the server to move on or be kicked
+    }
+
+    yield call(startTurn)
+
+    const turnTask = yield takeLatest("START_NEXT_TURN", startTurn)
+
     yield take("GAME_OVER")
+    yield cancel(turnTask)
 
     const winner = yield select(selectors.getWinner)
 
@@ -128,7 +181,6 @@ export const performTurnSaga = function* () {
     let movesPerformed = 0
 
     while (movesPerformed <= movesToPerform.length) {
-        console.log("WAITING FOR A MOVE")
 
         const { playersMove, timedout } = yield race({
             playersMove: take(actions.simonPadClicked),
@@ -144,7 +196,6 @@ export const performTurnSaga = function* () {
             playersMove.payload === movesToPerform[movesPerformed]
 
         const pad = { pad: playersMove.payload, isValid: isValidMove }
-        console.log("PLAYER PRESSED PAD:", pad)
 
         yield put({ type: "server/ANIMATE_SIMON_PAD", payload: pad })
 
@@ -253,7 +304,6 @@ export const startShortTimer = function* () {
 export const performPlayersTurn = function* () {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
-    yield put(actions.setMoveIndex(0))
 
     while (movesPerformed < movesToPerform.length) {
         let isPlayersFirstMove = movesPerformed === 0
@@ -283,7 +333,6 @@ export const performPlayersTurn = function* () {
         }
 
         movesPerformed++
-        yield put(actions.setMoveIndex(movesPerformed))
     }
 
     //Give a little pause before starting the next turn
