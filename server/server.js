@@ -47,9 +47,12 @@ io.on("connection", socket => {
             } else if (!gameRoom.isGameOver()) {
                 gameRoom.playerLostConnection(socket)
             }
+
+            socket.gameRoom = undefined
         }
 
-        //Logout the player if they are logged in
+        //Logout the player if they are logged in and remove the player property
+        //from the socket. Users playing as guests should keep their socket.player.
         if (socket.player && socket.player.loggedIn) {
             User.findOneAndUpdate({ username: socket.player.username }, { loggedIn: false }, (err, user) => {
                 if (err) {
@@ -58,6 +61,8 @@ io.on("connection", socket => {
 
                 console.log("USER LOGGED OUT:", user)
             })
+
+            socket.player = undefined
         }
     })
 
@@ -100,6 +105,7 @@ function createRouteHandlers(socket) {
                     console.log("FOUND USER:", user)
                     user.loggedIn = true
                     user.level = user.calculateLevel(user.xp)
+
                     socket.player = user
 
                     socket.emit("action", { type: "LOGIN_SUCCESS", payload: { user }})
@@ -270,6 +276,7 @@ function createRouteHandlers(socket) {
         },
         ["server/CANCEL_SEARCH"]: action => {
             gameRoomManager.cancelSearch(socket)
+            socket.gameRoom = undefined            
         },
         ["server/CREATE_PRIVATE_MATCH"]: action => {
             gameRoomManager.createPrivateMatch(socket)
@@ -299,12 +306,15 @@ function createRouteHandlers(socket) {
         },
         ["server/CANCEL_PRIVATE_MATCH"]: action => {
             gameRoomManager.cancelPrivateMatch(socket)
+            socket.gameRoom = undefined            
         },
         ["server/PLAYER_QUIT_MATCH"]: action => {
             const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
             if (gameRoom) {
                 gameRoom.playerLostConnection(socket)
             }
+
+            socket.gameRoom = undefined
         }
     }
 
