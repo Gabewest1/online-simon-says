@@ -1,7 +1,9 @@
 import { AppState, Platform } from "react-native"
-import { call, put, race, select, take, takeEvery, takeLatest } from "redux-saga/effects"
+import { call, put, fork, race, select, take, takeEvery, takeLatest } from "redux-saga/effects"
 import { actions, selectors } from "./index"
-import { actions as simonGameActions } from "../SimonSaysGame"
+import { actions as simonGameActions, selectors as simonGameSelctors } from "../SimonSaysGame"
+import { selectors as userSelectors } from "../Auth"
+
 /*** 
  * I couldn't find a way to import the navigator object from react-native-navigation
  * so i could change screens from within the sagas.
@@ -143,34 +145,78 @@ export const kickInactivePlayerSaga = function* () {
                 screen: "SelectGameMode"
             }
         }
-        
+
         yield put(actions.navigateToScreen(payload))
-        yield call(showInactivityMessageSaga)
-        
+        yield fork(showInactivityMessageSaga)
+
         yield put(simonGameActions.resetGame())
         yield put(simonGameActions.cancelSimonGameSaga())
     }
 }
 export const watchSocketDisconnected = function* () {
+
+    const handleGuestDisconnection = function* () {
+        const currentScreenName = yield select(selectors.getCurrentScreenName)
+        const gameMode = yield select(simonGameSelctors.getGameMode)
+        const navigationOptions = {}
+
+        switch (currentScreenName) {
+            case "SimonGameScreen":
+                navigationOptions.screen = gameMode > 1 ? "SelectGameMode" : "SimonGameScreen"
+                break
+
+            case "GameOverScreen":
+                navigationOptions.screen = gameMode > 1 ? "SelectGameMode" : "GameOverScreen"
+                break
+
+            case "SelectOnlineGameMode":
+            case "FindMatchScreen":
+            case "InvitePlayersScreen":
+                navigationOptions.screen = "SelectGameMode"
+                break
+
+            case "SignUpScreen":
+                navigationOptions.screen = "StartingScreen"
+                break
+
+            default:
+                navigationOptions.screen = currentScreenName
+        }
+
+        return navigationOptions
+    }
+    const handleLoggedInUserDisconnection = function* () {
+        const navigationOptions = { screen: "StartingScreen" }
+
+        return navigationOptions
+    }
+
     while (true) {
         yield take("SOCKET_DISCONNECTED")
-        console.log("I GOT THE ACTION IN SOCKET DISCONNECTED SAGA")
-        
-        const navigationOptions = { screen: "StartingScreen" }
+        const user = yield select(userSelectors.getUser)
+
+        const navigationOptions = user.isAGuest 
+            ? yield call(handleGuestDisconnection)
+            : yield call(handleLoggedInUserDisconnection)
+
         const payload = { fn: "resetTo", navigationOptions }
 
         yield put(actions.navigateToScreen(payload))
-        yield call(showLostInternetConnectionNotificationSaga)
+        yield fork(showLostInternetConnectionNotificationSaga)
 
-        yield put(simonGameActions.resetGame())
-        yield put(simonGameActions.cancelSimonGameSaga())
+        //Guests should be able to continue playing without internet
+        //Logged in users should have their games ended and reset.
+        if (!user.isAGuest) {
+            yield put(simonGameActions.resetGame())
+            yield put(simonGameActions.cancelSimonGameSaga())
+        }
     }
 }
 export const watchSocketReconnected = function* () {
     while (true) {
         yield take("SOCKET_RECONNECTED")
         
-        yield call(showFoundInternetConnectionNotification)
+        yield fork(showFoundInternetConnectionNotification)
 
     }
 }
