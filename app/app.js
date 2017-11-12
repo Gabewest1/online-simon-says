@@ -32,7 +32,6 @@ Navigation.registerComponent("InvitePlayersScreen", () => InvitePlayersScreen, s
 Navigation.registerComponent("PlayerDisconnectedMessage", () => PlayerDisconnectedMessage, store, Provider)
 Navigation.registerComponent("GameInvitationNotification", () => GameInvitationNotification, store, Provider)
 Navigation.registerComponent("QuitModal", () => QuitModal, store, Provider)
-Navigation.registerComponent("InactivePlayerNotification", () => InactivePlayerNotification, store, Provider)
 Navigation.registerComponent("Notification", () => Notification, store, Provider)
 
 Navigation.startSingleScreenApp({
