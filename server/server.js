@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 3000
 
 const server = app.listen(PORT, () => console.log(`running on port ${PORT}`))
 
-const io = socket(server)
+const io = socket(server, { "pingInterval": 10000, "pingTimeout": 5000 })
 
 const gameRoomManager = new (require("./GameRoomManager"))(io)
 
@@ -133,6 +133,14 @@ function createRouteHandlers(socket) {
                 { username: credentials.username },
                 { email: credentials.email }
             ]}
+
+            //Usernames shouldn't be longer than 21 characters and i set the input field to have a maxLength = 21
+            //But i wanna be safe that the username fits the character limit.
+            if (credentials.username.length > 21) {
+                socket.emit("action", stopSubmit("signUp", { username: "Username can't exceed 21 characters" }))
+
+                return                
+            }
 
             User.findOne(query, (err, user) => {
                 if (err) {
