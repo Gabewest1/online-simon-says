@@ -151,7 +151,7 @@ export const multiplayerGameSaga = function* (gameMode) {
         yield put({ type: "server/READY_FOR_NEXT_TURN" }) //All players must alert the server to move on or be kicked
     }
 
-    yield call(startTurn)
+    yield fork(startTurn)
 
     const turnTask = yield takeLatest("START_NEXT_TURN", startTurn)
 
