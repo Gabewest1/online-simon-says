@@ -215,9 +215,13 @@ export const watchSocketDisconnected = function* () {
 export const watchSocketReconnected = function* () {
     while (true) {
         yield take("SOCKET_RECONNECTED")
-        
+        const user = yield select(userSelectors.getUser)
+
         yield fork(showFoundInternetConnectionNotification)
 
+        if (user.isAGuest) {
+            yield put({ type: "server/SET_SOCKET_PLAYER", payload: user })
+        }
     }
 }
 
