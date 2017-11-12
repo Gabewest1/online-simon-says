@@ -56,7 +56,6 @@ class GameRoomManager {
 
         if (gameRoom) {
             gameRoom.removePlayer(socket)
-            gameRoom.game.removePlayer(socket.player)
             gameRoom.syncPlayersArrayWithRedux()
         }
     }
