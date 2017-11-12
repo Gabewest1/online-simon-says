@@ -1,5 +1,6 @@
 import { createActions, handleActions } from "redux-actions"
 import { combineReducers } from "redux"
+import { actions as navigatorActions } from "../Navigator"
 
 const {
     setGameMode,
@@ -136,6 +137,7 @@ export const playersReducer = handleActions({
     [resetGame]: (state, action) => [],
     [cancelSearch]: (state, action) => [],
     [cancelPrivateMatch]: (state, action) => [],
+    [navigatorActions.socketDisconnected]: (state, action) => [],
     [setPlayers]: (state, action) => action.payload,
     [addPlayer]: (state, { payload }) => state.concat(payload),
     [removePlayer]: (state, { payload }) => state.filter(player => player.username !== payload.username ),
@@ -155,6 +157,7 @@ const gameReducerInitialState = {
 }
 
 export const gameReducer = handleActions({
+    [navigatorActions.socketDisconnected]: (state, action) => ({ ...state, hasFoundMatch: false }),
     [cancelSearch]: (state, action) => gameReducerInitialState,
     [cancelPrivateMatch]: (state, action) => gameReducerInitialState,
     [gameOver]: (state, action) => ({ ...state, isGameOver: true }),
