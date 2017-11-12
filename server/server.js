@@ -199,6 +199,9 @@ function createRouteHandlers(socket) {
         ["server/PLAY_AS_GUEST"]: action => {
             socket.player = action.payload
 
+        },
+        ["server/SET_SOCKET_PLAYER"]: action => {
+            socket.player = action.payload
         }
     }
 
