@@ -6,7 +6,7 @@ import { SearchBar } from "react-native-elements"
 import { BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
 
 const FormInputView = styled(FormInput)`
-    color: white;
+    color: ${ SECONDARY_COLOR };
 `
 const View = styled.View`
     position: relative;
@@ -32,6 +32,7 @@ class Input extends React.Component {
         return (
             <View>
                 <FormInputView
+                    { ...this.props }
                     { ...restInput }
                     containerStyle={ this.props.containerStyle }
                     inputStyle={ this.props.inputStyle }
@@ -56,12 +57,14 @@ class Input extends React.Component {
         }
         const inputStyle = {
             backgroundColor: BACKGROUND_COLOR,
+            color: SECONDARY_COLOR,
             ...this.props.inputStyle
         }
 
         return (
             <SearchBarContainer>
                 <SearchBar
+                    { ...this.props }
                     { ...restInput }
                     containerStyle={ containerStyle }
                     inputStyle={ inputStyle }
