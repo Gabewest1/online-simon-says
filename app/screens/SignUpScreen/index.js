@@ -38,10 +38,10 @@ class SignUpScreen extends React.Component {
     validate(values) {
         Keyboard.dismiss()
 
-        values.username = values.username.toLowerCase().trim()
-        values.email = values.email.toLowerCase().trim()
-        values.password = values.password.toLowerCase().trim()
-        values["re-password"] = values["re-password"].toLowerCase().trim()
+        values.username = values.username && values.username.toLowerCase().trim()
+        values.email = values.email && values.email.toLowerCase().trim()
+        values.password = values.password && values.password.toLowerCase().trim()
+        values["re-password"] = values["re-password"] && values["re-password"].toLowerCase().trim()
 
         let errors = {}
 
@@ -77,7 +77,8 @@ class SignUpScreen extends React.Component {
                         name="username"
                         type="text"
                         component={ Input }
-                        placeholder="username" />
+                        placeholder="username"
+                        maxLength={ 21 } />
                     <Field
                         name="email"
                         type="text"
