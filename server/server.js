@@ -177,12 +177,22 @@ function createRouteHandlers(socket) {
 
         },
         ["server/LOGOUT"]: action => {
+            if (!socket.player) {
+                return
+            }
+
+            if (socket.player && socket.player.isAGuest) {
+                socket.player = undefined
+
+                return
+            }
             User.findOneAndUpdate({ username: socket.player.username }, { loggedIn: false }, (err, user) => {
                 if (err) {
                     console.log(err)
                 }
 
                 console.log("USER LOGGED OUT:", user)
+                socket.player = undefined
             })
 
         },
