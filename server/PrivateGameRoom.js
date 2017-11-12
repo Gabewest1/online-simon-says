@@ -4,6 +4,11 @@ class PrivateGameRoom extends GameRoom {
     constructor(id, gameMode) {
         super(id, gameMode)
     }
+    endGame() {
+        super.endGame()
+
+        super.syncPlayersArrayWithRedux()
+    }
     isGameRoomReady() {
         const thereIsMoreThanOnePlayer = this.game.players.length > 1
         const numPlayersNotReady = this.game.players.filter(player => !player.isReady).length
