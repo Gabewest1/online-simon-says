@@ -77,8 +77,6 @@ class InvitePlayersScreen extends React.Component {
                     name="username"
                     type="text"
                     containerStyle={{ width: 280 }}
-                    inputStyle={{ color: "white" }}
-                    icon={{ color: "white" }}
                     component={ Input }
                     placeholder="Invite user..." />
                 <MenuItem onPress={ this.props.handleSubmit(this.validate) }>Invite</MenuItem>
