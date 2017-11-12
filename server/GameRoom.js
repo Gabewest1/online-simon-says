@@ -174,9 +174,13 @@ class GameRoom {
         this.eliminatePlayer(this.performingPlayer)
         this.endTurn()
     }
-    removePlayer(playerToRemove) {
-        this.lobby = this.lobby.filter(player => player !== playerToRemove)
-        playerToRemove.gameRoom = undefined
+    removePlayer(playerSocket) {
+        this.lobby = this.lobby.filter(player => player !== playerSocket)
+        playerSocket.gameRoom = undefined
+
+        if (!this.gameStarted) {
+            this.game.removePlayer(playerSocket.player)
+        }
     }
     setNextPlayer() {
         let indexOfCurrentPlayer = this.game.players.findIndex(player => player.username === this.performingPlayer.player.username)
