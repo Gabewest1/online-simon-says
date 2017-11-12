@@ -60,7 +60,12 @@ class GameRoomManager {
         }
     }
 
+    //Tries to find and return a game room that needs 1 player to start but saves
+    //a refernce to any game room that is open incase there doesn't exist a game room
+    //missing only 1 person.
     getOpenGame(gameMode) {
+        let openGameRoom
+
         for (let id in this.gameRoomsById) {
             const gameRoom = this.gameRoomsById[id]
             const isGameRoomOpen =
@@ -69,11 +74,17 @@ class GameRoomManager {
                 && gameRoom.gameMode === gameMode
 
             if (isGameRoomOpen) {
-                return gameRoom
+                const isThereOneSpotRemaining = gameRoom.playersNeededToStart - gameRoom.lobby.length === 1
+                
+                if (isThereOneSpotRemaining) {
+                    return gameRoom
+                }
+
+                openGameRoom = gameRoom
             }
         }
 
-        return this.createGameRoom(gameMode)
+        return openGameRoom || this.createGameRoom(gameMode)
     }
 
     findPlayersGameRoom(player) {
