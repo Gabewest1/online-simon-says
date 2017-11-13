@@ -178,6 +178,7 @@ export const performTurnSaga = function* () {
     let movesPerformed = 0
 
     while (movesPerformed <= movesToPerform.length) {
+        yield put(actions.setIsScreenDarkened(false))
 
         const { playersMove, timedout } = yield race({
             playersMove: take(actions.simonPadClicked),
@@ -202,6 +203,8 @@ export const performTurnSaga = function* () {
 
         movesPerformed++
     }
+
+    yield put(actions.setIsScreenDarkened(true))
 }
 
 export const playerDisconnected = function* () {
