@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import styled from "styled-components/native"
 import Background from "../../components/background"
-import { SINGLE_PLAYER_GAME } from "../../constants"
+import { SINGLE_PLAYER_GAME, SECONDARY_COLOR } from "../../constants"
 
 import ListItem from "../../components/menu-item"
 
@@ -16,11 +16,11 @@ const Container = styled.View`
 `
 const Text = styled.Text`
     font-size: 36;
-    color: white;
+    color: ${ SECONDARY_COLOR };
     position: absolute;
     top: 50;
     border-bottom-width: 5;
-    border-color: white;
+    border-color: ${ SECONDARY_COLOR };
 `
 
 class GameOverScreen extends React.Component {
