@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 3000
 
 const server = app.listen(PORT, () => console.log(`running on port ${PORT}`))
 
-const io = socket(server, { "pingInterval": 10000, "pingTimeout": 5000 })
+const io = socket(server, { "pingInterval": 7500, "pingTimeout": 30000 })
 
 const gameRoomManager = new (require("./GameRoomManager"))(io)
 
