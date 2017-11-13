@@ -383,6 +383,13 @@ function createRouteHandlers(socket) {
                 gameRoom.startGame()
                 socket.emit("action", { type: "GO_TO_GAME_SCREEN", payload: gameMode })
             }
+        },
+        ["server/SYNC_PLAYERS_WITH_REDUX"]: action => {
+            const gameRoom = gameRoomManager.findPlayersGameRoom(socket)
+
+            if (gameRoom) {
+                gameRoom.syncPlayersArrayWithRedux()
+            }
         }
     }
 
