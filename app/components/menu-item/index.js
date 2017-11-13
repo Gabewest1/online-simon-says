@@ -52,7 +52,7 @@ class MenuItem extends React.Component {
                 raised
                 disabled={ disabled }
                 fontSize={ FONT_SIZE }
-                color={ color }
+                color={ disabled ? "#c4bcbc" : color }
                 backgroundColor={ inverted ? SECONDARY_COLOR : BACKGROUND_COLOR }
                 icon={{ ...icon, style: { position: "absolute", left: "10%", color, fontSize: FONT_SIZE } }}
                 buttonStyle={{
@@ -60,6 +60,7 @@ class MenuItem extends React.Component {
                     marginLeft: 0,
                     marginRight: 0
                 }}
+                disabledStyle={{ backgroundColor: "#828282" }}
                 containerViewStyle={{ ...style, ...borderStyles, marginLeft: 0, marginRight: 0 }}
                 title={ children || title }
                 onPress={ this.debounceDecorator(onPress) } />

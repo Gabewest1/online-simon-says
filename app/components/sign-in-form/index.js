@@ -89,7 +89,6 @@ class SignInForm extends React.Component {
                                 Play as Guest
                     </ListItem>
                     <ListItem
-                        inverted
                         onPress={ this.gotoSignUpScreen }
                         icon={{name: "border-color"}}>
                                 Sign Up
