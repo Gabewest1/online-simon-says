@@ -21,8 +21,7 @@ class SimonGame {
         )
     }
     removePlayer(player) {
-        //This method should only be called for private matches and before they've started
-        this.players = this.players.filter(p => p.username !== player.username)        
+        this.players = this.players.filter(p => p.username !== player.username)
     }
     playerReady(player) {
         this.players = this.players.map(p => {
