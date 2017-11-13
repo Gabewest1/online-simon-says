@@ -170,7 +170,6 @@ export const gameReducer = handleActions({
     [resetTimer]: (state, action) => ({ ...state, timer: 15 }),
     [setMoveIndex]: (state, action) => ({ ...state, moveIndex: action.payload }),
     [setWinner]: (state, action) => ({ ...state, winner: action.payload }),
-    [simonPadClicked]: (state, action) => ({ ...state, moveIndex: state.moveIndex + 1 }),
     [resetGame]: (state, action) => ({ ...gameReducerInitialState, gameMode: state.gameMode })  //I keep the game mode soley for when a guest loses internet connection on the game over 
                                                                                                 //screen, so they can access the gameMode state from the Navigator sagas to determine where to redirect.
 }, gameReducerInitialState)

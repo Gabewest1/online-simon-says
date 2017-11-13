@@ -303,6 +303,7 @@ export const performPlayersTurn = function* () {
     let movesPerformed = 0
 
     while (movesPerformed < movesToPerform.length) {
+        yield put(actions.setMoveIndex(0))
         let isPlayersFirstMove = movesPerformed === 0
         let timer
 
@@ -330,11 +331,11 @@ export const performPlayersTurn = function* () {
         }
 
         movesPerformed++
+        yield put(actions.setMoveIndex(movesPerformed))
     }
 
-    //Give a little pause before starting the next turn
-    yield delay(100)
-
+    yield put(actions.setIsScreenDarkened(true))
+    
     return true
 }
 
