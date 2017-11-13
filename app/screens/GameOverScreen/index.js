@@ -4,11 +4,11 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import styled from "styled-components/native"
 import Background from "../../components/background"
-import { SINGLE_PLAYER_GAME, SECONDARY_COLOR } from "../../constants"
+import { SINGLE_PLAYER_GAME, PRIVATE_MATCH, SECONDARY_COLOR } from "../../constants"
 
 import ListItem from "../../components/menu-item"
 
-import { actions as simonGameActions } from "../../redux/SimonSaysGame"
+import { actions as simonGameActions, selectors as simonGameSelectors } from "../../redux/SimonSaysGame"
 import { actions as navigatorActions } from "../../redux/Navigator"
 
 const Container = styled.View`
@@ -26,6 +26,10 @@ const Text = styled.Text`
 class GameOverScreen extends React.Component {
     componentWillMount() {
         this.props.resetGame()
+
+        if (this.props.gameMode === PRIVATE_MATCH) {
+            this.props.fetchPlayersInLobby()            
+        }
     }
     findNextMatch() {
         this.props.navigateToScreen({
@@ -36,7 +40,6 @@ class GameOverScreen extends React.Component {
                 animated: true,
                 animationType: 'slide-horizontal',
                 overrideBackPress: true,
-                passProps: { gameMode: this.props.gameMode }
             }
         })
     }
@@ -49,18 +52,35 @@ class GameOverScreen extends React.Component {
                 animated: true,
                 animationType: 'slide-horizontal',
                 overrideBackPress: true,
-                passProps: { gameMode: this.props.gameMode }
+            }
+        })
+    }
+    returnToPrivateMatchLobby() {
+        this.props.navigateToScreen({
+            fn: "push",
+            navigationOptions: {
+                screen: "InvitePlayersScreen",
+                title: "",
+                animated: true,
+                animationType: 'slide-horizontal',
+                overrideBackPress: true
             }
         })
     }
     render() {
+        const isAPrivateMatch = this.props.gameMode === PRIVATE_MATCH
+
         const onPress = this.props.gameMode === SINGLE_PLAYER_GAME
             ? this.playAgain.bind(this)
-            : this.findNextMatch.bind(this)
+            : isAPrivateMatch
+                ? this.returnToPrivateMatchLobby.bind(this)
+                : this.findNextMatch.bind(this)
 
         const playAgainText = this.props.gameMode === SINGLE_PLAYER_GAME
             ? "Play Again"
-            : "Find Next Match"
+            : isAPrivateMatch
+                ? "Return to lobby"
+                : "Find Next Match"
 
         return (
             <Background centered>
@@ -73,7 +93,7 @@ class GameOverScreen extends React.Component {
                         title={ playAgainText }
                         style={{ marginBottom: 35 }}
                         onPress={ () => onPress() } />
-                    <ListItem
+                    { !isAPrivateMatch && <ListItem
                         disabled={ false }
                         title="Quit"
                         onPress={ () => this.props.navigateToScreen({
@@ -86,7 +106,7 @@ class GameOverScreen extends React.Component {
                                 overrideBackPress: true,
                                 backButtonHidden: true
                             }
-                        }) } />
+                        }) } />}
                 </Container>
             </Background>
         )
@@ -94,11 +114,15 @@ class GameOverScreen extends React.Component {
 }
 
 function mapStateToProps(state) {
-    return {}
+    return {
+        gameMode: simonGameSelectors.getGameMode(state)
+    }
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ ...simonGameActions, ...navigatorActions }, dispatch)
+    const fetchPlayersInLobby = () => ({ type: "server/SYNC_PLAYERS_WITH_REDUX" })
+
+    return bindActionCreators({ ...simonGameActions, ...navigatorActions, fetchPlayersInLobby }, dispatch)
 }
 
 GameOverScreen.propTypes = {
