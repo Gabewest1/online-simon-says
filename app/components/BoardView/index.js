@@ -32,8 +32,6 @@ function playAudio(index) {
         } else {
             audio.play()
         }
-
-        audio.release()
     })
 }
 
@@ -95,7 +93,7 @@ class BoardView extends Component {
 
         //Is true when playing back the moves to the player or 
         //in a multiplayer game and the opponents plays a move
-        if (this.props.lit) {
+        if (this.props.lit === id) {
             playAudio(this.props.lit)
         }
 
@@ -107,11 +105,8 @@ class BoardView extends Component {
                 style={ [ styles.tile, position, { backgroundColor } ] }
                 isAnimating={ isLit }
                 activeOpacity={ this.props.disableOnPress ? 1 : .2 }
-                index={ id }
-                tile={ this.tiles[id] }
                 key={ id }
-                onPress={ () => !this.props.disableOnPress && this._onPress(id) }
-                ref={ tile => this.tiles[id] = tile } />
+                onPress={ () => !this.props.disableOnPress && this._onPress(id) } />
         )
     }
 
