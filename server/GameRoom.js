@@ -229,7 +229,7 @@ class GameRoom {
         this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
     startJoinMatchTimer() {
-        const timeTillPlayerTimesout = 5000
+        const timeTillPlayerTimesout = 15000
         const notReady = ({ player }) =>
             !this.playersReadyToStart.find(socket => socket.player.username === player.username)
 
@@ -303,7 +303,7 @@ class GameRoom {
         this.acceptPlayersReadyForNextTurn = true
         this.timer = setTimeout(() => {
             this.endTurn()
-        }, 8500)
+        }, 15000)
     }
 }
 
