@@ -6,8 +6,8 @@ class PrivateGameRoom extends GameRoom {
     }
     endGame() {
         super.endGame()
-
-        super.syncPlayersArrayWithRedux()
+        this.syncPlayersWithLobby()
+        this.resetGame()
     }
     isGameRoomReady() {
         const thereIsMoreThanOnePlayer = this.game.players.length > 1
@@ -29,6 +29,21 @@ class PrivateGameRoom extends GameRoom {
 
         super.syncPlayersArrayWithRedux()
     }
+    resetGame() {
+        this.game.players.forEach(player => {
+            player.isReady = false
+            player.isEliminated = false
+        })
+        this.gameStarted = false
+        this.playersReady = []
+        this.playersReadyForNextTurn = []
+        this.acceptPlayersReadyForNextTurn = false
+        this.playersReadyToStart = []
+        this.eliminatedPlayers = []
+        this.movesToPerform = []
+        this.currentMovesIndex = 0
+        this.round = 0
+    }
     startGame() {
         console.log("STARTING THE GAME, IS IT READY:".yellow, this.gameStarted)
         if (!this.gameStarted) {
@@ -39,6 +54,16 @@ class PrivateGameRoom extends GameRoom {
             this.timer = super.startJoinMatchTimer()
         }
     }
+    syncPlayersWithLobby() {
+        this.game.players.forEach(player => {
+            const isPlayerStillInTheLobby = this.lobby.find(playerSocket => playerSocket.player.username === player.username)
+
+            if (!isPlayerStillInTheLobby) {
+                this.game.removePlayer(player)
+            }
+        })
+    }
+
 }
 
 module.exports = PrivateGameRoom
