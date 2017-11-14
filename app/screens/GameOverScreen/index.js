@@ -51,7 +51,7 @@ class GameOverScreen extends React.Component {
                 title: "",
                 animated: true,
                 animationType: 'slide-horizontal',
-                overrideBackPress: true,
+                overrideBackPress: true
             }
         })
     }

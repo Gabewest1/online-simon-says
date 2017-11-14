@@ -196,6 +196,7 @@ class SimonGameScreen extends React.Component {
 function mapStateToProps(state) {
     return {
         disableOnPress: simonGameSelectors.disableOnPress(state),
+        gameMode: simonGameSelectors.getGameMode(state),
         hasGameStarted: simonGameSelectors.hasGameStarted(state),
         highScore: userSelectors.getHighScore(state),
         isGameOver: simonGameSelectors.isGameOver(state),
