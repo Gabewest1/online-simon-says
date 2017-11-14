@@ -69,7 +69,8 @@ const Timer = styled.Text`
     color: ${({ isScreenDarkened }) => isScreenDarkened ? BACKGROUND_COLOR : SECONDARY_COLOR };
     font-size: 24px;
     padding-bottom: 10px;
-    `
+    background-color: transparent;    
+`
 const HighScoresView = styled.View`
     flex-direction: row;
     justify-content: space-between;
@@ -77,9 +78,10 @@ const HighScoresView = styled.View`
     position: absolute;
     top: 0;
     width: 100%;
-    `
+`
 const Score = styled.Text`
     color: ${({ isScreenDarkened }) => isScreenDarkened ? BACKGROUND_COLOR : SECONDARY_COLOR };
+    background-color: transparent;    
     font-size: 22px;
     font-weight: 500;
 `
