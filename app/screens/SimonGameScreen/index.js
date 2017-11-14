@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import { AsyncStorage } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
@@ -63,23 +64,24 @@ const PlayerView = styled(Player)`
         }
     }};
     borderRadius: 50;
-`
+    `
 const Timer = styled.Text`
-    color: ${ SECONDARY_COLOR };
+    color: ${({ isScreenDarkened }) => isScreenDarkened ? BACKGROUND_COLOR : SECONDARY_COLOR };
     font-size: 24px;
     padding-bottom: 10px;
-`
+    `
 const HighScoresView = styled.View`
     flex-direction: row;
     justify-content: space-between;
-    padding: 15px;
+    padding: 20px 35px;
     position: absolute;
     top: 0;
     width: 100%;
-`
+    `
 const Score = styled.Text`
     color: ${({ isScreenDarkened }) => isScreenDarkened ? BACKGROUND_COLOR : SECONDARY_COLOR };
-    font-size: 18px;
+    font-size: 22px;
+    font-weight: 500;
 `
 const Players = ({ player1, player2, performingPlayer, bottom }) => {
     return (
@@ -91,11 +93,14 @@ const Players = ({ player1, player2, performingPlayer, bottom }) => {
         </PlayersView>
     )
 }
-const HighScores = ({ highScore, isScreenDarkened }) => {
+const HighScores = ({ highScore, isScreenDarkened, round }) => {
     return (
         <HighScoresView>
             <Score isScreenDarkened={ isScreenDarkened }>
-                High Score: { highScore }
+                Best: { highScore }
+            </Score>
+            <Score isScreenDarkened={ isScreenDarkened }>
+                Score: { round }
             </Score>
         </HighScoresView>
     )
@@ -110,6 +115,10 @@ class SimonGameScreen extends React.Component {
         ],
         leftButtons: []
     }
+    constructor(props) {
+        super(props)
+        this.state = { highScore: 0 }
+    }
     componentWillMount() {
         //Server emits a SET_GAME_MODE for multiplayer games.
         //Need to emit that this is a single player game if not a multiplayer one.
@@ -121,6 +130,7 @@ class SimonGameScreen extends React.Component {
         this.handleBack = this.handleBack.bind(this)
 
         this.props.navigator.setOnNavigatorEvent(this.handleBack)
+        this.getHighScore()
     }
     handleBack({ id }) {
         console.log("BUTTON ID:", id)
@@ -134,6 +144,16 @@ class SimonGameScreen extends React.Component {
     handlePadClick(pad) {
         this.props.simonPadClicked(pad)
     }
+    async getHighScore() {
+        try {
+            const value = await AsyncStorage.getItem('highscore');
+            if (value !== null) {
+                this.setState({ highScore: value })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     renderHUD() {
         if (this.props.gameMode !== SINGLE_PLAYER_GAME && this.props.players.length > 0) {
             return (
@@ -146,17 +166,20 @@ class SimonGameScreen extends React.Component {
             return (
                 <HighScores
                     isScreenDarkened={ this.props.isScreenDarkened }
-                    highScore={ this.props.highScore } />
+                    highScore={ Math.max(this.state.highScore, this.props.highScore) }
+                    round={ this.props.round } />
             )
         }
     }
 
     render() {
+        const { isScreenDarkened } = this.props
+
         return (
             <Container>
-                <TintedBG show={ this.props.isScreenDarkened } />
+                <TintedBG show={ isScreenDarkened } />
                 { this.renderHUD() }
-                <Timer>{ this.props.timer }</Timer>
+                <Timer isScreenDarkened={ isScreenDarkened }>{ this.props.timer }</Timer>
                 <BoardView { ...this.props } onPress={ this.handlePadClick.bind(this) } />
                 { this.props.players.length > 2
                     && <Players
