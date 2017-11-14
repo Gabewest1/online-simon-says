@@ -42,5 +42,8 @@ Navigation.startSingleScreenApp({
         icon: require("./assets/images/home.png")
     },
     animated: true,
-    animationType: 'slide-horizontal'
+    animationType: 'slide-horizontal',
+    appStyle: {
+        orientation: 'portrait'
+    }
 })
