@@ -1,5 +1,6 @@
 import { delay } from "redux-saga"
 import { all, call, cancel, fork, put, race, select, take, takeEvery, takeLatest } from "redux-saga/effects"
+import { AsyncStorage } from "react-native"
 import { actions, selectors } from "./index"
 import { selectors as userSelectors } from "../Auth"
 
@@ -338,7 +339,7 @@ export const performPlayersTurn = function* () {
     }
 
     yield put(actions.setIsScreenDarkened(true))
-    
+
     return true
 }
 
@@ -435,7 +436,7 @@ export const receiveGameInviteSaga = function* () {
                 screen: "InvitePlayersScreen",
                 title: "",
                 animationType: 'slide-up',
-                overrideBackPress: true,
+                overrideBackPress: true
             }
 
             const payload = { fn: "push", navigationOptions }
@@ -489,23 +490,31 @@ export const gotoGameScreenSaga = function* () {
     }
 }
 export const updateSinglePlayerStats = function* () {
-    const playerPerforming = yield select(selectors.selectPerformingPlayer)    
+    const playerPerforming = yield select(selectors.selectPerformingPlayer)
+    const currentHighScore = yield select(userSelectors.getHighScore)
     const round = yield select(selectors.getCurrentRound)
 
-    console.log("IS PLAYER A GUEST:", playerPerforming.isAGuest)
+    const highScore = Math.max(currentHighScore, round)
+
+    if (highScore > currentHighScore) {
+        yield call(saveToLocalStorage, highScore)
+    }
 
     if (playerPerforming.isAGuest) {
-        const currentHighScore = yield select(userSelectors.getHighScore)
-
-        const highScore = Math.max(currentHighScore, round)
-
-        console.log("CURRENT HIGHSCORE AND SCORE:", currentHighScore, highScore)
 
         playerPerforming.statsByGameMode[SINGLE_PLAYER].highScore = highScore
 
         yield put({ type: "UPDATE_STATS", payload: playerPerforming })
     } else {
         yield put({ type: "server/UPDATE_SINGLE_PLAYER_STATS", payload: { round }})
+    }
+}
+
+export const saveToLocalStorage = function* (score) {
+    try {
+        yield call(AsyncStorage.setItem, "highscore", score.toString())
+    } catch (err) {
+        console.log(err)
     }
 }
 
