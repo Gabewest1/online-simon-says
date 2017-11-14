@@ -491,7 +491,7 @@ export const gotoGameScreenSaga = function* () {
 }
 export const updateSinglePlayerStats = function* () {
     const playerPerforming = yield select(selectors.selectPerformingPlayer)
-    const currentHighScore = yield select(userSelectors.getHighScore)
+    const currentHighScore = yield call(getHighScore)
     const round = yield select(selectors.getCurrentRound)
 
     const highScore = Math.max(currentHighScore, round)
@@ -500,8 +500,8 @@ export const updateSinglePlayerStats = function* () {
         yield call(saveToLocalStorage, highScore)
     }
 
-    if (playerPerforming.isAGuest) {
-
+    if (playerPerforming.isAGuest && highScore > currentHighScore) {
+        console.log("UPDATING STATS:", highScore, currentHighScore)
         playerPerforming.statsByGameMode[SINGLE_PLAYER].highScore = highScore
 
         yield put({ type: "UPDATE_STATS", payload: playerPerforming })
@@ -510,6 +510,16 @@ export const updateSinglePlayerStats = function* () {
     }
 }
 
+export const getHighScore = function* () {
+    try {
+        const localStorageHighScore = parseInt( (yield call(AsyncStorage.getItem, 'highscore')) )
+        const currentHighScore = yield select(userSelectors.getHighScore)
+
+        return Math.max(localStorageHighScore, currentHighScore)
+    } catch (error) {
+        console.log(error)
+    }
+}
 export const saveToLocalStorage = function* (score) {
     try {
         yield call(AsyncStorage.setItem, "highscore", score.toString())
