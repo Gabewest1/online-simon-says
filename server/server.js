@@ -207,13 +207,21 @@ function createRouteHandlers(socket) {
 
     const statsRoutes = {
         ["server/FETCH_LEADERBOARD_DATA"]: action => {
-            User.find({}).sort({"statsByGameMode.1.highScore": -1}).limit(10).exec((err, users) => {
+            User.find({}).sort({"statsByGameMode.1.highScore": -1}).exec((err, users) => {
                 if (err) {
                     console.log(err)
                 }
 
-                console.log("SENDING THE USER LEADERBOARDS:", users)
-                socket.emit("action", { type: "FETCH_LEADERBOARD_DATA_SUCCESS", payload: users })
+                const top10Users = users.slice(0, 10)
+
+                if (!socket.player.isAGuest) {
+                    const usersRating = users.findIndex(user => user.username === socket.player.username) + 1
+                    console.log("MY RATING IS:".bgCyan, usersRating)
+
+                    socket.emit("action", { type: "SET_RANKING", payload: usersRating })
+                }
+
+                socket.emit("action", { type: "FETCH_LEADERBOARD_DATA_SUCCESS", payload: top10Users })
             })
         },
         ["server/UPDATE_SINGLE_PLAYER_STATS"]: action => {

@@ -45,7 +45,7 @@ const RankWrapper = styled.View`
     align-items: center;
     flex-direction: row;
     justify-content: center;
-    width: 40;
+    width: ${ width < 768 ? 40 : 80 };
 `
 const Rank = styled.Text`
     color: ${ BACKGROUND_COLOR };
@@ -98,12 +98,12 @@ class Leaderboards extends React.Component {
         return true
     }
     render() {
-        const { isLoading, myPlayer } = this.props
+        const { isLoading, myPlayer, ranking } = this.props
         const myPlayerStyles = { color: SECONDARY_COLOR }
 
         return (
             <Background centered={ this.props.isLoading }>
-                { !isLoading && this.renderPlayer({ item: myPlayer, index: 11, style: myPlayerStyles }) }
+                { !isLoading && this.renderPlayer({ item: myPlayer, index: ranking, style: myPlayerStyles }) }
                 { isLoading
                     ? <Spinner isVisible={ true } size={ 100 } type="FadingCircleAlt" color={ SECONDARY_COLOR } />
                     : this.renderLeaderboard()
@@ -116,14 +116,18 @@ class Leaderboards extends React.Component {
             <List style={ styles.list }>
                 <FlatList
                     data={ this.props.players }
-                    renderItem={ this.renderPlayer } />
+                    renderItem={ (props) => this.renderPlayer(props) } />
 
             </List>
         )
     }
     renderPlayer({ item, index, style }) {
         console.log("PLAYER:", item)
-        const rank = item.isAGuest ? "N/A" : index + 1
+        const rank = index === "N/A"
+            ? "N/A"
+            : item.username === this.props.myPlayer.username
+                ? this.props.ranking
+                : index + 1
 
         return (
             <Container key={ item.username }>
@@ -147,7 +151,8 @@ function mapStateToProps(state) {
         isLoading: leaderboardSelectors.isLoading(state),
         myHighscore: userSelectors.getHighScore(state),
         myPlayer: userSelectors.getUser(state),
-        players: leaderboardSelectors.getPlayers(state)
+        players: leaderboardSelectors.getPlayers(state),
+        ranking: userSelectors.getRanking(state)
     }
 }
 
@@ -162,7 +167,8 @@ Leaderboards.propTypes = {
     fetchLeaderboardData: PropTypes.func.isRequired,
     navigateToScreen: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired,
-    players: PropTypes.array.isRequired
+    players: PropTypes.array.isRequired,
+    ranking: PropTypes.oneOf([PropTypes.string, PropTypes.number])
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Leaderboards)

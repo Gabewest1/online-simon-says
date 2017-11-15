@@ -6,6 +6,7 @@ const {
     loginSuccess,
     logout,
     playAsGuest,
+    setRanking,
     register,
     updateStats
 } = createActions(
@@ -14,6 +15,7 @@ const {
     "LOGIN_SUCCESS",
     "LOGOUT",
     "PLAY_AS_GUEST",
+    "SET_RANKING",
     "REGISTER",
     "UPDATE_STATS"
 )
@@ -24,6 +26,7 @@ export const actions = {
     loginSuccess,
     logout,
     playAsGuest,
+    setRanking,
     register,
     updateStats
 }
@@ -33,6 +36,7 @@ const initialState = {
     isLoading: false,
     token: null,
     info: {},
+    ranking: "N/A",
     error: null
 }
 
@@ -51,6 +55,7 @@ export default handleActions({
         error: action.payload
     }),
     [logout]: (state, action) => initialState,
+    [setRanking]: (state, action) => ({ ...state, ranking: action.payload }),
     [register]: (state, action) => ({ ...state, isLoading: true }),
     [updateStats]: (state, action) => ({ ...state, info: action.payload })
 }, initialState)
