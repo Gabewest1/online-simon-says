@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Keyboard } from "react-native"
-import { CheckBox, SearchBar } from "react-native-elements"
+import { Dimensions, Keyboard, TouchableOpacity, InteractionManager, Text, View } from "react-native"
+import { Icon, SearchBar } from "react-native-elements"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
@@ -12,6 +12,8 @@ import Background from "../../components/background"
 import MenuItem from "../../components/menu-item"
 import Input from "../../components/input"
 
+import { SECONDARY_COLOR } from "../../constants"
+
 import {
     actions as simonGameActions,
     selectors as simonGameSelectors
@@ -21,9 +23,34 @@ import { actions as navigatorActions } from "../../redux/Navigator"
 
 import { selectors as userSelectors } from "../../redux/Auth"
 
-const InvitedPlayerView = styled.View`
+const FONT_SIZE = Dimensions.get("window").width < 480
+    ? 18 : 24
 
+const InvitePlayerForm = styled.View`
+    paddingVertical: ${ FONT_SIZE * .7 };
 `
+const PlayersView = styled.View`
+    flex-grow: 1;
+`
+const Header = styled.View`
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    marginVertical: ${ FONT_SIZE * .7 };
+    paddingVertical: ${ FONT_SIZE * .35 };
+    border-color: ${ SECONDARY_COLOR };
+    border-bottom-width: 2;
+`
+const InvitedPlayerView = styled.View`
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: ${ FONT_SIZE * .7 };
+`
+
+const styles = {
+    width: Dimensions.get("window").width * .8
+}
 
 class InvitePlayersScreen extends React.Component {
     static navigatorButtons = {
@@ -38,12 +65,18 @@ class InvitePlayersScreen extends React.Component {
     constructor(props) {
         super(props)
 
-        this.validate = this.validate.bind(this)
-        this.handleBack = this.handleBack.bind(this)
+        //I track isReady locally to quickly animate the ready icon b/c otherwise i have to wait
+        //for the server to respond and update my state. 
+        this.state = { isReady: this.getMyPlayer().isReady }
 
         props.navigator.setOnNavigatorEvent(this.handleBack)
     }
-    handleBack({ id }) {
+    getMyPlayer = () => {
+        const { players, myUsername } = this.props
+
+        return players.find(player => player.username === myUsername)
+    }
+    handleBack = ({ id }) => {
         if (id === "backPress" || id === "quit") {
             console.log("EXIT ACTION:", this.props)
             this.props.showBackoutWarningMessage({
@@ -52,7 +85,18 @@ class InvitePlayersScreen extends React.Component {
             })
         }
     }
-    validate(values) {
+    togglePlayerReady = player => {
+        InteractionManager.runAfterInteractions(() => {
+            if (!player.isReady) {
+                this.props.playerReady()
+                this.setState({ isReady: true })
+            } else {
+                this.props.playerNotReady()
+                this.setState({ isReady: false })
+            }
+        })
+    }
+    validate = values => {
         Keyboard.dismiss()
 
         values.username = values.username && values.username.toLowerCase().trim()
@@ -71,35 +115,45 @@ class InvitePlayersScreen extends React.Component {
     }
     render() {
         return (
-            <Background>
-                <Field
-                    searchBar
-                    name="username"
-                    type="text"
-                    containerStyle={{ width: 280 }}
-                    component={ Input }
-                    placeholder="Invite user..." />
-                <MenuItem onPress={ this.props.handleSubmit(this.validate) }>Invite</MenuItem>
-                { this.renderPlayers() }
+            <Background around>
+                <InvitePlayerForm>
+                    <Field
+                        searchBar
+                        containerStyle={{ width: styles.width }}
+                        name="username"
+                        type="text"
+                        component={ Input }
+                        placeholder="Invite user..." />
+                    <MenuItem
+                        style={{ width: styles.width }}
+                        onPress={ this.props.handleSubmit(this.validate) }>
+                        Invite
+                    </MenuItem>
+                </InvitePlayerForm>
+                <PlayersView>
+                    <Header>
+                        <View>
+                            <Text style={{ fontSize: FONT_SIZE }}>Players</Text>
+                        </View>
+                        <View>
+                            <Text style={{ fontSize: FONT_SIZE }}>Ready</Text>
+                        </View>
+                    </Header>
+                    { this.renderPlayers() }
+                </PlayersView>
             </Background>
         )
     }
     renderPlayers() {
         return this.props.players.map(player =>
-            (<InvitedPlayerView key={ player.username }>
-                <CheckBox
-                    center
-                    title={ (<Player player={ player } />) }
-                    iconRight
-                    iconType="material"
-                    checkedIcon="clear"
-                    uncheckedIcon="add"
-                    checkedColor="red"
-                    checked={ player.isReady }
-                    onPress={ !player.isReady ?
-                        this.props.playerReady :
-                        this.props.playerNotReady
-                    } />
+            (<InvitedPlayerView style={{ width: styles.width }} key={ player.username }>
+                <Player player={ player } />
+                <TouchableOpacity onPress={ () => this.togglePlayerReady(player) }>
+                    <Icon
+                        type="material"
+                        name={ player.isReady ? "clear" : "add" }
+                        color={ player.isReady ? "lightgray" : "red" } />
+                </TouchableOpacity>
             </InvitedPlayerView>)
         )
     }
