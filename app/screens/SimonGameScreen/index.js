@@ -6,7 +6,6 @@ import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 
 import Player from "../../components/player"
-import SimonGame from "../../components/simon__game"
 import Background from "../../components/background"
 import BoardView from "../../components/BoardView"
 
