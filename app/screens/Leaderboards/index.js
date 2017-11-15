@@ -123,11 +123,12 @@ class Leaderboards extends React.Component {
     }
     renderPlayer({ item, index, style }) {
         console.log("PLAYER:", item)
+        const rank = item.isAGuest ? "N/A" : index + 1
 
         return (
             <Container key={ item.username }>
                 <RankWrapper>
-                    <Rank style={ style }>{ index + 1}</Rank>
+                    <Rank style={ style }>{ rank }</Rank>
                 </RankWrapper>
                 <PlayerStatsWrapper borderColor={ style && style.color }>
                     <Player
