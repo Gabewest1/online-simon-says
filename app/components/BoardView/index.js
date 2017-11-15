@@ -7,6 +7,8 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import SimonPad from "../SimonPad"
+
 const Sound = require('react-native-sound');
 
 const pad1Audio = new Sound("simon_sound1.mp3", Sound.MAIN_BUNDLE, err => err && console.log(err))
@@ -24,6 +26,7 @@ const padAudioFiles = {
 function playAudio(index) {
     const audio = padAudioFiles[index]
     console.log("AUDIO::::", index, audio)
+
     audio.getCurrentTime(time => {
         if (time > 0) {
             audio.stop(() => {
@@ -43,10 +46,6 @@ const BORDER_RADIUS = CELL_PADDING * 2;
 const TILE_SIZE = CELL_SIZE - CELL_PADDING * 2;
 const LETTER_SIZE = 50;
 
-
-let mainSequence = [];
-let currSequence = [];
-
 class BoardView extends Component {
     constructor(props) {
         super(props);
@@ -65,13 +64,13 @@ class BoardView extends Component {
     render() {
         return (
             <View style={ styles.container }>
-                {this._renderTiles()}
+                {this.renderPads()}
             </View>
         )
     }
 
     // create four tiles
-    _renderTiles() {
+    renderPads() {
         let result = [];
         let i = 1;
         let bgColors = ["", "", "#3275DD", "#D93333", "#64D23B", "#FED731", "black"];
@@ -81,7 +80,7 @@ class BoardView extends Component {
                     left: col * CELL_SIZE + CELL_PADDING,
                     top: row * CELL_SIZE + CELL_PADDING
                 };
-                result.push(this._renderTile(i++, position, bgColors[i], 'white'));
+                result.push(this.renderPad(i++, position, bgColors[i], 'white'));
             }
         }
 
@@ -89,7 +88,7 @@ class BoardView extends Component {
     }
 
     // create one tile
-    _renderTile(id, position, bgColor, litBgColor) {
+    renderPad(id, position, bgColor, litBgColor) {
 
         //Is true when playing back the moves to the player or 
         //in a multiplayer game and the opponents plays a move
@@ -101,11 +100,10 @@ class BoardView extends Component {
         const backgroundColor = isLit == id ? litBgColor : bgColor
 
         return (
-            <TouchableOpacity
-                style={ [ styles.tile, position, { backgroundColor } ] }
-                isAnimating={ isLit }
-                activeOpacity={ this.props.disableOnPress ? 1 : .2 }
+            <SimonPad
                 key={ id }
+                style={ [ styles.tile, position, { backgroundColor } ] }
+                activeOpacity={ this.props.disableOnPress ? 1 : .2 }
                 onPress={ () => !this.props.disableOnPress && this._onPress(id) } />
         )
     }
