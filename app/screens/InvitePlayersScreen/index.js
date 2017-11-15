@@ -151,8 +151,8 @@ class InvitePlayersScreen extends React.Component {
                 <TouchableOpacity onPress={ () => this.togglePlayerReady(player) }>
                     <Icon
                         type="material"
-                        name={ player.isReady ? "clear" : "add" }
-                        color={ player.isReady ? "lightgray" : "red" } />
+                        name={ player.isReady ? "add" : "clear" }
+                        color={ player.isReady ? "red" : "lightgray" } />
                 </TouchableOpacity>
             </InvitedPlayerView>)
         )
