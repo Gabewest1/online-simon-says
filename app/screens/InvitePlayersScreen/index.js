@@ -87,12 +87,14 @@ class InvitePlayersScreen extends React.Component {
     }
     togglePlayerReady = player => {
         InteractionManager.runAfterInteractions(() => {
-            if (!player.isReady) {
-                this.props.playerReady()
-                this.setState({ isReady: true })
-            } else {
-                this.props.playerNotReady()
-                this.setState({ isReady: false })
+            if (player.username === this.props.myUsername) {
+                if (!player.isReady) {
+                    this.props.playerReady()
+                    this.setState({ isReady: true })
+                } else {
+                    this.props.playerNotReady()
+                    this.setState({ isReady: false })
+                }
             }
         })
     }
@@ -148,11 +150,13 @@ class InvitePlayersScreen extends React.Component {
         return this.props.players.map(player =>
             (<InvitedPlayerView style={{ width: styles.width }} key={ player.username }>
                 <Player player={ player } />
-                <TouchableOpacity onPress={ () => this.togglePlayerReady(player) }>
+                <TouchableOpacity
+                    activeOpacity={ player.username === this.props.myUsername ? .2 : 1 }
+                    onPress={ () => this.togglePlayerReady(player) }>
                     <Icon
                         type="material"
-                        name={ player.isReady ? "add" : "clear" }
-                        color={ player.isReady ? "red" : "lightgray" } />
+                        name={ player.isReady ? "done" : "clear" }
+                        color={ player.isReady ? "green" : "red" } />
                 </TouchableOpacity>
             </InvitedPlayerView>)
         )
