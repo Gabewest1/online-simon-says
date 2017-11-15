@@ -5,6 +5,7 @@ const Message = styled.View`
     justify-content: center;
     align-items: center;
     backgroundColor: rgba(0,0,0,.6);
+    width: 100%;
 `
 const Text = styled.Text`
     color: white;
