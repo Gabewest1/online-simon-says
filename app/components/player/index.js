@@ -1,6 +1,14 @@
 import React from "react"
+import { Dimensions } from "react-native"
 import { Icon } from "react-native-elements"
 import styled from "styled-components/native"
+
+const { width } = Dimensions.get("window").width
+const FONT_SIZE = width < 480
+    ? 16
+    : width < 768
+        ? 22
+        : 32
 
 const PlayerView = styled.View`
     position: relative;
@@ -18,7 +26,8 @@ const Level = styled.Text`
     background-color: transparent;
 `
 const Name = styled.Text`
-    margin-horizontal: 4;
+    margin-horizontal: ${ FONT_SIZE * .4 };
+    font-size: ${ FONT_SIZE };
 `
 const Image = styled.Image`
     
