@@ -156,6 +156,7 @@ class SimonGameScreen extends React.Component {
         }
     }
     renderHUD() {
+        const highScore = Math.max(this.state.highScore, this.props.highScore) || 0
         if (this.props.gameMode !== SINGLE_PLAYER_GAME && this.props.players.length > 0) {
             return (
                 <Players
@@ -167,7 +168,7 @@ class SimonGameScreen extends React.Component {
             return (
                 <HighScores
                     isScreenDarkened={ this.props.isScreenDarkened }
-                    highScore={ Math.max(this.state.highScore, this.props.highScore) }
+                    highScore={ highScore }
                     round={ this.props.round } />
             )
         }
