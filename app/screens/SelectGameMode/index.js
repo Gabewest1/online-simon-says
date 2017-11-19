@@ -13,6 +13,7 @@ import Player from "../../components/player"
 import { SINGLE_PLAYER_GAME } from "../../constants"
 import { actions as userActions, selectors as userSelectors } from "../../redux/Auth"
 import { actions as navigatorActions } from "../../redux/Navigator"
+import { actions as simonGameActions } from "../../redux/SimonSaysGame"
 
 const MARGIN_BOTTOM = 35
 
@@ -29,6 +30,7 @@ const List = styled.View`
 
 class SelectGameMode extends React.Component {
     componentWillMount() {
+        this.props.setGameMode(SINGLE_PLAYER_GAME)
         this.props.navigator.setButtons({
             rightButtons: [{
                 id: "Player",
@@ -123,14 +125,15 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ ...userActions, ...navigatorActions }, dispatch)
+    return bindActionCreators({ ...userActions, ...navigatorActions, ...simonGameActions }, dispatch)
 }
 
 SelectGameMode.propTypes = {
     myPlayer: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
     navigateToScreen: PropTypes.func.isRequired,
-    navigator: PropTypes.object.isRequired
+    navigator: PropTypes.object.isRequired,
+    setGameMode: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectGameMode)
