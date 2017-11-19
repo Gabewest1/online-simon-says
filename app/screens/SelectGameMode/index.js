@@ -1,4 +1,5 @@
 import React from "react"
+import { Dimensions } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
@@ -7,9 +8,10 @@ import PropTypes from "prop-types"
 import ListItem from "../../components/menu-item"
 import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
+import Player from "../../components/player"
 
 import { SINGLE_PLAYER_GAME } from "../../constants"
-import { actions as userActions } from "../../redux/Auth"
+import { actions as userActions, selectors as userSelectors } from "../../redux/Auth"
 import { actions as navigatorActions } from "../../redux/Navigator"
 
 const MARGIN_BOTTOM = 35
@@ -26,6 +28,18 @@ const List = styled.View`
 `
 
 class SelectGameMode extends React.Component {
+    componentWillMount() {
+        this.props.navigator.setButtons({
+            rightButtons: [{
+                id: "Player",
+                component: "Player",
+                passProps: {
+                    player: this.props.myPlayer,
+                    style: { height: "100%", width: Dimensions.get("window").width } 
+                }
+            }]
+        })
+    }
     render() {
         return (
             <Container>
@@ -34,7 +48,7 @@ class SelectGameMode extends React.Component {
                         disabled={ false }
                         style={{ marginBottom: MARGIN_BOTTOM }}
                         onPress={ () => this.props.navigateToScreen({
-                            fn: "push",
+                            fn: "resetTo",
                             navigationOptions: {
                                 screen: "SimonGameScreen",
                                 title: "",
@@ -104,8 +118,8 @@ class SelectGameMode extends React.Component {
     }
 }
 
-function mapStateToProps() {
-    return {}
+function mapStateToProps(state) {
+    return { myPlayer: userSelectors.getUser(state) }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -113,6 +127,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 SelectGameMode.propTypes = {
+    myPlayer: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
     navigateToScreen: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired

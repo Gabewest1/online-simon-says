@@ -70,7 +70,6 @@ export const handleSuccessfulSignIn = function* () {
 
         const navigationOptions = {
             screen: "SelectGameMode",
-            title: "Play",
             animated: true,
             animationType: "slide-horizontal",
             backButtonHidden: true
