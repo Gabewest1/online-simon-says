@@ -3,12 +3,14 @@ import { Dimensions } from "react-native"
 import { Icon } from "react-native-elements"
 import styled from "styled-components/native"
 
-const { width } = Dimensions.get("window").width
+const { width } = Dimensions.get("window")
 const FONT_SIZE = width < 480
     ? 16
-    : width < 768
-        ? 22
-        : 32
+    : width < 624
+        ? 18
+        : width < 768
+            ? 22
+            : 32
 
 const PlayerView = styled.View`
     position: relative;
@@ -28,6 +30,7 @@ const Level = styled.Text`
 const Name = styled.Text`
     margin-horizontal: ${ FONT_SIZE * .4 };
     font-size: ${ FONT_SIZE };
+    justifyContent: center;
 `
 const Image = styled.Image`
     
@@ -43,7 +46,7 @@ class Player extends React.Component {
                     <Image { ...this.props.icon } source={ require("../../assets/images/level.png") } />
                     <Level { ...this.props.level }>{ level }</Level>
                 </IconView>
-                <Name { ...this.props } { ...this.props.name }>{ username }</Name>
+                <Name { ...this.props.name }>{ username }</Name>
             </PlayerView>
         )
     }
