@@ -113,8 +113,7 @@ class SimonGameScreen extends React.Component {
                 title: "Quit",
                 id: "quit"
             }
-        ],
-        leftButtons: []
+        ]
     }
     constructor(props) {
         super(props)

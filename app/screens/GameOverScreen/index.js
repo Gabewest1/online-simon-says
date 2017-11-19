@@ -39,13 +39,13 @@ class GameOverScreen extends React.Component {
                 title: "",
                 animated: true,
                 animationType: 'slide-horizontal',
-                overrideBackPress: true,
+                overrideBackPress: true
             }
         })
     }
     playAgain() {
         this.props.navigateToScreen({
-            fn: "push",
+            fn: "resetTo",
             navigationOptions: {
                 screen: "SimonGameScreen",
                 title: "",
@@ -57,7 +57,7 @@ class GameOverScreen extends React.Component {
     }
     returnToPrivateMatchLobby() {
         this.props.navigateToScreen({
-            fn: "push",
+            fn: "resetTo",
             navigationOptions: {
                 screen: "InvitePlayersScreen",
                 title: "",

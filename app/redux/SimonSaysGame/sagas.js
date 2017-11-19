@@ -103,7 +103,7 @@ export const findMatchSaga = function* () {
                 overrideBackPress: true,
                 backButtonHidden: true
             }
-            const payload = { fn: "push", navigationOptions }
+            const payload = { fn: "resetTo", navigationOptions }
 
             yield put(navigatorActions.navigateToScreen(payload))
         }
@@ -485,7 +485,7 @@ export const gotoGameScreenSaga = function* () {
             overrideBackPress: true
         }
 
-        const payload = { fn: "push", navigationOptions}
+        const payload = { fn: "resetTo", navigationOptions}
         yield put(navigatorActions.navigateToScreen(payload))
     }
 }
