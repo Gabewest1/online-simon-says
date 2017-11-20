@@ -60,6 +60,7 @@ class SignInForm extends React.Component {
     }
     render() {
         let { handleSubmit, style } = this.props
+        console.log("STYLE:", style, typeof style)
 
         return (
             <Form style={ style }>
@@ -114,7 +115,7 @@ SignInForm.propTypes = {
     navigateToScreen: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired,
     playAsGuest: PropTypes.func.isRequired,
-    style: PropTypes.object
+    style: PropTypes.oneOfType([PropTypes.array, PropTypes.object, PropTypes.number, PropTypes.string])
 }
 
 export default reduxForm({
