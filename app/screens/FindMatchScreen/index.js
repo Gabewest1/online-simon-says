@@ -63,6 +63,7 @@ class FindMatchScreen extends React.Component {
 
 function mapStateToProps(state) {
     return {
+        gameMode: simonGameSelectors.getGameMode(state),
         hasFoundMatch: simonGameSelectors.hasFoundMatch(state)
     }
 }
@@ -73,6 +74,7 @@ function mapDispatchToProps(dispatch) {
 
 FindMatchScreen.propTypes = {
     cancelSearch: PropTypes.func.isRequired,
+    gameMode: PropTypes.number.isRequired,
     findMatch: PropTypes.func.isRequired,
     gameMode: PropTypes.number.isRequired,
     hasFoundMatch: PropTypes.bool.isRequired,

@@ -42,12 +42,13 @@ class SelectOnlineGameMode extends React.Component {
         return true
     }
     gotoGameScreen(gameMode) {
+        this.props.setGameMode(gameMode)
+
         const navigationOptions = {
             screen: "FindMatchScreen",
             title: "",
             animated: true,
             animationType: 'slide-horizontal',
-            passProps: { gameMode },
             overrideBackPress: true
         }
 
