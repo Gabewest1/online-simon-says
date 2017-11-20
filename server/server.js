@@ -225,6 +225,10 @@ function createRouteHandlers(socket) {
             })
         },
         ["server/UPDATE_SINGLE_PLAYER_STATS"]: action => {
+            if (!socket.player) { 
+                return
+            }
+
             User.findOne({ username: socket.player.username }, (err, user) => {
                 if (err) {
                     console.log(err)
