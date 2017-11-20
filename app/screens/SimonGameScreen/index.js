@@ -230,7 +230,6 @@ SimonGameScreen.propTypes = {
     isScreenDarkened: PropTypes.bool.isRequired,
     navigator: PropTypes.object.isRequired,
     numberOfMoves: PropTypes.number.isRequired,
-    pads: PropTypes.array.isRequired,
     performingPlayer: PropTypes.object.isRequired,
     players: PropTypes.array.isRequired,
     round: PropTypes.number.isRequired,

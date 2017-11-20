@@ -42,7 +42,6 @@ class Pad extends React.Component {
 }
 
 Pad.propTypes = {
-    source: PropTypes.any.isRequired,
     onPress: PropTypes.func.isRequired
 }
 
