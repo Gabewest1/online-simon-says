@@ -64,27 +64,29 @@ class GameRoomManager {
     //a refernce to any game room that is open incase there doesn't exist a game room
     //missing only 1 person.
     getOpenGame(gameMode) {
-        let openGameRoom
+        let numPlayersNeeded = 1
 
-        for (let id in this.gameRoomsById) {
-            const gameRoom = this.gameRoomsById[id]
-            const isGameRoomOpen =
-                gameRoom.lobby.length < gameRoom.playersNeededToStart
-                && !gameRoom.gameStarted
-                && gameRoom.gameMode === gameMode
+        while (numPlayersNeeded < 4) {
+            for (let id in this.gameRoomsById) {
+                const gameRoom = this.gameRoomsById[id]
+                const gameHasntStarted = !gameRoom.gameStarted 
+                const isSameGameMode = gameRoom.gameMode === gameMode 
+                const matchesPlayersNeededCriteria = gameRoom.playersNeededToStart - gameRoom.lobby.length === numPlayersNeeded
 
-            if (isGameRoomOpen) {
-                const isThereOneSpotRemaining = gameRoom.playersNeededToStart - gameRoom.lobby.length === 1
-                
-                if (isThereOneSpotRemaining) {
+                const shouldJoinGameRoom =
+                    gameHasntStarted
+                    && isSameGameMode
+                    && matchesPlayersNeededCriteria
+    
+                if (shouldJoinGameRoom) {
                     return gameRoom
                 }
-
-                openGameRoom = gameRoom
             }
+
+            numPlayersNeeded++
         }
 
-        return openGameRoom || this.createGameRoom(gameMode)
+        return this.createGameRoom(gameMode)
     }
 
     findPlayersGameRoom(player) {
