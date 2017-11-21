@@ -51,7 +51,7 @@ class BoardView extends Component {
     constructor(props) {
         super(props);
         this.tiles = []
-        this.state = {lit: 0, activeTouch: { index: -1, x: -1, y: -1 } };
+        this.state = {lit: 0, activeTouch: { x: -1, y: -1 } };
     }
     componentWillMount() {
         this._panResponder = PanResponder.create({
@@ -71,7 +71,7 @@ class BoardView extends Component {
             // The user has released all touches while this view is the
             // responder. This typically means a gesture has succeeded
             console.log("TOUCHES DONEEEEEEEEEEEEEEEEEEEEEEEEE")
-            this.setState({ activeTouch: { index: -1, x: -1, y: -1 } })
+            this.setState({ activeTouch: { x: -1, y: -1 } })
           },
           onPanResponderTerminate: (evt, gestureState) => {
             // Another component has become the responder, so this gesture
@@ -86,19 +86,15 @@ class BoardView extends Component {
         })
     }
     setActiveTouch(evt, gestureState) {
-        let touches = evt.touchHistory.touchBank
-        console.log(touches)
-        let activeTouchIndex = evt.touchHistory.numberActiveTouches - 1
-        let activeTouch = touches[activeTouchIndex]
-        let { startPageX: x, startPageY: y } = activeTouch
+        const touches = evt.touchHistory.touchBank
 
-        if (activeTouchIndex > this.state.activeTouch.index) {
-            this.setState({ activeTouch: { index: activeTouchIndex, x, y }})
-            console.log("current touch:", x, y) 
-        } else if (activeTouchIndex < this.state.activeTouch.index) {
-            this.setState({ activeTouch: { index: activeTouchIndex, x: -1, y: -1 }})
-        }
+        const activeTouch = touches
+            .filter(touch => touch.touchActive)
+            .reduce((highest, current) => highest.startTimeStamp <= current.startTimeStamp ? current : highest, { startTimeStamp: 0 })
 
+        const { startPageX: x, startPageY: y } = activeTouch
+
+        this.setState({ activeTouch: { x, y }})
     }
     shouldComponentUpdate(nextProps, nextState) {
         const tileWasPressed = this.props.lit !== nextProps.lit || this.state.lit !== nextState.lit
