@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
     Dimensions,
     InteractionManager,
+    PanResponder,
     StyleSheet,
     View,
     TouchableOpacity
@@ -50,20 +51,68 @@ class BoardView extends Component {
     constructor(props) {
         super(props);
         this.tiles = []
-        this.state = {lit: 0};
+        this.state = {lit: 0, activeTouch: { index: -1, x: -1, y: -1 } };
     }
+    componentWillMount() {
+        this._panResponder = PanResponder.create({
+          onStartShouldSetPanResponder: (evt, gestureState) => true,
+          onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+          onMoveShouldSetPanResponder: (evt, gestureState) => true,
+          onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+    
+          onPanResponderGrant: (evt, gestureState) => {
+            this.setActiveTouch(evt, gestureState)
+          },
+          onPanResponderMove: (evt, gestureState) => {
+            this.setActiveTouch(evt, gestureState)
+          },
+          onPanResponderTerminationRequest: (evt, gestureState) => true,
+          onPanResponderRelease: (evt, gestureState) => {
+            // The user has released all touches while this view is the
+            // responder. This typically means a gesture has succeeded
+            console.log("TOUCHES DONEEEEEEEEEEEEEEEEEEEEEEEEE")
+            this.setState({ activeTouch: { index: -1, x: -1, y: -1 } })
+          },
+          onPanResponderTerminate: (evt, gestureState) => {
+            // Another component has become the responder, so this gesture
+            // should be cancelled
+            console.log("TERMINATING")
+          },
+          onShouldBlockNativeResponder: (evt, gestureState) => {
+            // Returns whether this component should block native components from becoming the JS
+            // responder. Returns true by default. Is currently only supported on android.
+            return true;
+          },
+        })
+    }
+    setActiveTouch(evt, gestureState) {
+        let touches = evt.touchHistory.touchBank
+        console.log(touches)
+        let activeTouchIndex = evt.touchHistory.numberActiveTouches - 1
+        let activeTouch = touches[activeTouchIndex]
+        let { startPageX: x, startPageY: y } = activeTouch
 
+        if (activeTouchIndex > this.state.activeTouch.index) {
+            this.setState({ activeTouch: { index: activeTouchIndex, x, y }})
+            console.log("current touch:", x, y) 
+        } else if (activeTouchIndex < this.state.activeTouch.index) {
+            this.setState({ activeTouch: { index: activeTouchIndex, x: -1, y: -1 }})
+        }
+
+    }
     shouldComponentUpdate(nextProps, nextState) {
         const tileWasPressed = this.props.lit !== nextProps.lit || this.state.lit !== nextState.lit
         const onPressDisabledChanged = this.props.disableOnPress !== nextProps.disableOnPress
         const movesArrayIncreased = this.props.numberOfMoves !== nextProps.numberOfMoves
+        const newActiveTouch = this.state.activeTouch !== nextState.activeTouch
 
-        return tileWasPressed || onPressDisabledChanged || movesArrayIncreased
+        return tileWasPressed || onPressDisabledChanged || movesArrayIncreased || newActiveTouch
     }
 
     render() {
+        // console.log("RENDERING!!!!!")
         return (
-            <View style={ styles.container }>
+            <View { ...this._panResponder.panHandlers } style={ styles.container }>
                 {this.renderPads()}
             </View>
         )
@@ -103,6 +152,7 @@ class BoardView extends Component {
             <SimonPad
                 key={ id }
                 style={ [ styles.tile, position, { backgroundColor } ] }
+                activeTouch={ this.state.activeTouch }
                 activeOpacity={ this.props.disableOnPress ? 1 : .2 }
                 onPress={ () => !this.props.disableOnPress && this._onPress(id) } />
         )
