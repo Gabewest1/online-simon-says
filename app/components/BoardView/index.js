@@ -61,10 +61,14 @@ class BoardView extends Component {
           onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
     
           onPanResponderGrant: (evt, gestureState) => {
-            this.setActiveTouch(evt, gestureState)
+              if (!this.props.isScreenDarkened) {
+                  this.setActiveTouch(evt, gestureState)
+              }
           },
           onPanResponderMove: (evt, gestureState) => {
-            this.setActiveTouch(evt, gestureState)
+              if (!this.props.isScreenDarkened) {
+                  this.setActiveTouch(evt, gestureState)
+              }
           },
           onPanResponderTerminationRequest: (evt, gestureState) => true,
           onPanResponderRelease: (evt, gestureState) => {
