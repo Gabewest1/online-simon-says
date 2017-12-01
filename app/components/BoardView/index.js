@@ -26,7 +26,7 @@ const padAudioFiles = {
 
 function playAudio(index) {
     const audio = padAudioFiles[index]
-    console.log("AUDIO::::", index, audio)
+    // console.log("AUDIO::::", index, audio)
 
     audio.getCurrentTime(time => {
         if (time > 0) {
@@ -55,38 +55,32 @@ class BoardView extends Component {
     }
     componentWillMount() {
         this._panResponder = PanResponder.create({
-          onStartShouldSetPanResponder: (evt, gestureState) => true,
-          onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-          onMoveShouldSetPanResponder: (evt, gestureState) => true,
-          onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-    
-          onPanResponderGrant: (evt, gestureState) => {
-              if (!this.props.isScreenDarkened) {
-                  this.setActiveTouch(evt, gestureState)
-              }
-          },
-          onPanResponderMove: (evt, gestureState) => {
-              if (!this.props.isScreenDarkened) {
-                  this.setActiveTouch(evt, gestureState)
-              }
-          },
-          onPanResponderTerminationRequest: (evt, gestureState) => true,
-          onPanResponderRelease: (evt, gestureState) => {
-            // The user has released all touches while this view is the
-            // responder. This typically means a gesture has succeeded
-            console.log("TOUCHES DONEEEEEEEEEEEEEEEEEEEEEEEEE")
-            this.setState({ activeTouch: { x: -1, y: -1 } })
-          },
-          onPanResponderTerminate: (evt, gestureState) => {
-            // Another component has become the responder, so this gesture
-            // should be cancelled
-            console.log("TERMINATING")
-          },
-          onShouldBlockNativeResponder: (evt, gestureState) => {
-            // Returns whether this component should block native components from becoming the JS
-            // responder. Returns true by default. Is currently only supported on android.
-            return true;
-          },
+            onStartShouldSetPanResponder: (evt, gestureState) => true,
+            onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+            onMoveShouldSetPanResponder: (evt, gestureState) => true,
+            onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+            onPanResponderGrant: (evt, gestureState) => {
+                if (!this.props.isScreenDarkened) {
+                    this.setActiveTouch(evt, gestureState)
+                }
+            },
+            onPanResponderMove: (evt, gestureState) => {
+                if (!this.props.isScreenDarkened) {
+                    this.setActiveTouch(evt, gestureState)
+                }
+            },
+            onPanResponderTerminationRequest: (evt, gestureState) => true,
+            onPanResponderRelease: (evt, gestureState) => {
+            // console.log("TOUCHES DONEEEEEEEEEEEEEEEEEEEEEEEEE")
+                this.setState({ activeTouch: { x: -1, y: -1 } })
+            },
+            onPanResponderTerminate: (evt, gestureState) => {
+                console.log("TERMINATING")
+            },
+            onShouldBlockNativeResponder: (evt, gestureState) => {
+                return true;
+            }
         })
     }
     setActiveTouch(evt, gestureState) {
@@ -110,7 +104,8 @@ class BoardView extends Component {
     }
 
     render() {
-        // console.log("RENDERING!!!!!")
+        // console.log("RENDERING BOARD VIEW!!!!!")
+
         return (
             <View { ...this._panResponder.panHandlers } style={ styles.container }>
                 {this.renderPads()}
@@ -154,6 +149,7 @@ class BoardView extends Component {
                 style={ [ styles.tile, position, { backgroundColor } ] }
                 activeTouch={ this.state.activeTouch }
                 activeOpacity={ this.props.disableOnPress ? 1 : .2 }
+                isScreenDarkened={ this.props.isScreenDarkened }
                 onPress={ () => !this.props.disableOnPress && this._onPress(id) } />
         )
     }

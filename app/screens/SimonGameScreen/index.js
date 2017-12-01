@@ -108,6 +108,7 @@ class SimonGameScreen extends React.Component {
         if (this.props.gameMode === SINGLE_PLAYER_GAME) {
             this.props.setGameMode(SINGLE_PLAYER_GAME)
         }
+
         this.props.startGame(this.props.gameMode)
 
         this.handleBack = this.handleBack.bind(this)
@@ -116,7 +117,6 @@ class SimonGameScreen extends React.Component {
         this.getHighScore()
     }
     handleBack({ id }) {
-        console.log("BUTTON ID:", id)
         if (id === "backPress" || id === "quit") {
             this.props.showBackoutWarningMessage({
                 stay: { type: "STAY", onPress: this.props.stay },
