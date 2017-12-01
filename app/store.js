@@ -10,7 +10,7 @@ import socket from "./socket"
 const socketIoMiddleware = createSocketIoMiddleware(socket, "server/")
 
 const sagaMiddleware = createSagaMiddleware()
-const middlewares = [socketIoMiddleware, sagaMiddleware, logger]
+const middlewares = [socketIoMiddleware, sagaMiddleware]
 
 let store = createStore(
     combineReducers({...reducers, form}),
