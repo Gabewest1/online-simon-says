@@ -7,6 +7,7 @@ class Pad extends React.Component {
         super(props)
         console.log("IN THE CONSTRUCTOR OF THE PAD")
         this.state = {
+            hasLayoutBeenSet: false,
             coordinates: {},
             isAnimating: false,
             opacity: new Animated.Value(1)
@@ -14,12 +15,13 @@ class Pad extends React.Component {
     }
     render() {
         const { activeOpacity, activeTouch, onPress, style } = this.props
+        const { hasLayoutBeenSet } = this.state
         // console.log("I AM RENDERING!")
 
         return (
             <Animated.View
                 ref="pad"
-                onLayout={ this.setCoordinates }
+                onLayout={ !hasLayoutBeenSet && this.setCoordinates }
                 style={ [ style, { opacity: this.state.opacity }] } />
         )
     }
@@ -74,11 +76,8 @@ class Pad extends React.Component {
         ).start();
     }
     setCoordinates = () => {
-        console.log("ASSIGNING POSITION", this)
         this.refs.pad._component.measure( (fx, fy, w, h, px, py) => {
-            console.log('X offset to page: ' + px)
-            console.log('Y offset to page: ' + py)
-            this.setState({ coordinates: { height: h, width: w, left: px, top: py } })
+            this.setState({ hasLayoutBeenSet: true, coordinates: { height: h, width: w, left: px, top: py } })
         })
     }
 }
