@@ -8,6 +8,7 @@ import styled from "styled-components/native"
 import Player from "../../components/player"
 import Background from "../../components/background"
 import BoardView from "../../components/BoardView"
+import TintedBG from "../../components/TintedBG"
 
 import {
     actions as simonGameActions,
@@ -25,24 +26,6 @@ import { SINGLE_PLAYER_GAME, BACKGROUND_COLOR, SECONDARY_COLOR } from "../../con
 const Container = styled(Background)`
     justify-content: center;
     align-items: center;
-`
-const TintedBG = styled.View`
-    width: 100%;
-    height: 100%;
-    backgroundColor: rgba(0,0,0,.7);
-    position: absolute;
-    ${({ show }) => {
-        if (show) {
-            return `
-                opacity: 1;
-            `
-        } else {
-            return `
-                z-index: -1;
-                opacity: 0;
-            `
-        }
-    }}
 `
 const PlayersView = styled.View`
     flex-direction: row;
