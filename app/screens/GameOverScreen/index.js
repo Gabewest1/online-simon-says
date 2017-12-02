@@ -57,7 +57,7 @@ class GameOverScreen extends React.Component {
     }
     returnToPrivateMatchLobby() {
         this.props.navigateToScreen({
-            fn: "resetTo",
+            fn: "push",
             navigationOptions: {
                 screen: "InvitePlayersScreen",
                 title: "",
