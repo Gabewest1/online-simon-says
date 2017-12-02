@@ -116,9 +116,15 @@ function createRouteHandlers(socket) {
                     let errors = {}
 
                     const foundUser = user && (user.username === credentials.username || user.email === credentials.username)
-                    errors.username = !foundUser ? "User not found" : undefined
+                    const isUserAlreadyLoggedIn = foundUser && user.loggedIn
+
+                    errors.username = !foundUser 
+                        ? "User not found" 
+                        : isUserAlreadyLoggedIn
+                            ? "User is already logged in" 
+                            : undefined
+
                     errors.password = foundUser && !user.validPassword(credentials.password) ? "Incorrect password" : undefined
-                    errors.loggedIn = foundUser && user.loggedIn ? "User is already logged in" : undefined
 
                     socket.emit("action", { type: "LOGIN_ERROR", payload: err })
                     socket.emit("action", stopSubmit("signIn", errors))
