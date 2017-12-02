@@ -10,7 +10,7 @@ import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
 import SignInForm from "../../components/sign-in-form"
 
-import { actions as userActions } from "../../redux/Auth"
+import { actions as userActions, selectors as userSelectors } from "../../redux/Auth"
 import { actions as navigatorActions } from "../../redux/Navigator"
 
 const SignInFormFlex = styled(SignInForm)`
@@ -77,19 +77,21 @@ class StartingScreen extends React.Component {
         }
     }
     render() {
-        let { navigator, playAsGuest } = this.props
+        let { isLoading, navigator, playAsGuest } = this.props
 
         return (
             <Background center>
                 <SimonSaysLogoFlex />
-                <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } />
+                <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
             </Background>
         )
     }
 }
 
-function mapStateToProps() {
-    return {}
+function mapStateToProps(state) {
+    return {
+        isLoading: userSelectors.isLoading(state)
+    }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -99,6 +101,7 @@ function mapDispatchToProps(dispatch) {
 StartingScreen.propTypes = {
     appStateActive: PropTypes.func.isRequired,
     giveSagasNavigator: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
     navigator: PropTypes.object.isRequired,
     playAsGuest: PropTypes.func.isRequired,
     socketConnected: PropTypes.func.isRequired,

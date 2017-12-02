@@ -6,13 +6,14 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { reduxForm, Field, SubmissionError } from "redux-form"
 import styled from "styled-components/native"
+import Spinner from "react-native-spinkit"
 
 import ListItem from "../menu-item"
 import Input from "../input"
 
-
 import { actions as authActions } from "../../redux/Auth"
 import { actions as navigatorActions } from "../../redux/Navigator"
+import { SECONDARY_COLOR } from "../../constants"
 
 const Form = styled.View`
     justify-content: space-between;
@@ -21,6 +22,13 @@ const Form = styled.View`
 `
 const Buttons = styled.View`
     justify-content: space-around;
+`
+const LoadingNotification = styled.View`
+    justify-content: center;
+    align-items: center;
+`
+const LoadingText = styled.Text`
+    font-size: 24px;
 `
 
 class SignInForm extends React.Component {
@@ -59,7 +67,7 @@ class SignInForm extends React.Component {
         }
     }
     render() {
-        let { handleSubmit, style } = this.props
+        let { isLoading, handleSubmit, style } = this.props
         console.log("STYLE:", style, typeof style)
 
         return (
@@ -74,27 +82,35 @@ class SignInForm extends React.Component {
                     type="password"
                     component={ Input }
                     placeholder="password" />
+                {
+                    isLoading ? <LoadingNotification>
+                            <Spinner type="Circle" color={ SECONDARY_COLOR } size={ 90 } />
+                            <LoadingText>Loggin In</LoadingText>
+                        </LoadingNotification>
+                        : (
+                            <Buttons>
+                                <ListItem
+                                    style={{ marginVertical: 15 }}
+                                    onPress={ handleSubmit(this.validate) }
+                                    icon={{name: "airplay" }}>
+                                        Login
+                                </ListItem>
+                                <ListItem
+                                    disabled={ false }
+                                    style={{ marginBottom: 15 }}
+                                    onPress={ () => this.props.playAsGuest() }
+                                    icon={{name: "person-outline"}}>
+                                            Play as Guest
+                                </ListItem>
+                                <ListItem
+                                    onPress={ this.gotoSignUpScreen }
+                                    icon={{name: "border-color"}}>
+                                            Sign Up
+                                </ListItem>
+                            </Buttons>
 
-                <Buttons>
-                    <ListItem
-                        style={{ marginVertical: 15 }}
-                        onPress={ handleSubmit(this.validate) }
-                        icon={{name: "airplay" }}>
-                            Login
-                    </ListItem>
-                    <ListItem
-                        disabled={ false }
-                        style={{ marginBottom: 15 }}
-                        onPress={ () => this.props.playAsGuest() }
-                        icon={{name: "person-outline"}}>
-                                Play as Guest
-                    </ListItem>
-                    <ListItem
-                        onPress={ this.gotoSignUpScreen }
-                        icon={{name: "border-color"}}>
-                                Sign Up
-                    </ListItem>
-                </Buttons>
+                        )
+                }
 
             </Form>
         )
@@ -110,6 +126,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 SignInForm.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     login: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     navigateToScreen: PropTypes.func.isRequired,
