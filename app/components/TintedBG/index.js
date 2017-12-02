@@ -10,7 +10,6 @@ const TintedBG = styled.View`
         if (show) {
             return `
                 opacity: 1;
-                z-index: 1;
             `
         } else {
             return `
