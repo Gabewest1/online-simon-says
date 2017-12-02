@@ -49,9 +49,10 @@ const LETTER_SIZE = 50;
 
 class BoardView extends Component {
     constructor(props) {
-        super(props);
+        super(props)
+
         this.tiles = []
-        this.state = {lit: 0, activeTouch: { x: -1, y: -1 } };
+        this.state = {lit: 0, activeTouch: { x: -1, y: -1 }, numTouches: 0 }
     }
     componentWillMount() {
         this._panResponder = PanResponder.create({
@@ -72,8 +73,8 @@ class BoardView extends Component {
             },
             onPanResponderTerminationRequest: (evt, gestureState) => true,
             onPanResponderRelease: (evt, gestureState) => {
-            // console.log("TOUCHES DONEEEEEEEEEEEEEEEEEEEEEEEEE")
-                this.setState({ activeTouch: { x: -1, y: -1 } })
+            console.log("TOUCHES DONEEEEEEEEEEEEEEEEEEEEEEEEE")
+                this.setState({ activeTouch: { x: -1, y: -1 }, numTouches: 0 })
             },
             onPanResponderTerminate: (evt, gestureState) => {
                 console.log("TERMINATING")
@@ -86,21 +87,30 @@ class BoardView extends Component {
     setActiveTouch(evt, gestureState) {
         const touches = evt.touchHistory.touchBank
 
-        const activeTouch = touches
-            .filter(touch => touch.touchActive)
-            .reduce((highest, current) => highest.startTimeStamp <= current.startTimeStamp ? current : highest, { startTimeStamp: 0 })
+        const activeTouches = touches.filter(touch => touch.touchActive)
+
+        const activeTouch = activeTouches.reduce((highest, current) => highest.startTimeStamp <= current.startTimeStamp ? current : highest, { startTimeStamp: 0 })
+
+        console.log("Active Touch:", activeTouch)
+        console.log(activeTouches.length, this.state.numTouches)
 
         const { startPageX: x, startPageY: y } = activeTouch
 
-        this.setState({ activeTouch: { x, y }})
+        //Should reset the active touch if there is less touches now than previously.
+        if (activeTouches.length < this.state.numTouches) {
+            this.setState({ activeTouch: { x: -1, y: -1 }, numTouches: this.state.numTouches - 1 })
+        } else if (activeTouches.length > this.state.numTouches) {
+            this.setState({ activeTouch: { x, y }, numTouches: this.state.numTouches + 1 })
+        }
     }
     shouldComponentUpdate(nextProps, nextState) {
         const tileWasPressed = this.props.lit !== nextProps.lit || this.state.lit !== nextState.lit
         const onPressDisabledChanged = this.props.disableOnPress !== nextProps.disableOnPress
         const movesArrayIncreased = this.props.numberOfMoves !== nextProps.numberOfMoves
         const newActiveTouch = this.state.activeTouch !== nextState.activeTouch
+        const numTouchesChanged = this.state.numTouches !== nextState.numTouches
 
-        return tileWasPressed || onPressDisabledChanged || movesArrayIncreased || newActiveTouch
+        return tileWasPressed || onPressDisabledChanged || movesArrayIncreased || newActiveTouch || numTouchesChanged
     }
 
     render() {
