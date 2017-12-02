@@ -60,26 +60,22 @@ class SelectOnlineGameMode extends React.Component {
                 <List>
                     <ListItem
                         onPress={ () => this.gotoGameScreen(TWO_PLAYER_GAME) }
-                        style={{ marginBottom: 35 }}
-                        icon={{ name: "looks-two" }}>
+                        style={{ marginBottom: 35 }}>
                         Two Player
                     </ListItem>
                     <ListItem
                         onPress={ () => this.gotoGameScreen(THREE_PLAYER_GAME) }
-                        style={{ marginBottom: 35 }}
-                        icon={{ name: "looks-3" }}>
+                        style={{ marginBottom: 35 }}>
                         Three Player
                     </ListItem>
                     <ListItem
                         style={{ marginBottom: 35 }}                
-                        onPress={ () => this.gotoGameScreen(FOUR_PLAYER_GAME) }
-                        icon={{ name: "looks-4" }}>
+                        onPress={ () => this.gotoGameScreen(FOUR_PLAYER_GAME) }>
                         Four Player
                     </ListItem>
                     <ListItem
                         inverted
-                        onPress={ () => this.props.createPrivateMatch() }
-                        icon={{ name: "looks-two" }}>
+                        onPress={ () => this.props.createPrivateMatch() }>
                         Private Match
                     </ListItem>
                 </List>
