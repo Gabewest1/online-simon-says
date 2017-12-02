@@ -130,15 +130,18 @@ class SimonGameScreen extends React.Component {
     async getHighScore() {
         try {
             const value = parseInt( await AsyncStorage.getItem('highscore'));
-            if (value !== null) {
+            console.log("HIGHSCORE VALUE:", value)
+            if (!!value) {
                 this.setState({ highScore: value })
+            } else {
+                this.setState({ highScore: 0 })
             }
         } catch (error) {
             console.log(error)
         }
     }
     renderHUD() {
-        const highScore = Math.max(this.state.highScore, this.props.highScore) || 0
+        const highScore = Math.max(this.state.highScore, this.props.highScore)
         if (this.props.gameMode !== SINGLE_PLAYER_GAME && this.props.players.length > 0) {
             return (
                 <Players
