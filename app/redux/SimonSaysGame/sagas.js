@@ -307,6 +307,7 @@ export const performPlayersTurn = function* () {
     let movesPerformed = 0
 
     while (movesPerformed < movesToPerform.length) {
+        const correctMove = movesToPerform[movesPerformed]        
         yield put(actions.setMoveIndex(0))
         let isPlayersFirstMove = movesPerformed === 0
         let timer
@@ -323,18 +324,19 @@ export const performPlayersTurn = function* () {
         })
 
         if (timedout) {
+            yield put(actions.setCorrectMove(correctMove))
+
             return false
         } else {
             yield cancel(timer)
         }
 
-        const correctMove = movesToPerform[movesPerformed]
         const isValidMove = playersMove.payload === correctMove
 
         if (!isValidMove) {
             yield put(actions.setWrongMove(playersMove.payload))
             yield put(actions.setCorrectMove(correctMove))
-
+            
             return false
         }
 
