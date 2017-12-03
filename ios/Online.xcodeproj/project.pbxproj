@@ -51,10 +51,10 @@
 		758B4EB21F9300DC003EE875 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 758B4EA71F9300DC003EE875 /* Zocial.ttf */; };
 		759718611F9F0181005CFA33 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7597185B1F9F0163005CFA33 /* libRNSound.a */; };
 		75C506311F997CD000A4DAAB /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75C5062C1F997CAD00A4DAAB /* libRNSpinkit.a */; };
-		75CC47881FB02A8000E8F0CB /* simon_sound1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 75CC47841FB02A8000E8F0CB /* simon_sound1.mp3 */; };
-		75CC47891FB02A8000E8F0CB /* simon_sound2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 75CC47851FB02A8000E8F0CB /* simon_sound2.mp3 */; };
-		75CC478A1FB02A8000E8F0CB /* simon_sound3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 75CC47861FB02A8000E8F0CB /* simon_sound3.mp3 */; };
-		75CC478B1FB02A8000E8F0CB /* simon_sound4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 75CC47871FB02A8000E8F0CB /* simon_sound4.mp3 */; };
+		75D895341FD39AFF00790CA0 /* simon_sound1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 75D895301FD39AFF00790CA0 /* simon_sound1.mp3 */; };
+		75D895351FD39AFF00790CA0 /* simon_sound2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 75D895311FD39AFF00790CA0 /* simon_sound2.mp3 */; };
+		75D895361FD39AFF00790CA0 /* simon_sound3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 75D895321FD39AFF00790CA0 /* simon_sound3.mp3 */; };
+		75D895371FD39AFF00790CA0 /* simon_sound4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 75D895331FD39AFF00790CA0 /* simon_sound4.mp3 */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -367,10 +367,10 @@
 		758B4EA71F9300DC003EE875 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
 		759718381F9F0162005CFA33 /* RNSound.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
 		75C506081F997CAC00A4DAAB /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSpinkit.xcodeproj; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; };
-		75CC47841FB02A8000E8F0CB /* simon_sound1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = simon_sound1.mp3; sourceTree = "<group>"; };
-		75CC47851FB02A8000E8F0CB /* simon_sound2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = simon_sound2.mp3; sourceTree = "<group>"; };
-		75CC47861FB02A8000E8F0CB /* simon_sound3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = simon_sound3.mp3; sourceTree = "<group>"; };
-		75CC47871FB02A8000E8F0CB /* simon_sound4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = simon_sound4.mp3; sourceTree = "<group>"; };
+		75D895301FD39AFF00790CA0 /* simon_sound1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = simon_sound1.mp3; path = ../../../android/app/src/main/res/raw/simon_sound1.mp3; sourceTree = "<group>"; };
+		75D895311FD39AFF00790CA0 /* simon_sound2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = simon_sound2.mp3; path = ../../../android/app/src/main/res/raw/simon_sound2.mp3; sourceTree = "<group>"; };
+		75D895321FD39AFF00790CA0 /* simon_sound3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = simon_sound3.mp3; path = ../../../android/app/src/main/res/raw/simon_sound3.mp3; sourceTree = "<group>"; };
+		75D895331FD39AFF00790CA0 /* simon_sound4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = simon_sound4.mp3; path = ../../../android/app/src/main/res/raw/simon_sound4.mp3; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -606,10 +606,10 @@
 		759718621F9F0216005CFA33 /* audio */ = {
 			isa = PBXGroup;
 			children = (
-				75CC47841FB02A8000E8F0CB /* simon_sound1.mp3 */,
-				75CC47851FB02A8000E8F0CB /* simon_sound2.mp3 */,
-				75CC47861FB02A8000E8F0CB /* simon_sound3.mp3 */,
-				75CC47871FB02A8000E8F0CB /* simon_sound4.mp3 */,
+				75D895301FD39AFF00790CA0 /* simon_sound1.mp3 */,
+				75D895311FD39AFF00790CA0 /* simon_sound2.mp3 */,
+				75D895321FD39AFF00790CA0 /* simon_sound3.mp3 */,
+				75D895331FD39AFF00790CA0 /* simon_sound4.mp3 */,
 			);
 			name = audio;
 			path = ../app/assets/audio;
@@ -1148,18 +1148,18 @@
 				758B4EAC1F9300DC003EE875 /* Foundation.ttf in Resources */,
 				758B4EAF1F9300DC003EE875 /* MaterialIcons.ttf in Resources */,
 				758B4EB21F9300DC003EE875 /* Zocial.ttf in Resources */,
-				75CC47881FB02A8000E8F0CB /* simon_sound1.mp3 in Resources */,
 				758B4EAD1F9300DC003EE875 /* Ionicons.ttf in Resources */,
+				75D895351FD39AFF00790CA0 /* simon_sound2.mp3 in Resources */,
 				758B4EB11F9300DC003EE875 /* SimpleLineIcons.ttf in Resources */,
 				758B4EA91F9300DC003EE875 /* EvilIcons.ttf in Resources */,
-				75CC478B1FB02A8000E8F0CB /* simon_sound4.mp3 in Resources */,
-				75CC47891FB02A8000E8F0CB /* simon_sound2.mp3 in Resources */,
+				75D895371FD39AFF00790CA0 /* simon_sound4.mp3 in Resources */,
 				758B4EAA1F9300DC003EE875 /* Feather.ttf in Resources */,
-				75CC478A1FB02A8000E8F0CB /* simon_sound3.mp3 in Resources */,
+				75D895341FD39AFF00790CA0 /* simon_sound1.mp3 in Resources */,
 				758B4EA81F9300DC003EE875 /* Entypo.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				758B4EAE1F9300DC003EE875 /* MaterialCommunityIcons.ttf in Resources */,
 				758B4EAB1F9300DC003EE875 /* FontAwesome.ttf in Resources */,
+				75D895361FD39AFF00790CA0 /* simon_sound3.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
