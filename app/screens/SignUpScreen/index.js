@@ -6,7 +6,10 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { reduxForm, Field, SubmissionError } from "redux-form"
 import styled from "styled-components/native"
-import { actions as authActions } from "../../redux/Auth"
+import Spinner from "react-native-spinkit"
+
+import { actions as authActions, selectors as userSelectors } from "../../redux/Auth"
+import { SECONDARY_COLOR } from "../../constants"
 
 import Background from "../../components/background"
 import MenuItem from "../../components/menu-item"
@@ -27,6 +30,13 @@ const ButtonWrapper = styled.View`
     flex-grow: 2;
     justify-content: center;
     width: 80%;
+`
+const LoadingView = styled.View`
+    width: 100%;
+    align-items: center;
+`
+const LoadingText = styled.Text`
+    font-size: 24;
 `
 
 class SignUpScreen extends React.Component {
@@ -65,7 +75,7 @@ class SignUpScreen extends React.Component {
         }
     }
     render() {
-        let { handleSubmit } = this.props
+        let { isLoading, handleSubmit } = this.props
 
         return (
             <Background around>
@@ -96,15 +106,24 @@ class SignUpScreen extends React.Component {
                         placeholder="re-password" />
                 </Form>
                 <ButtonWrapper>
-                    <MenuItem onPress={ handleSubmit(this.validate) } title="Submit" />
+                    {
+                        isLoading
+                            ? <LoadingView>
+                                <Spinner size={ 90 } type="Circle" color={ SECONDARY_COLOR } />
+                                <LoadingText>Creating...</LoadingText>
+                              </LoadingView>
+                            : <MenuItem onPress={ handleSubmit(this.validate) } title="Submit" />
+                     
+                    }
+
                 </ButtonWrapper>
             </Background>
         )
     }
 }
 
-function mapStateToProps() {
-    return {}
+function mapStateToProps(state) {
+    return { isLoading: userSelectors.isLoading(state) }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -113,6 +132,7 @@ function mapDispatchToProps(dispatch) {
 
 SignUpScreen.propTypes = {
     handleSubmit: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
     navigator: PropTypes.object.isRequired,
     register: PropTypes.func.isRequired
 }
