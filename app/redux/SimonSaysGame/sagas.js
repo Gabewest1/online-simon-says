@@ -324,6 +324,7 @@ export const performPlayersTurn = function* () {
         })
 
         if (timedout) {
+            yield put(actions.setWrongMove(0))            
             yield put(actions.setCorrectMove(correctMove))
 
             return false

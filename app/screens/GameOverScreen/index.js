@@ -127,9 +127,13 @@ class GameOverScreen extends React.Component {
     }
 
     renderMoves() {
+        const wrongMoveText = this.props.wrongMove.match(/[red|blue|green|yellow]/i)
+            ? `You chose: ${ this.props.wrongMove }`
+            : "You Timedout"
+
         return (
             <Moves>
-                <WrongMove>You chose: { this.props.wrongMove }</WrongMove>
+                <WrongMove>{ wrongMoveText }</WrongMove>
                 <CorrectMove>Correct move: { this.props.correctMove }</CorrectMove>
             </Moves>
         )
