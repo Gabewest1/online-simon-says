@@ -12,6 +12,7 @@ import { actions as simonGameActions } from "../../redux/SimonSaysGame"
 
 const Message = styled.View`
     backgroundColor: rgba(0,0,0,.6);
+    width: ${ Dimensions.get("window").width };
     ${ () => {
         const width = Dimensions.get("window").width
 
