@@ -1,5 +1,5 @@
 import React from "react"
-import { Dimensions } from "react-native"
+import { Dimensions, Platform } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
@@ -31,16 +31,30 @@ const List = styled.View`
 class SelectGameMode extends React.Component {
     componentWillMount() {
         this.props.setGameMode(SINGLE_PLAYER_GAME)
-        this.props.navigator.setButtons({
-            rightButtons: [{
-                id: "Player",
-                component: "Player",
-                passProps: {
-                    player: this.props.myPlayer,
-                    style: { height: "100%", width: Dimensions.get("window").width } 
-                }
-            }]
-        })
+
+        //leftButtons doesn't work on android so have to hack around by using rightButtons.
+        this.props.navigator.setButtons(Platform.select({
+            android: {
+                rightButtons: [{
+                    id: "Player",
+                    component: "Player",
+                    passProps: {
+                        player: this.props.myPlayer,
+                        style: { height: "100%", width: Dimensions.get("window").width } 
+                    }
+                }]
+            },
+            ios: {
+                leftButtons: [{
+                    id: "Player",
+                    component: "Player",
+                    passProps: {
+                        player: this.props.myPlayer,
+                        style: { height: "100%" } 
+                    }
+                }]
+            }
+        }))
     }
     render() {
         return (
