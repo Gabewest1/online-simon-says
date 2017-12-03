@@ -1,4 +1,5 @@
 import React from "react"
+import { Dimensions } from "react-native"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
@@ -22,11 +23,22 @@ const Text = styled.Text`
     border-bottom-width: 5;
     border-color: ${ SECONDARY_COLOR };
 `
+const Moves = styled.View`
+    width: 100%;
+    align-items: center;
+    position: absolute;
+    top: ${ Dimensions.get("window").width >= 768 ? '20%' : "15%" };
+`
+const WrongMove = CorrectMove = styled.Text`
+    font-size: ${ Dimensions.get("window").width >= 768 ? 48 : 24 };
+`
 
 class GameOverScreen extends React.Component {
     componentWillMount() {
         this.props.resetGame()
 
+        //The players array gets cleared when the game resets
+        //so need to retrieve the players again.
         if (this.props.gameMode === PRIVATE_MATCH) {
             this.props.fetchPlayersInLobby()            
         }
@@ -84,8 +96,9 @@ class GameOverScreen extends React.Component {
 
         return (
             <Background centered>
-                { this.props.gameMode !== SINGLE_PLAYER_GAME &&
-                    <Text>{ this.props.winner.username } Won!</Text>
+                { this.props.gameMode === SINGLE_PLAYER_GAME
+                    ? this.renderMoves()
+                    : <Text>{ this.props.winner.username } Won!</Text>
                 }
                 <Container>
                     <ListItem
@@ -106,16 +119,28 @@ class GameOverScreen extends React.Component {
                                 overrideBackPress: true,
                                 backButtonHidden: true
                             }
-                        }) } />}
+                        }) } />
+                    }
                 </Container>
             </Background>
+        )
+    }
+
+    renderMoves() {
+        return (
+            <Moves>
+                <WrongMove>You chose: { this.props.wrongMove }</WrongMove>
+                <CorrectMove>Correct move: { this.props.correctMove }</CorrectMove>
+            </Moves>
         )
     }
 }
 
 function mapStateToProps(state) {
     return {
-        gameMode: simonGameSelectors.getGameMode(state)
+        correctMove: simonGameSelectors.getCorrectMove(state),
+        gameMode: simonGameSelectors.getGameMode(state),
+        wrongMove: simonGameSelectors.getWrongMove(state)
     }
 }
 
@@ -126,11 +151,13 @@ function mapDispatchToProps(dispatch) {
 }
 
 GameOverScreen.propTypes = {
+    correctMove: PropTypes.number,
     gameMode: PropTypes.number.isRequired,
     navigateToScreen: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired,
     resetGame: PropTypes.func.isRequired,
-    winner: PropTypes.object
+    winner: PropTypes.object,
+    wrongMove: PropTypes.number
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameOverScreen)

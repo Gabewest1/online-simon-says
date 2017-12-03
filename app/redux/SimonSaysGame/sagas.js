@@ -328,9 +328,13 @@ export const performPlayersTurn = function* () {
             yield cancel(timer)
         }
 
-        const isValidMove = playersMove.payload === movesToPerform[movesPerformed]
+        const correctMove = movesToPerform[movesPerformed]
+        const isValidMove = playersMove.payload === correctMove
 
         if (!isValidMove) {
+            yield put(actions.setWrongMove(playersMove.payload))
+            yield put(actions.setCorrectMove(correctMove))
+
             return false
         }
 

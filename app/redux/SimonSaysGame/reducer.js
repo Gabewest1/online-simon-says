@@ -1,4 +1,4 @@
-import { createActions, handleActions } from "redux-actions"
+import { createActions, handleActions, handleAction } from "redux-actions"
 import { combineReducers } from "redux"
 import { actions as navigatorActions } from "../Navigator"
 
@@ -39,7 +39,9 @@ const {
     playerDeclinedChallenge,
     playerQuitMatch,
     playerReady,
-    playerNotReady
+    playerNotReady,
+    setWrongMove,
+    setCorrectMove
 } = createActions(
     "SET_GAME_MODE",
     "SIMON_PAD_CLICKED",
@@ -77,7 +79,9 @@ const {
     "PLAYER_DECLINED_CHALLENGE",
     "PLAYER_QUIT_MATCH",
     "PLAYER_READY",
-    "PLAYER_NOT_READY"
+    "PLAYER_NOT_READY",
+    "SET_WRONG_MOVE",
+    "SET_CORRECT_MOVE"
 )
 
 export const actions = {
@@ -117,7 +121,9 @@ export const actions = {
     playerDeclinedChallenge,
     playerQuitMatch,
     playerReady,
-    playerNotReady
+    playerNotReady,
+    setWrongMove,
+    setCorrectMove
 }
 
 const padsReducerInitialState = {
@@ -141,7 +147,7 @@ export const playersReducer = handleActions({
     [setPlayers]: (state, action) => action.payload,
     [addPlayer]: (state, { payload }) => state.concat(payload),
     [removePlayer]: (state, { payload }) => state.filter(player => player.username !== payload.username ),
-    [eliminatePlayer]: (state, { payload }) => state.map(player => player.username === payload.username ? { ...player, isEliminated: true } : player),
+    [eliminatePlayer]: (state, { payload }) => state.map(player => player.username === payload.username ? { ...player, isEliminated: true } : player)
 }, [])
 
 const gameReducerInitialState = {
@@ -174,9 +180,15 @@ export const gameReducer = handleActions({
                                                                                                 //screen, so they can access the gameMode state from the Navigator sagas to determine where to redirect.
 }, gameReducerInitialState)
 
+export const gameInformationReducer = handleActions({
+    [setWrongMove]: (state, action) => ({ ...state, wrongMove: action.payload }),
+    [setCorrectMove]: (state, action) => ({ ...state, correctMove: action.payload })
+}, { correctMove: -1, wrongMove: -1 })
+
 export default combineReducers({
     pads: padsReducer,
     moves: movesReducer,
     players: playersReducer,
-    game: gameReducer
+    game: gameReducer,
+    gameInformation: gameInformationReducer
 })
