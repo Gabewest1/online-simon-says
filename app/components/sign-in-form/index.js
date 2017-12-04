@@ -16,7 +16,6 @@ import { actions as navigatorActions } from "../../redux/Navigator"
 import { SECONDARY_COLOR } from "../../constants"
 
 const Form = styled.View`
-    justify-content: space-between;
     width: 80%;
     max-width: 600px;
 `

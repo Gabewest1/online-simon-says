@@ -14,14 +14,11 @@ import { actions as userActions, selectors as userSelectors } from "../../redux/
 import { actions as navigatorActions } from "../../redux/Navigator"
 
 const SignInFormFlex = styled(SignInForm)`
-    flex-grow: 2;
     justify-content: flex-start;
 `
 const SimonSaysLogoFlex = styled(SimonSaysLogo)`
-    flex-grow: 1;
     justify-content: flex-end;
     align-items: center;
-    margin-bottom: 40;
 `
 
 //Need to prevent the same handlers from getting set everytime this
@@ -80,7 +77,7 @@ class StartingScreen extends React.Component {
         let { isLoading, navigator, playAsGuest } = this.props
 
         return (
-            <Background center>
+            <Background centered>
                 <SimonSaysLogoFlex />
                 <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
             </Background>
