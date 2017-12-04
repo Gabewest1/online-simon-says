@@ -10,7 +10,7 @@ const Container = styled.View`
 `
 const Text = styled.Text`
     color: ${ SECONDARY_COLOR };
-    font-size: ${ Dimensions.get("window").width >= 768 ? 56 : 36 };
+    font-size: ${ Dimensions.get("window").width >= 600 ? 56 : 36 };
     font-weight: 900;
 `
 const SimonLogo = styled.Image`
