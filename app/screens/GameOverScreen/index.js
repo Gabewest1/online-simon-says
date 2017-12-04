@@ -127,7 +127,7 @@ class GameOverScreen extends React.Component {
     }
 
     renderMoves() {
-        if (!this.props.wrongMove) {
+        if (!this.props.gameMode > SINGLE_PLAYER_GAME) {
             return
         }
 
