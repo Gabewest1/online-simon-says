@@ -237,12 +237,8 @@ export const navigateScreens = function* (action) {
 
     console.log(`Going from ${currentScreenName} to ${nextScreenName}`)
 
-    //I don't know if this statement is needed but i want to ensure that multiple instances
-    //of a game don't somehow spawn.
     if (currentScreenName === nextScreenName) {
-        if (currentScreenName === "SimonGameScreen") {
-            return
-        }
+        return
     }
 
     if (AppState.currentState !== "active") {
