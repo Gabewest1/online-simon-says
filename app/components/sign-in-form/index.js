@@ -63,7 +63,8 @@ class SignInForm extends React.Component {
                 screen: "SignUpScreen",
                 title: "Sign Up",
                 animated: true,
-                animationType: "slide-horizontal"
+                animationType: "slide-horizontal",
+                overrideBackPress: true
             }
         })
     }
