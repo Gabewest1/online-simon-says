@@ -505,20 +505,17 @@ export const updateSinglePlayerStats = function* () {
 
     const highScore = Math.max(currentHighScore, round)
 
-    if (highScore > currentHighScore) {
-        yield call(saveToLocalStorage, highScore)
-    }
-
     if (playerPerforming.isAGuest && highScore > currentHighScore) {
         console.log("UPDATING STATS:", highScore, currentHighScore)
         const payload = {
             ...playerPerforming,
-            statsByGameMode: { 
+            statsByGameMode: {
                 ...playerPerforming.statsByGameMode,
                 1: { highScore }
             }
         }
 
+        yield call(saveToLocalStorage, highScore)        
         yield put({ type: "UPDATE_STATS", payload })
     } else {
         yield put({ type: "server/UPDATE_SINGLE_PLAYER_STATS", payload: { round }})

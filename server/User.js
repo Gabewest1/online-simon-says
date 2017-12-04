@@ -55,7 +55,7 @@ function generateLevelMap() {
     const levelToXpMap = {}
     const fn = level => (level * 100) - 100
 
-    for (let level = 1; level<=100; level++) {
+    for (let level = 1; level<=999; level++) {
         levelToXpMap[level] = fn(level)
     }
 

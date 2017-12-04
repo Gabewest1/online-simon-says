@@ -26,6 +26,7 @@ const Container = styled.View`
     justify-content: space-between;
     borderWidth: 1;
     borderColor: ${ BACKGROUND_COLOR };
+    backgroundColor: ${({ backgroundColor }) => backgroundColor ? backgroundColor : SECONDARY_COLOR }};    
 `
 const PlayerStatsWrapper = styled.View`
     alignItems: center;
@@ -99,12 +100,10 @@ class Leaderboards extends React.Component {
         return true
     }
     render() {
-        const { isLoading, myPlayer, ranking } = this.props
-        const myPlayerStyles = { color: SECONDARY_COLOR }
+        const { isLoading } = this.props
 
         return (
             <Background centered={ this.props.isLoading }>
-                { !isLoading && this.renderPlayer({ item: myPlayer, index: ranking, style: myPlayerStyles }) }
                 { isLoading
                     ? <Spinner isVisible={ true } size={ 100 } type="FadingCircleAlt" color={ SECONDARY_COLOR } />
                     : this.renderLeaderboard()
@@ -113,10 +112,14 @@ class Leaderboards extends React.Component {
         )
     }
     renderLeaderboard() {
+        const { myPlayer, ranking } = this.props
+        const myPlayerStyles = { backgroundColor: "white", color: SECONDARY_COLOR }
+
         return (
             <List style={ styles.list }>
                 <FlatList
                     data={ this.props.players }
+                    ListHeaderComponent={ this.renderPlayer.bind(this, { item: myPlayer, index: ranking, style: myPlayerStyles }) }
                     renderItem={ (props) => this.renderPlayer(props) } />
 
             </List>
@@ -131,7 +134,7 @@ class Leaderboards extends React.Component {
                 : index + 1
 
         return (
-            <Container key={ item.username }>
+            <Container key={ item.username } style={ style }>
                 <RankWrapper>
                     <Rank style={ style }>{ rank }</Rank>
                 </RankWrapper>

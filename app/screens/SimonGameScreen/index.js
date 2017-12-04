@@ -141,7 +141,8 @@ class SimonGameScreen extends React.Component {
         }
     }
     renderHUD() {
-        const highScore = Math.max(this.state.highScore, this.props.highScore)
+        const highScore = this.props.isAGuest ? this.state.highScore : this.props.highScore
+
         if (this.props.gameMode !== SINGLE_PLAYER_GAME && this.props.players.length > 0) {
             return (
                 <Players
@@ -186,6 +187,7 @@ function mapStateToProps(state) {
         gameMode: simonGameSelectors.getGameMode(state),
         hasGameStarted: simonGameSelectors.hasGameStarted(state),
         highScore: userSelectors.getHighScore(state),
+        isAGuest: userSelectors.isAGuest(state),
         isGameOver: simonGameSelectors.isGameOver(state),
         isItMyTurn: simonGameSelectors.isItMyTurn(state),
         isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
@@ -209,6 +211,7 @@ SimonGameScreen.propTypes = {
     animateSimonPad: PropTypes.func.isRequired,
     disableOnPress: PropTypes.bool.isRequired,
     gameMode: PropTypes.number.isRequired,
+    isAGuest: PropTypes.bool.isRequired,
     hasGameStarted: PropTypes.bool.isRequired,
     highScore: PropTypes.number.isRequired,
     isItMyTurn: PropTypes.bool.isRequired,
