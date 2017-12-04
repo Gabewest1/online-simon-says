@@ -43,6 +43,9 @@ class GameOverScreen extends React.Component {
             this.props.fetchPlayersInLobby()            
         }
     }
+    shouldComponentUpdate(nextProps) {
+        return nextProps.gameMode === this.props.gameMode
+    } 
     findNextMatch() {
         this.props.navigateToScreen({
             fn: "push",
@@ -127,10 +130,6 @@ class GameOverScreen extends React.Component {
     }
 
     renderMoves() {
-        if (!this.props.gameMode > SINGLE_PLAYER_GAME) {
-            return
-        }
-
         const wrongMoveText = this.props.wrongMove.match(/[red|blue|green|yellow]/i)
             ? `You chose: ${ this.props.wrongMove }`
             : "You Timedout"
