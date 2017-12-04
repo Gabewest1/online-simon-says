@@ -9,6 +9,8 @@ import styled from "styled-components/native"
 import Spinner from "react-native-spinkit"
 
 import { actions as authActions, selectors as userSelectors } from "../../redux/Auth"
+import { actions as navigatorActions } from "../../redux/Navigator"
+
 import { SECONDARY_COLOR } from "../../constants"
 
 import Background from "../../components/background"
@@ -41,10 +43,25 @@ const LoadingText = styled.Text`
 `
 
 class SignUpScreen extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
 
         this.validate = this.validate.bind(this)
+        this.handleBack = this.handleBack.bind(this)
+        props.navigator.setOnNavigatorEvent(this.handleBack)
+    }
+    handleBack({ id }) {
+        if (id === "backPress") {
+            this.props.navigateToScreen({
+                fn: "pop",
+                navigationOptions: {
+                    screen: "StartingScreen",
+                    backButtonHidden: true
+                }
+            })
+        }
+
+        return true
     }
     validate(values) {
         Keyboard.dismiss()
@@ -128,7 +145,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(authActions, dispatch)
+    return bindActionCreators({ ...authActions, ...navigatorActions }, dispatch)
 }
 
 SignUpScreen.propTypes = {
