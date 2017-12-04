@@ -378,7 +378,8 @@ export const createPrivateMatchSaga = function* () {
             screen: "InvitePlayersScreen",
             title: "",
             animationType: 'slide-up',
-            overrideBackPress: true
+            overrideBackPress: true,
+            backButtonHidden: true
         }
 
         const payload = { fn: "push", navigationOptions}
