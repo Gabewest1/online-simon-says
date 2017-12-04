@@ -7,6 +7,7 @@ import Spinner from "react-native-spinkit"
 import { SECONDARY_COLOR } from "../../constants"
 
 import Background from "../../components/background"
+import CustomNavbar from "../CustomNavbar"
 
 import { actions as navigatorActions } from "../../redux/Navigator"
 
@@ -82,4 +83,4 @@ FindMatchScreen.propTypes = {
     navigateToScreen: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FindMatchScreen)
+export default CustomNavbar(connect(mapStateToProps, mapDispatchToProps)(FindMatchScreen))

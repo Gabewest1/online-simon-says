@@ -7,6 +7,7 @@ import PropTypes from "prop-types"
 import ListItem from "../../components/menu-item"
 import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
+import CustomNavbar from "../CustomNavbar"
 
 import { TWO_PLAYER_GAME, THREE_PLAYER_GAME, FOUR_PLAYER_GAME } from "../../constants"
 import { actions as simonGameActions } from "../../redux/SimonSaysGame"
@@ -98,4 +99,4 @@ SelectOnlineGameMode.propTypes = {
     navigator: PropTypes.object.isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SelectOnlineGameMode)
+export default CustomNavbar(connect(mapStateToProps, mapDispatchToProps)(SelectOnlineGameMode))

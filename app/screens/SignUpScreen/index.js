@@ -15,6 +15,7 @@ import Background from "../../components/background"
 import MenuItem from "../../components/menu-item"
 import Input from "../../components/input"
 import Logo from "../../components/simon__logo"
+import CustomNavbar from "../CustomNavbar"
 
 const Form = styled.View`
     width: 80%;
@@ -139,5 +140,5 @@ SignUpScreen.propTypes = {
 
 export default reduxForm({
     form: "signUp"
-})(connect(mapStateToProps, mapDispatchToProps)(SignUpScreen))
+})(CustomNavbar(connect(mapStateToProps, mapDispatchToProps)(SignUpScreen)))
 

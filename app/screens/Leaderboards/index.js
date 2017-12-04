@@ -10,6 +10,7 @@ import Spinner from "react-native-spinkit"
 import { BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
 import Background from "../../components/background"
 import Player from "../../components/player"
+import CustomNavbar from "../CustomNavbar"
 
 import { actions as leaderboardActions, selectors as leaderboardSelectors } from "../../redux/Leaderboards"
 import { actions as navigatorActions } from "../../redux/Navigator"
@@ -171,4 +172,4 @@ Leaderboards.propTypes = {
     ranking: PropTypes.oneOf([PropTypes.string, PropTypes.number])
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Leaderboards)
+export default CustomNavbar(connect(mapStateToProps, mapDispatchToProps)(Leaderboards))
