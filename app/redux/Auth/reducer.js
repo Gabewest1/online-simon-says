@@ -8,7 +8,8 @@ const {
     playAsGuest,
     setRanking,
     register,
-    updateStats
+    updateStats,
+    setPassword
 } = createActions(
     "LOGIN",
     "LOGIN_ERROR",
@@ -17,7 +18,8 @@ const {
     "PLAY_AS_GUEST",
     "SET_RANKING",
     "REGISTER",
-    "UPDATE_STATS"
+    "UPDATE_STATS",
+    "SET_PASSWORD"
 )
 
 export const actions = {
@@ -28,7 +30,8 @@ export const actions = {
     playAsGuest,
     setRanking,
     register,
-    updateStats
+    updateStats,
+    setPassword
 }
 
 const initialState = {
@@ -37,6 +40,7 @@ const initialState = {
     token: null,
     info: {},
     ranking: "N/A",
+    password: undefined, //This password state is only used for the sign in screens password input bar. Need the decrypted version b/c info.password is encrypted.
     error: null
 }
 
@@ -57,5 +61,6 @@ export default handleActions({
     [logout]: (state, action) => initialState,
     [setRanking]: (state, action) => ({ ...state, ranking: action.payload }),
     [register]: (state, action) => ({ ...state, isLoading: true }),
-    [updateStats]: (state, action) => ({ ...state, info: action.payload })
+    [updateStats]: (state, action) => ({ ...state, info: action.payload }),
+    [setPassword]: (state, action) => ({ ...state, password: action.payload })
 }, initialState)

@@ -1,6 +1,6 @@
-import { call, put, race, take, takeEvery } from "redux-saga/effects"
-import { delay } from "redux-saga"
-import { actions } from "./reducer"
+import { call, fork, put, select, take, takeEvery } from "redux-saga/effects"
+import { AsyncStorage } from "react-native"
+import { actions, selectors } from "./index"
 import { actions as navigatorActions } from "../Navigator"
 
 const root = function* () {
@@ -27,11 +27,13 @@ export const watchRegister = function* () {
 }
 
 export const login = function* (action) {
-    let credentials =  {...action.payload }
-    
+    let credentials = { ...action.payload }
+
     Object.keys(credentials).map(key => {
         credentials[key] = credentials[key].toLowerCase()
     })
+
+    yield put(actions.setPassword(credentials.password))
 
     yield put({ type: "server/LOGIN", payload: credentials })
 }
@@ -42,6 +44,8 @@ export const register = function* (action) {
     Object.keys(credentials).map(key => {
         credentials[key] = credentials[key].toLowerCase()
     })
+
+    yield put(actions.setPassword(credentials.password))
 
     yield put({ type: "server/REGISTER", payload: credentials })
 }
@@ -66,7 +70,7 @@ export const logout = function* () {
 export const handleSuccessfulSignIn = function* () {
     console.log("WAITING FOR A LOGIN SUCCESS")
     while (yield take(actions.loginSuccess)) {
-        console.log("USER LOGGED IN AND IM ABOUT TO NAVIGATE!")
+        yield fork(rememberUser)
 
         const navigationOptions = {
             screen: "SelectGameMode",
@@ -78,6 +82,23 @@ export const handleSuccessfulSignIn = function* () {
         const payload = { fn: "resetTo", navigationOptions }
 
         yield put(navigatorActions.navigateToScreen(payload))
+    }
+}
+
+export const rememberUser = function* () {
+    try {
+        const isAGuest = yield select(selectors.isAGuest)
+
+        if (!isAGuest) {
+            const username = yield select(selectors.getUsername)
+            const password = yield select(selectors.getPassword)
+            console.log("Saving the user", username, password)
+            
+            yield call(AsyncStorage.setItem, "username", username)
+            yield call(AsyncStorage.setItem, "password", password)
+        }
+    } catch (e) {
+        console.log(e)
     }
 }
 

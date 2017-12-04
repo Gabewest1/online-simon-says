@@ -1,6 +1,6 @@
 import React from "react"
 import { FormInput, FormValidationMessage } from "react-native-elements"
-import { Dimensions, Keyboard, View, Text } from "react-native"
+import { AsyncStorage, Keyboard } from "react-native"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
@@ -38,6 +38,24 @@ class SignInForm extends React.Component {
         this.validate = this.validate.bind(this)
         this.gotoSignUpScreen = this.gotoSignUpScreen.bind(this)
     }
+    async setRememberedUser() {
+        try {
+            console.log("RETRIEVING REMEMBERED USER")
+            const username = await AsyncStorage.getItem("username")
+            const password = await AsyncStorage.getItem("password")
+
+            if (username && password) {
+                console.log("Setting users data", username, password)
+                this.props.initialize({ username, password })
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    componentWillMount() {
+        console.log(this.setRememberedUser)
+        this.setRememberedUser()
+    }
     gotoSignUpScreen() {
         this.props.navigateToScreen({
             fn: "push",
@@ -45,7 +63,7 @@ class SignInForm extends React.Component {
                 screen: "SignUpScreen",
                 title: "Sign Up",
                 animated: true,
-                animationType: "slide-horizontal",
+                animationType: "slide-horizontal"
             }
         })
     }
@@ -84,9 +102,9 @@ class SignInForm extends React.Component {
                     placeholder="password" />
                 {
                     isLoading ? <LoadingNotification>
-                            <Spinner type="Circle" color={ SECONDARY_COLOR } size={ 90 } />
-                            <LoadingText>Loggin In</LoadingText>
-                        </LoadingNotification>
+                        <Spinner type="Circle" color={ SECONDARY_COLOR } size={ 90 } />
+                        <LoadingText>Loggin In</LoadingText>
+                    </LoadingNotification>
                         : (
                             <Buttons>
                                 <ListItem
