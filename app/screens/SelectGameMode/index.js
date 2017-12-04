@@ -29,7 +29,7 @@ const List = styled.View`
 `
 
 class SelectGameMode extends React.Component {
-    componentWillMount() {
+    componentDidMount() {
         this.props.setGameMode(SINGLE_PLAYER_GAME)
 
         //leftButtons doesn't work on android so have to hack around by using rightButtons.
