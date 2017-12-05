@@ -104,7 +104,7 @@ class SelectGameMode extends React.Component {
                                 animated: true,
                                 animationType: 'slide-horiontal',
                                 overrideBackPress: true,
-                                backButtonHidden: true
+                                backButtonHidden: Platform.OS === "ios"
                             }
                         }) }
                         color={ "green" }
