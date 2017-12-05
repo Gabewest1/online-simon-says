@@ -103,7 +103,8 @@ class SelectGameMode extends React.Component {
                                 title: "Leaderboards",
                                 animated: true,
                                 animationType: 'slide-horiontal',
-                                overrideBackPress: true
+                                overrideBackPress: true,
+                                backButtonHidden: true
                             }
                         }) }
                         color={ "green" }
