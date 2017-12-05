@@ -61,9 +61,6 @@ const Sticky = styled.View`
 const styles = StyleSheet.create({
     icon: {
         marginVertical: FONT_SIZE * .8,
-        borderColor: BACKGROUND_COLOR,
-        borderWidth: 1,
-        borderRadius: 50
     },
     list: {
         backgroundColor: SECONDARY_COLOR,
