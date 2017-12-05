@@ -14,10 +14,9 @@ import { actions as userActions, selectors as userSelectors } from "../../redux/
 import { actions as navigatorActions } from "../../redux/Navigator"
 
 const SignInFormFlex = styled(SignInForm)`
-    justify-content: flex-start;
+    flex: 1;
 `
 const SimonSaysLogoFlex = styled(SimonSaysLogo)`
-    justify-content: flex-end;
     align-items: center;
 `
 
