@@ -3,7 +3,7 @@ import { Dimensions } from "react-native"
 import styled from "styled-components/native"
 import { SECONDARY_COLOR } from "../../constants"
 
-const width = Dimensions.get("window").width * .5
+const width = Dimensions.get("window").width * .45
 
 const Container = styled.View`
     align-items: center;
