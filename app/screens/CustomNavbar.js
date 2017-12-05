@@ -3,7 +3,7 @@ import { Platform } from "react-native"
 import Icon from "react-native-vector-icons/FontAwesome"
 
 export default function CustomNavbar(Component) {
-    return class extends React.Component {
+    return class CustomComponent extends React.Component {
         componentDidMount() {
             if (Platform.OS === "ios") {
                 this.setNavbarForIOS()

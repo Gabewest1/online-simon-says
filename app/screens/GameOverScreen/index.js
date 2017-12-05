@@ -60,7 +60,7 @@ class GameOverScreen extends React.Component {
     }
     playAgain() {
         this.props.navigateToScreen({
-            fn: "resetTo",
+            fn: "push",
             navigationOptions: {
                 screen: "SimonGameScreen",
                 title: "",

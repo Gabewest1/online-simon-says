@@ -100,10 +100,9 @@ export const findMatchSaga = function* () {
                 animated: true,
                 animationType: 'slide-horizontal',
                 passProps: { gameMode },
-                overrideBackPress: true,
-                backButtonHidden: true
+                overrideBackPress: true
             }
-            const payload = { fn: "resetTo", navigationOptions }
+            const payload = { fn: "push", navigationOptions }
 
             yield put(navigatorActions.navigateToScreen(payload))
         }
@@ -378,8 +377,7 @@ export const createPrivateMatchSaga = function* () {
             screen: "InvitePlayersScreen",
             title: "",
             animationType: 'slide-up',
-            overrideBackPress: true,
-            backButtonHidden: true
+            overrideBackPress: true
         }
 
         const payload = { fn: "push", navigationOptions}
@@ -493,7 +491,7 @@ export const gotoGameScreenSaga = function* () {
             overrideBackPress: true
         }
 
-        const payload = { fn: "resetTo", navigationOptions}
+        const payload = { fn: "push", navigationOptions }
         yield put(navigatorActions.navigateToScreen(payload))
     }
 }

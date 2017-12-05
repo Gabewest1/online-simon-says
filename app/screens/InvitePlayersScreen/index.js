@@ -11,6 +11,7 @@ import Player from "../../components/player"
 import Background from "../../components/background"
 import MenuItem from "../../components/menu-item"
 import Input from "../../components/input"
+import CustomNavbar from "../CustomNavbar"
 
 import { SECONDARY_COLOR } from "../../constants"
 
@@ -53,15 +54,6 @@ const styles = {
 }
 
 class InvitePlayersScreen extends React.Component {
-    static navigatorButtons = {
-        rightButtons: [
-            {
-                title: "Quit",
-                id: "quit"
-            }
-        ],
-        leftButtons: []
-    }
     constructor(props) {
         super(props)
 
@@ -187,4 +179,4 @@ InvitePlayersScreen.propTypes = {
 
 export default reduxForm({
     form: "invitePlayer"
-})(connect(mapStateToProps, mapDispatchToProps)(InvitePlayersScreen))
+})(CustomNavbar(connect(mapStateToProps, mapDispatchToProps)(InvitePlayersScreen)))

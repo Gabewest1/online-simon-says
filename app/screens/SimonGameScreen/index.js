@@ -9,6 +9,7 @@ import Player from "../../components/player"
 import Background from "../../components/background"
 import BoardView from "../../components/BoardView"
 import TintedBG from "../../components/TintedBG"
+import CustomNavbar from "../CustomNavbar"
 
 import {
     actions as simonGameActions,
@@ -90,14 +91,6 @@ const HighScores = ({ highScore, isScreenDarkened, round }) => {
     )
 }
 class SimonGameScreen extends React.Component {
-    static navigatorButtons = {
-        rightButtons: [
-            {
-                title: "Quit",
-                id: "quit"
-            }
-        ]
-    }
     constructor(props) {
         super(props)
         this.state = { highScore: 0 }
@@ -230,4 +223,4 @@ SimonGameScreen.propTypes = {
     winner: PropTypes.object
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SimonGameScreen)
+export default CustomNavbar(connect(mapStateToProps, mapDispatchToProps)(SimonGameScreen))

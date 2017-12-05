@@ -64,7 +64,7 @@ class SelectGameMode extends React.Component {
                         disabled={ false }
                         style={{ marginBottom: MARGIN_BOTTOM }}
                         onPress={ () => this.props.navigateToScreen({
-                            fn: "resetTo",
+                            fn: "push",
                             navigationOptions: {
                                 screen: "SimonGameScreen",
                                 title: "",
