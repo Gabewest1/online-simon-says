@@ -16,12 +16,12 @@ import { actions as navigatorActions } from "../../redux/Navigator"
 console.log("HEIGHT:", Dimensions.get("window").height)
 const SignInFormFlex = styled(SignInForm)`
     flex: 1;
-    justify-content: ${ Dimensions.get("window").height >= 600 ? "flex-start" : "center" };
+    justify-content: ${ Dimensions.get("window").height >= 800 ? "flex-start" : "center" };
 `
 const SimonSaysLogoFlex = styled(SimonSaysLogo)`
     align-items: center;
     justify-content: center;
-    ${ Dimensions.get("window").height >= 600 && "flex: 1;" }
+    ${ Dimensions.get("window").height >= 800 && "flex: 1;" }
 `
 
 //Need to prevent the same handlers from getting set everytime this
