@@ -31,7 +31,8 @@ const List = styled.View`
 class SelectGameMode extends React.Component {
     componentDidMount() {
         this.props.setGameMode(SINGLE_PLAYER_GAME)
-
+    }
+    renderNavbar() {
         //leftButtons doesn't work on android so have to hack around by using rightButtons.
         this.props.navigator.setButtons(Platform.select({
             android: {
@@ -58,7 +59,7 @@ class SelectGameMode extends React.Component {
     }
     render() {
         return (
-            <Container>
+            <Container onLayout={ this.renderNavbar.bind(this) }>
                 <List>
                     <ListItem
                         disabled={ false }
