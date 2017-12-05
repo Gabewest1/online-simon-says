@@ -15,13 +15,17 @@ import { actions as navigatorActions } from "../../redux/Navigator"
 
 console.log("HEIGHT:", Dimensions.get("window").height)
 const SignInFormFlex = styled(SignInForm)`
-    flex: 1;
-    justify-content: ${ Dimensions.get("window").height >= 800 ? "flex-start" : "center" };
+    
 `
 const SimonSaysLogoFlex = styled(SimonSaysLogo)`
     align-items: center;
     justify-content: center;
-    ${ Dimensions.get("window").height >= 800 && "flex: 1;" }
+    position: relative;
+    top: -10px;
+`
+const Container = styled.View`
+    width: ${ Dimensions.get("window").width };
+    align-items: center;
 `
 
 //Need to prevent the same handlers from getting set everytime this
@@ -80,9 +84,11 @@ class StartingScreen extends React.Component {
         let { isLoading, navigator, playAsGuest } = this.props
 
         return (
-            <Background>
-                <SimonSaysLogoFlex />
-                <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
+            <Background centered>
+                <Container>
+                    <SimonSaysLogoFlex />
+                    <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
+                </Container>
             </Background>
         )
     }
