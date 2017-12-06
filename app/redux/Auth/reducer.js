@@ -1,5 +1,6 @@
 import { createActions, handleActions } from "redux-actions"
 import { actions as navigatorActions } from "../Navigator"
+import { navigateScreens } from "../Navigator/sagas";
 
 const {
     login,
@@ -64,5 +65,6 @@ export default handleActions({
     [register]: (state, action) => ({ ...state, isLoading: true }),
     [updateStats]: (state, action) => ({ ...state, info: action.payload }),
     [setPassword]: (state, action) => ({ ...state, password: action.payload }),
-    [navigatorActions.socketDisconnected]: (state, action) => ({ ...state, isLoading: false })
+    [navigatorActions.socketDisconnected]: (state, action) => ({ ...state, isLoading: false }),
+    [navigatorActions.socketReconnecting]: (state, action) => ({ ...state, isLoading: false })
 }, initialState)
