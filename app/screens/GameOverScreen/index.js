@@ -16,12 +16,13 @@ const Container = styled.View`
     width: 80%;
 `
 const Text = styled.Text`
-    font-size: 36;
+    font-size: ${ Dimensions.get("window").width >= 768 ? 30 : 20 };
     color: ${ SECONDARY_COLOR };
     position: absolute;
     top: 50;
     border-bottom-width: 5;
     border-color: ${ SECONDARY_COLOR };
+    text-align: center;
 `
 const Moves = styled.View`
     width: 100%;

@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { AsyncStorage } from "react-native"
+import { AsyncStorage, Dimensions } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
@@ -69,11 +69,20 @@ const Score = styled.Text`
     font-weight: 500;
 `
 const Players = ({ player1, player2, performingPlayer, bottom }) => {
+    const fontSize = Dimensions.get("window").width >= 768 ? 18 : 10
+    const name = { style: { fontSize }}
+
     return (
         <PlayersView bottom={ bottom }>
-            <PlayerView player={ player1 } isItMyTurn={ performingPlayer.username === player1.username } />
+            <PlayerView
+                player={ player1 }
+                isItMyTurn={ performingPlayer.username === player1.username }
+                name={ name } />
             { player2 &&
-                <PlayerView player={ player2 } isItMyTurn={ performingPlayer.username === player2.username } />
+                <PlayerView
+                    player={ player2 }
+                    isItMyTurn={ performingPlayer.username === player2.username }
+                    name={ name } />
             }
         </PlayersView>
     )
