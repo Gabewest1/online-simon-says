@@ -1,4 +1,5 @@
 import { createActions, handleActions } from "redux-actions"
+import { actions as navigatorActions } from "../Navigator"
 
 const {
     login,
@@ -62,5 +63,6 @@ export default handleActions({
     [setRanking]: (state, action) => ({ ...state, ranking: action.payload }),
     [register]: (state, action) => ({ ...state, isLoading: true }),
     [updateStats]: (state, action) => ({ ...state, info: action.payload }),
-    [setPassword]: (state, action) => ({ ...state, password: action.payload })
+    [setPassword]: (state, action) => ({ ...state, password: action.payload }),
+    [navigatorActions.socketDisconnected]: (state, action) => ({ ...state, isLoading: false })
 }, initialState)
