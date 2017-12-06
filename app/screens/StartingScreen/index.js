@@ -15,14 +15,11 @@ import { actions as navigatorActions } from "../../redux/Navigator"
 
 console.log("HEIGHT:", Dimensions.get("window").height)
 const SignInFormFlex = styled(SignInForm)`
-    flex-grow: 1;
-    height: 50%;
+    
 `
 const SimonSaysLogoFlex = styled(SimonSaysLogo)`
     align-items: center;
     justify-content: center;
-    flex-grow: 1;
-    height: 50%;
 `
 const Container = styled.View`
     width: ${ Dimensions.get("window").width };
@@ -85,11 +82,9 @@ class StartingScreen extends React.Component {
         let { isLoading, navigator, playAsGuest } = this.props
 
         return (
-            <Background centered>
-                <Container>
-                    <SimonSaysLogoFlex />
-                    <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
-                </Container>
+            <Background around>
+                <SimonSaysLogoFlex />
+                <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
             </Background>
         )
     }
