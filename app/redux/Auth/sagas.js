@@ -29,10 +29,6 @@ export const watchRegister = function* () {
 export const login = function* (action) {
     let credentials = { ...action.payload }
 
-    Object.keys(credentials).map(key => {
-        credentials[key] = credentials[key].toLowerCase()
-    })
-
     yield put(actions.setPassword(credentials.password))
 
     yield put({ type: "server/LOGIN", payload: credentials })
@@ -40,10 +36,6 @@ export const login = function* (action) {
 
 export const register = function* (action) {
     let credentials = { ...action.payload }
-
-    Object.keys(credentials).map(key => {
-        credentials[key] = credentials[key].toLowerCase()
-    })
 
     yield put(actions.setPassword(credentials.password))
 

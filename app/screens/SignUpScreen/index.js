@@ -66,7 +66,7 @@ class SignUpScreen extends React.Component {
     validate(values) {
         Keyboard.dismiss()
 
-        values.username = values.username && values.username.toLowerCase().trim()
+        values.username = values.username && values.username.trim()
         values.email = values.email && values.email.toLowerCase().trim()
         values.password = values.password && values.password.toLowerCase().trim()
         values["re-password"] = values["re-password"] && values["re-password"].toLowerCase().trim()

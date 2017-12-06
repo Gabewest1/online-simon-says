@@ -91,10 +91,14 @@ function createRouteHandlers(socket) {
     const authorizationRoutes = {
         ["server/LOGIN"]: action => {
             const { payload: credentials } = action
+
+            credentials.username = credentials.username.toLowerCase()
+            credentials.password = credentials.password.toLowerCase()
+
             const query = {
                 $or: [
-                    { username: credentials.username },
-                    { email: credentials.username }
+                    { username: { $regex: `^${ credentials.username }$`, $options: "i" }},
+                    { email: { $regex: `^${ credentials.username }$`, $options: "i" }}
                 ]
             }
 
@@ -118,14 +122,16 @@ function createRouteHandlers(socket) {
                     const foundUser = user && (user.username === credentials.username || user.email === credentials.username)
                     const isUserAlreadyLoggedIn = foundUser && user.loggedIn
 
-                    errors.username = !foundUser 
-                        ? "User not found" 
+                    errors.username = !foundUser
+                        ? "User not found"
                         : isUserAlreadyLoggedIn
-                            ? "User is already logged in" 
+                            ? "User is already logged in"
                             : undefined
 
                     errors.password = foundUser && !user.validPassword(credentials.password) ? "Incorrect password" : undefined
 
+                    console.log(colors.bgCyan("LOGIN ERRORS:", errors))
+                    
                     socket.emit("action", { type: "LOGIN_ERROR", payload: err })
                     socket.emit("action", stopSubmit("signIn", errors))
                 }
@@ -135,17 +141,24 @@ function createRouteHandlers(socket) {
         },
         ["server/REGISTER"]: action => {
             const { payload: credentials } = action
-            const query = { $or: [
-                { username: credentials.username },
-                { email: credentials.email }
-            ]}
+
+            credentials.password = credentials.password.toLowerCase()
+            credentials.email = credentials.email.toLowerCase()
+
+            const query = {
+                $or: [
+                    { username: { $regex: `^${ credentials.username }$`, $options: "i" }},
+                    { email: { $regex: `^${ credentials.email }$`, $options: "i" }}
+                ]
+            }
 
             //Usernames shouldn't be longer than 21 characters and i set the input field to have a maxLength = 21
             //But i wanna be safe that the username fits the character limit.
             if (credentials.username.length > 21) {
                 socket.emit("action", stopSubmit("signUp", { username: "Username can't exceed 21 characters" }))
+                socket.emit("action", { type: "LOGIN_ERROR", payload: {} })
 
-                return                
+                return
             }
 
             User.findOne(query, (err, user) => {
@@ -154,8 +167,10 @@ function createRouteHandlers(socket) {
                 } else if (user) {
                     let errors = {}
 
-                    errors.username = user.username === credentials.username ? "Username taken" : undefined
+                    errors.username = user.username.toLowerCase() === credentials.username.toLowerCase() ? "Username taken" : undefined
                     errors.email = user.email === credentials.email ? "Email taken" : undefined
+
+                    console.log(colors.bgCyan("REGISTER ERRORS:", user.username, user.email))
 
                     socket.emit("action", { type: "LOGIN_ERROR", payload: err })
                     socket.emit("action", stopSubmit("signUp", errors))
