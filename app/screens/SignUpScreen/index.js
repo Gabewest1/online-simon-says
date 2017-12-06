@@ -106,7 +106,7 @@ class SignUpScreen extends React.Component {
                         type="text"
                         component={ Input }
                         placeholder="username"
-                        maxLength={ 21 } />
+                        maxLength={ 15 } />
                     <Field
                         name="email"
                         type="text"

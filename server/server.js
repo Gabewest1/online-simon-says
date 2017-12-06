@@ -146,10 +146,10 @@ function createRouteHandlers(socket) {
                 ]
             }
 
-            //Usernames shouldn't be longer than 21 characters and i set the input field to have a maxLength = 21
+            //Usernames shouldn't be longer than 15 characters and i set the input field to have a maxLength = 15
             //But i wanna be safe that the username fits the character limit.
-            if (credentials.username.length > 21) {
-                socket.emit("action", stopSubmit("signUp", { username: "Username can't exceed 21 characters" }))
+            if (credentials.username.length > 15) {
+                socket.emit("action", stopSubmit("signUp", { username: "Username can't exceed 15 characters" }))
                 socket.emit("action", { type: "LOGIN_ERROR", payload: {} })
 
                 return
