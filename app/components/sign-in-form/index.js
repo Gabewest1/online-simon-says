@@ -1,6 +1,6 @@
 import React from "react"
 import { FormInput, FormValidationMessage } from "react-native-elements"
-import { AsyncStorage, Keyboard } from "react-native"
+import { AsyncStorage, Keyboard, Platform } from "react-native"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
@@ -23,11 +23,16 @@ const Buttons = styled.View`
     justify-content: space-around;
 `
 const LoadingNotification = styled.View`
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 `
 const LoadingText = styled.Text`
     font-size: 24px;
+    ${ Platform.OS === "ios" && `
+        position: relative;
+        top: 40;
+        left: 10;
+    `}
 `
 
 class SignInForm extends React.Component {
@@ -88,6 +93,8 @@ class SignInForm extends React.Component {
         let { isLoading, handleSubmit, style } = this.props
         console.log("STYLE:", style, typeof style)
 
+        isLoading = true
+        
         return (
             <Form style={ style }>
                 <Field
