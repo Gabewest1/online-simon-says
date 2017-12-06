@@ -9,7 +9,7 @@ import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
 import CustomNavbar from "../CustomNavbar"
 
-import { TWO_PLAYER_GAME, THREE_PLAYER_GAME, FOUR_PLAYER_GAME } from "../../constants"
+import { TWO_PLAYER_GAME, THREE_PLAYER_GAME, FOUR_PLAYER_GAME, BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
 import { actions as simonGameActions } from "../../redux/SimonSaysGame"
 import { actions as navigatorActions } from "../../redux/Navigator"
 
@@ -20,6 +20,17 @@ const Container = styled(Background)`
 
 const List = styled.View`
     width: 80%;
+`
+const RulesView = styled.View`
+    background-color: ${ SECONDARY_COLOR };
+    position: absolute;
+    bottom: 0;
+    padding: 10px 0px;
+`
+const Rules = styled.Text`
+    font-size: 16px;
+    text-align: center;
+    color: ${ BACKGROUND_COLOR };
 `
 
 class SelectOnlineGameMode extends React.Component {
@@ -80,6 +91,10 @@ class SelectOnlineGameMode extends React.Component {
                         Private Match
                     </ListItem>
                 </List>
+
+                <RulesView>
+                    <Rules>Take turns mimicing your opponents moves then stumping them with one of your own!</Rules>
+                </RulesView>
             </Container>
         )
     }
