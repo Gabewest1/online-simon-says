@@ -70,8 +70,8 @@ class SignInForm extends React.Component {
     validate(values) {
         Keyboard.dismiss()
 
-        values.username = values.username && values.username.toLowerCase().trim()
-        values.password = values.password && values.password.toLowerCase().trim()
+        values.username = values.username && values.username.trim()
+        values.password = values.password && values.password.trim()
 
         let errors = {}
 

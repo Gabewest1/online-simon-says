@@ -98,8 +98,13 @@ class InvitePlayersScreen extends React.Component {
         let errors = {}
 
         const isUserAlreadyInGameRoom = this.props.players.find(player => player.username.toLowerCase() === values.username)
+        const isLobbyFull = this.props.players.length >= 4
 
-        errors.username = isUserAlreadyInGameRoom ? "User already here" : undefined
+        errors.username = isUserAlreadyInGameRoom
+            ? "User already here"
+            : isLobbyFull
+                ? "Lobby Full"
+                : undefined
 
         if (!errors.username) {
             this.props.invitePlayer(values.username)

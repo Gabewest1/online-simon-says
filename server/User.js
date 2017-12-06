@@ -17,7 +17,7 @@ const MultiplayerGameSchema = new mongoose.Schema({
 const UserSchema = new mongoose.Schema({
     email: { type: String, lowercase: true },
     password: String,
-    username: { type: String, lowercase: true },
+    username: { type: String },
     xp: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
     loggedIn: Boolean,
