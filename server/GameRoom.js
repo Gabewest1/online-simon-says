@@ -267,7 +267,7 @@ class GameRoom {
         return timer
     }
     startShortTimer() {
-        let timeTillPlayerTimesout = 3
+        let timeTillPlayerTimesout = 7
 
         const timer = setInterval(() => {
             timeTillPlayerTimesout--
