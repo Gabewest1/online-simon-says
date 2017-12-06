@@ -104,7 +104,6 @@ class SignInForm extends React.Component {
                 {
                     isLoading ? <LoadingNotification>
                         <Spinner type="Circle" color={ SECONDARY_COLOR } size={ 90 } />
-                        <LoadingText>Loggin In</LoadingText>
                     </LoadingNotification>
                         : (
                             <Buttons>

@@ -128,7 +128,6 @@ class SignUpScreen extends React.Component {
                         isLoading
                             ? <LoadingView>
                                 <Spinner size={ 90 } type="Circle" color={ SECONDARY_COLOR } />
-                                <LoadingText>Creating...</LoadingText>
                               </LoadingView>
                             : <MenuItem onPress={ handleSubmit(this.validate) } title="Submit" />
                      
