@@ -58,8 +58,6 @@ io.on("connection", socket => {
                 if (err) {
                     console.log(err)
                 }
-
-                console.log("USER LOGGED OUT:", user)
             })
 
             socket.player = undefined
@@ -106,7 +104,6 @@ function createRouteHandlers(socket) {
                 if (err) {
                     console.log(err)
                 } else if (user && !user.loggedIn && user.validPassword(credentials.password)) {
-                    console.log("FOUND USER:", user)
                     user.loggedIn = true
                     user.level = user.calculateLevel(user.xp)
 
@@ -116,21 +113,18 @@ function createRouteHandlers(socket) {
 
                     user.save(err => err && console.log(err))
                 } else {
-                    //Need to do something with the errors
                     let errors = {}
 
                     const foundUser = user && (user.username === credentials.username || user.email === credentials.username)
-                    const isUserAlreadyLoggedIn = foundUser && user.loggedIn
+                    const isUserAlreadyLoggedIn = user && user.loggedIn
 
-                    errors.username = !foundUser
-                        ? "User not found"
-                        : isUserAlreadyLoggedIn
-                            ? "User is already logged in"
+                    errors.username = isUserAlreadyLoggedIn
+                        ? "User is already logged in"
+                        : !foundUser
+                            ? "User not found"
                             : undefined
 
                     errors.password = foundUser && !user.validPassword(credentials.password) ? "Incorrect password" : undefined
-
-                    console.log(colors.bgCyan("LOGIN ERRORS:", errors))
                     
                     socket.emit("action", { type: "LOGIN_ERROR", payload: err })
                     socket.emit("action", stopSubmit("signIn", errors))
@@ -169,8 +163,6 @@ function createRouteHandlers(socket) {
 
                     errors.username = user.username.toLowerCase() === credentials.username.toLowerCase() ? "Username taken" : undefined
                     errors.email = user.email === credentials.email ? "Email taken" : undefined
-
-                    console.log(colors.bgCyan("REGISTER ERRORS:", user.username, user.email))
 
                     socket.emit("action", { type: "LOGIN_ERROR", payload: err })
                     socket.emit("action", stopSubmit("signUp", errors))
