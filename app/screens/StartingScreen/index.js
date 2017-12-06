@@ -15,13 +15,14 @@ import { actions as navigatorActions } from "../../redux/Navigator"
 
 console.log("HEIGHT:", Dimensions.get("window").height)
 const SignInFormFlex = styled(SignInForm)`
-    
+    flex-grow: 1;
+    height: 50%;
 `
 const SimonSaysLogoFlex = styled(SimonSaysLogo)`
     align-items: center;
     justify-content: center;
-    position: relative;
-    top: -10px;
+    flex-grow: 1;
+    height: 50%;
 `
 const Container = styled.View`
     width: ${ Dimensions.get("window").width };
