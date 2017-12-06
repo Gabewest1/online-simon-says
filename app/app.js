@@ -1,5 +1,4 @@
 import React from "react"
-import { Text } from "react-native"
 import { Navigation } from "react-native-navigation"
 import store from "./store"
 import { Provider } from "react-redux"
@@ -18,9 +17,6 @@ import GameInvitationNotification from "./components/gameInvitationNotification"
 import QuitModal from "./components/QuitModal"
 import Notification from "./components/Notification"
 import Player from "./components/player"
-
-console.log("STARTING UP MY APP")
-console.disableYellowBox = true
 
 Navigation.registerComponent("StartingScreen", () => StartingScreen, store, Provider)
 Navigation.registerComponent("SignUpScreen", () => SignUpScreen, store, Provider)

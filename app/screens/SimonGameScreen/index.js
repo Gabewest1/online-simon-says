@@ -131,8 +131,8 @@ class SimonGameScreen extends React.Component {
     }
     async getHighScore() {
         try {
-            const value = parseInt( await AsyncStorage.getItem('highscore'));
-            console.log("HIGHSCORE VALUE:", value)
+            const value = parseInt( await AsyncStorage.getItem('highscore'))
+
             if (!!value) {
                 this.setState({ highScore: value })
             } else {

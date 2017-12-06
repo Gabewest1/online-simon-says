@@ -15,7 +15,6 @@ class Pad extends React.Component {
     }
     render() {
         const { activeOpacity, activeTouch, onPress, style } = this.props
-        // console.log("Pad")
 
         return (
             <Animated.View
@@ -41,7 +40,6 @@ class Pad extends React.Component {
         const { height, width, left, top } = this.state.coordinates
 
         if (!left || !top) {
-            // console.log("POSITION HASN'T BEEN SET")
             return
         }
 
@@ -51,11 +49,6 @@ class Pad extends React.Component {
         const maxY = minY + height
 
         const isBetweenTheBound = (lower, higher, val) => lower <= val && val <= higher
-
-        // console.log("X,Y:", x, y)
-        // console.log("W,H:", width, height)
-        // console.log("L,T:", minX, minY)
-        // console.log("BETWEEN BOUNDS:", isBetweenTheBound(minX, maxX, x) && isBetweenTheBound(minY, maxY, y))
 
         return isBetweenTheBound(minX, maxX, x) && isBetweenTheBound(minY, maxY, y)
     }
@@ -67,7 +60,6 @@ class Pad extends React.Component {
         this.setOpacityTo(1, 75)
     }
     setOpacityTo(value, duration) {
-        // console.log("SET OPACITY TO")
         Animated.timing(
             this.state.opacity,
             {

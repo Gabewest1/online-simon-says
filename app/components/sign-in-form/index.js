@@ -1,5 +1,4 @@
 import React from "react"
-import { FormInput, FormValidationMessage } from "react-native-elements"
 import { AsyncStorage, Keyboard, Platform } from "react-native"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
@@ -44,7 +43,6 @@ class SignInForm extends React.Component {
     }
     async setRememberedUser() {
         try {
-            console.log("RETRIEVING REMEMBERED USER")
             const username = await AsyncStorage.getItem("username")
             const password = await AsyncStorage.getItem("password")
 
@@ -57,7 +55,6 @@ class SignInForm extends React.Component {
         }
     }
     componentWillMount() {
-        console.log(this.setRememberedUser)
         this.setRememberedUser()
     }
     gotoSignUpScreen() {
@@ -91,10 +88,7 @@ class SignInForm extends React.Component {
     }
     render() {
         let { isLoading, handleSubmit, style } = this.props
-        console.log("STYLE:", style, typeof style)
 
-        isLoading = true
-        
         return (
             <Form style={ style }>
                 <Field
