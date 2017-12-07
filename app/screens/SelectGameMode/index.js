@@ -24,7 +24,6 @@ const Container = styled(Background)`
 
 const List = styled.View`
     width: 80%;
-    padding-bottom: 100px;
     margin-bottom: -${MARGIN_BOTTOM};
 `
 

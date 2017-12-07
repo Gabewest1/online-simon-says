@@ -13,13 +13,11 @@ import { TWO_PLAYER_GAME, THREE_PLAYER_GAME, FOUR_PLAYER_GAME } from "../../cons
 import { actions as simonGameActions } from "../../redux/SimonSaysGame"
 import { actions as navigatorActions } from "../../redux/Navigator"
 
-const Container = styled(Background)`
-    justify-content: space-around;
-    align-items: center;
-`
+const MARGIN_BOTTOM = 35
 
 const List = styled.View`
     width: 80%;
+    marginBottom: -${ MARGIN_BOTTOM };
 `
 
 class SelectOnlineGameMode extends React.Component {
@@ -57,20 +55,20 @@ class SelectOnlineGameMode extends React.Component {
     }
     render() {
         return (
-            <Container>
+            <Background centered>
                 <List>
                     <ListItem
                         onPress={ () => this.gotoGameScreen(TWO_PLAYER_GAME) }
-                        style={{ marginBottom: 35 }}>
+                        style={{ marginBottom: MARGIN_BOTTOM }}>
                         Two Player
                     </ListItem>
                     <ListItem
                         onPress={ () => this.gotoGameScreen(THREE_PLAYER_GAME) }
-                        style={{ marginBottom: 35 }}>
+                        style={{ marginBottom: MARGIN_BOTTOM }}>
                         Three Player
                     </ListItem>
                     <ListItem
-                        style={{ marginBottom: 35 }}                
+                        style={{ marginBottom: MARGIN_BOTTOM }}                
                         onPress={ () => this.gotoGameScreen(FOUR_PLAYER_GAME) }>
                         Four Player
                     </ListItem>
@@ -80,7 +78,7 @@ class SelectOnlineGameMode extends React.Component {
                         Private Match
                     </ListItem>
                 </List>
-            </Container>
+            </Background>
         )
     }
 }
