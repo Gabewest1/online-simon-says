@@ -59,7 +59,7 @@ class InvitePlayersScreen extends React.Component {
 
         //I track isReady locally to quickly animate the ready icon b/c otherwise i have to wait
         //for the server to respond and update my state. 
-        this.state = { isReady: this.getMyPlayer().isReady }
+        this.state = { isReady: false }
 
         props.navigator.setOnNavigatorEvent(this.handleBack)
     }
