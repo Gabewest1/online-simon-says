@@ -24,7 +24,7 @@ const Container = styled(Background)`
 
 const List = styled.View`
     width: 80%;
-    margin-bottom: -${MARGIN_BOTTOM};
+    margin-top: -${MARGIN_BOTTOM};
 `
 
 class SelectGameMode extends React.Component {

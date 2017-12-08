@@ -17,7 +17,7 @@ const MARGIN_BOTTOM = 35
 
 const List = styled.View`
     width: 80%;
-    marginBottom: -${ MARGIN_BOTTOM };
+    margin-top: -${ MARGIN_BOTTOM };
 `
 
 class SelectOnlineGameMode extends React.Component {
