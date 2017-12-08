@@ -176,7 +176,7 @@ class SimonGameScreen extends React.Component {
                 { this.renderHUD() }
                 <Timer isScreenDarkened={ isScreenDarkened }>{ this.props.timer }</Timer>
                 <BoardView { ...this.props } onPress={ this.handlePadClick.bind(this) } />
-                { isMultiplayerGame && isItMyTurn && <Text>It's you're turn!</Text> }
+                { isMultiplayerGame && isItMyTurn && <Text>It's your turn!</Text> }
                 { players.length > 2
                     && <Players
                         bottom
