@@ -59,7 +59,7 @@ class InvitePlayersScreen extends React.Component {
 
         //I track isReady locally to quickly animate the ready icon b/c otherwise i have to wait
         //for the server to respond and update my state. 
-        this.state = { isReady: this.getMyPlayer().isReady }
+        this.state = { isReady: false }
 
         props.navigator.setOnNavigatorEvent(this.handleBack)
     }
@@ -98,8 +98,13 @@ class InvitePlayersScreen extends React.Component {
         let errors = {}
 
         const isUserAlreadyInGameRoom = this.props.players.find(player => player.username.toLowerCase() === values.username)
+        const isLobbyFull = this.props.players.length >= 4
 
-        errors.username = isUserAlreadyInGameRoom ? "User already here" : undefined
+        errors.username = isUserAlreadyInGameRoom
+            ? "User already here"
+            : isLobbyFull
+                ? "Lobby Full"
+                : undefined
 
         if (!errors.username) {
             this.props.invitePlayer(values.username)

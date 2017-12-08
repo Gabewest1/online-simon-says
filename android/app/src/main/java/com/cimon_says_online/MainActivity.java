@@ -1,4 +1,4 @@
-package com.online;
+package com.cimon_says_online;
 
 import com.reactnativenavigation.controllers.SplashActivity;
 

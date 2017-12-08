@@ -20,8 +20,6 @@ const SignInFormFlex = styled(SignInForm)`
 const SimonSaysLogoFlex = styled(SimonSaysLogo)`
     align-items: center;
     justify-content: center;
-    position: relative;
-    top: -10px;
 `
 const Container = styled.View`
     width: ${ Dimensions.get("window").width };
@@ -46,7 +44,6 @@ class StartingScreen extends React.Component {
         props.giveSagasNavigator(props.navigator)
     }
     componentDidMount() {
-        console.log("is Disconnect Handler Set:", areEventHandlersConnected)
         if (!areEventHandlersConnected) {
             AppState.addEventListener('change', this.handleAppStateChange)
 
@@ -58,16 +55,16 @@ class StartingScreen extends React.Component {
                 this.props.socketConnected()
             })
             socket.on("disconnect", () => {
-                console.log("I DISCONNECTED DDDDDD:")
+                // console.log("I DISCONNECTED DDDDDD:")
                 this.props.socketDisconnected()
             })
 
             socket.on("reconnecting", () => {
-                console.log("TRYING TO RECONNECT TO THE SERVER")
+                // console.log("TRYING TO RECONNECT TO THE SERVER")
             })
 
             socket.on("reconnect", () => {
-                console.log("SUCCESSFULLY RECONNECTED TO THE SERVER! :D")
+                // console.log("SUCCESSFULLY RECONNECTED TO THE SERVER! :D")
                 this.props.socketReconnected()
             })
 
@@ -76,7 +73,6 @@ class StartingScreen extends React.Component {
     }
     handleAppStateChange = nextAppState => {
         if (nextAppState === "active") {
-            console.log("ACTIVATING THE APP")
             this.props.appStateActive()
         }
     }
@@ -84,11 +80,9 @@ class StartingScreen extends React.Component {
         let { isLoading, navigator, playAsGuest } = this.props
 
         return (
-            <Background centered>
-                <Container>
-                    <SimonSaysLogoFlex />
-                    <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
-                </Container>
+            <Background around>
+                <SimonSaysLogoFlex />
+                <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
             </Background>
         )
     }

@@ -58,8 +58,6 @@ io.on("connection", socket => {
                 if (err) {
                     console.log(err)
                 }
-
-                console.log("USER LOGGED OUT:", user)
             })
 
             socket.player = undefined
@@ -91,10 +89,14 @@ function createRouteHandlers(socket) {
     const authorizationRoutes = {
         ["server/LOGIN"]: action => {
             const { payload: credentials } = action
+
+            credentials.username = credentials.username.toLowerCase()
+            credentials.password = credentials.password.toLowerCase()
+
             const query = {
                 $or: [
-                    { username: credentials.username },
-                    { email: credentials.username }
+                    { username: { $regex: `^${ credentials.username }$`, $options: "i" }},
+                    { email: { $regex: `^${ credentials.username }$`, $options: "i" }}
                 ]
             }
 
@@ -102,7 +104,6 @@ function createRouteHandlers(socket) {
                 if (err) {
                     console.log(err)
                 } else if (user && !user.loggedIn && user.validPassword(credentials.password)) {
-                    console.log("FOUND USER:", user)
                     user.loggedIn = true
                     user.level = user.calculateLevel(user.xp)
 
@@ -112,20 +113,19 @@ function createRouteHandlers(socket) {
 
                     user.save(err => err && console.log(err))
                 } else {
-                    //Need to do something with the errors
                     let errors = {}
 
                     const foundUser = user && (user.username === credentials.username || user.email === credentials.username)
-                    const isUserAlreadyLoggedIn = foundUser && user.loggedIn
+                    const isUserAlreadyLoggedIn = user && user.loggedIn
 
-                    errors.username = !foundUser 
-                        ? "User not found" 
-                        : isUserAlreadyLoggedIn
-                            ? "User is already logged in" 
+                    errors.username = isUserAlreadyLoggedIn
+                        ? "User is already logged in"
+                        : !foundUser
+                            ? "User not found"
                             : undefined
 
                     errors.password = foundUser && !user.validPassword(credentials.password) ? "Incorrect password" : undefined
-
+                    
                     socket.emit("action", { type: "LOGIN_ERROR", payload: err })
                     socket.emit("action", stopSubmit("signIn", errors))
                 }
@@ -135,17 +135,24 @@ function createRouteHandlers(socket) {
         },
         ["server/REGISTER"]: action => {
             const { payload: credentials } = action
-            const query = { $or: [
-                { username: credentials.username },
-                { email: credentials.email }
-            ]}
 
-            //Usernames shouldn't be longer than 21 characters and i set the input field to have a maxLength = 21
+            credentials.password = credentials.password.toLowerCase()
+            credentials.email = credentials.email.toLowerCase()
+
+            const query = {
+                $or: [
+                    { username: { $regex: `^${ credentials.username }$`, $options: "i" }},
+                    { email: { $regex: `^${ credentials.email }$`, $options: "i" }}
+                ]
+            }
+
+            //Usernames shouldn't be longer than 15 characters and i set the input field to have a maxLength = 15
             //But i wanna be safe that the username fits the character limit.
-            if (credentials.username.length > 21) {
-                socket.emit("action", stopSubmit("signUp", { username: "Username can't exceed 21 characters" }))
+            if (credentials.username.length > 15) {
+                socket.emit("action", stopSubmit("signUp", { username: "Username can't exceed 15 characters" }))
+                socket.emit("action", { type: "LOGIN_ERROR", payload: {} })
 
-                return                
+                return
             }
 
             User.findOne(query, (err, user) => {
@@ -154,7 +161,7 @@ function createRouteHandlers(socket) {
                 } else if (user) {
                     let errors = {}
 
-                    errors.username = user.username === credentials.username ? "Username taken" : undefined
+                    errors.username = user.username.toLowerCase() === credentials.username.toLowerCase() ? "Username taken" : undefined
                     errors.email = user.email === credentials.email ? "Email taken" : undefined
 
                     socket.emit("action", { type: "LOGIN_ERROR", payload: err })

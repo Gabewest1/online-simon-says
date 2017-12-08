@@ -6,8 +6,8 @@ import { selectors as userSelectors } from "../Auth"
 
 import { actions as navigatorActions } from "../Navigator"
 
-export const ANIMATION_DURATION = 200
-export const TIMEOUT_TIME = 3
+export const ANIMATION_DURATION = 450
+export const TIMEOUT_TIME = 7
 const MULTIPLAYER_GAME = 0
 const SINGLE_PLAYER = 1
 

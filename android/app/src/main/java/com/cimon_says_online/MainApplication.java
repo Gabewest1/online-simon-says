@@ -1,4 +1,4 @@
-package com.online;
+package com.cimon_says_online;
 import com.horcrux.svg.SvgPackage;
 
 import com.facebook.react.ReactNativeHost;

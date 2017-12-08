@@ -66,7 +66,7 @@ class SignUpScreen extends React.Component {
     validate(values) {
         Keyboard.dismiss()
 
-        values.username = values.username && values.username.toLowerCase().trim()
+        values.username = values.username && values.username.trim()
         values.email = values.email && values.email.toLowerCase().trim()
         values.password = values.password && values.password.toLowerCase().trim()
         values["re-password"] = values["re-password"] && values["re-password"].toLowerCase().trim()
@@ -106,7 +106,7 @@ class SignUpScreen extends React.Component {
                         type="text"
                         component={ Input }
                         placeholder="username"
-                        maxLength={ 21 } />
+                        maxLength={ 15 } />
                     <Field
                         name="email"
                         type="text"
@@ -128,7 +128,6 @@ class SignUpScreen extends React.Component {
                         isLoading
                             ? <LoadingView>
                                 <Spinner size={ 90 } type="Circle" color={ SECONDARY_COLOR } />
-                                <LoadingText>Creating...</LoadingText>
                               </LoadingView>
                             : <MenuItem onPress={ handleSubmit(this.validate) } title="Submit" />
                      

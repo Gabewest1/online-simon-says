@@ -1,6 +1,5 @@
 import React from "react"
-import { FormInput, FormValidationMessage } from "react-native-elements"
-import { AsyncStorage, Keyboard } from "react-native"
+import { AsyncStorage, Keyboard, Platform } from "react-native"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
@@ -23,11 +22,16 @@ const Buttons = styled.View`
     justify-content: space-around;
 `
 const LoadingNotification = styled.View`
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 `
 const LoadingText = styled.Text`
     font-size: 24px;
+    ${ Platform.OS === "ios" && `
+        position: relative;
+        top: 40;
+        left: 10;
+    `}
 `
 
 class SignInForm extends React.Component {
@@ -39,7 +43,6 @@ class SignInForm extends React.Component {
     }
     async setRememberedUser() {
         try {
-            console.log("RETRIEVING REMEMBERED USER")
             const username = await AsyncStorage.getItem("username")
             const password = await AsyncStorage.getItem("password")
 
@@ -52,7 +55,6 @@ class SignInForm extends React.Component {
         }
     }
     componentWillMount() {
-        console.log(this.setRememberedUser)
         this.setRememberedUser()
     }
     gotoSignUpScreen() {
@@ -70,8 +72,8 @@ class SignInForm extends React.Component {
     validate(values) {
         Keyboard.dismiss()
 
-        values.username = values.username && values.username.toLowerCase().trim()
-        values.password = values.password && values.password.toLowerCase().trim()
+        values.username = values.username && values.username.trim()
+        values.password = values.password && values.password.trim()
 
         let errors = {}
 
@@ -86,7 +88,6 @@ class SignInForm extends React.Component {
     }
     render() {
         let { isLoading, handleSubmit, style } = this.props
-        console.log("STYLE:", style, typeof style)
 
         return (
             <Form style={ style }>
@@ -103,7 +104,6 @@ class SignInForm extends React.Component {
                 {
                     isLoading ? <LoadingNotification>
                         <Spinner type="Circle" color={ SECONDARY_COLOR } size={ 90 } />
-                        <LoadingText>Loggin In</LoadingText>
                     </LoadingNotification>
                         : (
                             <Buttons>
