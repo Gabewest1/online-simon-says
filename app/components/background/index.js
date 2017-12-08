@@ -8,7 +8,7 @@ const { height, width } = Dimensions.get("window")
 const Container = styled.View`
     background-color: ${({ color }) => color || BACKGROUND_COLOR};
     width: ${ width };
-    height: ${ height };
+    height: 100%;
     align-items: center;
     justify-content: flex-start;
     ${({ centered }) => centered && "justify-content: center;"}
