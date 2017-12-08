@@ -23,6 +23,7 @@ import {
 } from "../../redux/Navigator"
 
 import { SINGLE_PLAYER_GAME, BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
+import { getMoveIndex, numberOfMoves } from "../../redux/SimonSaysGame/selectors";
 
 const Container = styled(Background)`
     justify-content: center;
@@ -67,6 +68,9 @@ const Score = styled.Text`
     background-color: transparent;    
     font-size: 22px;
     font-weight: 500;
+`
+const Text = styled.Text`
+
 `
 const Players = ({ player1, player2, performingPlayer, bottom }) => {
     const fontSize = Dimensions.get("window").width >= 768 ? 18 : 10
@@ -163,7 +167,8 @@ class SimonGameScreen extends React.Component {
     }
 
     render() {
-        const { isScreenDarkened } = this.props
+        const { gameMode, numberOfMoves, performingPlayer, players, isItMyTurn, isScreenDarkened } = this.props
+        const isMultiplayerGame = gameMode > SINGLE_PLAYER_GAME
 
         return (
             <Container>
@@ -171,12 +176,13 @@ class SimonGameScreen extends React.Component {
                 { this.renderHUD() }
                 <Timer isScreenDarkened={ isScreenDarkened }>{ this.props.timer }</Timer>
                 <BoardView { ...this.props } onPress={ this.handlePadClick.bind(this) } />
-                { this.props.players.length > 2
+                { isMultiplayerGame && isItMyTurn && <Text>It's you're turn!</Text> }
+                { players.length > 2
                     && <Players
                         bottom
-                        player1={ this.props.players[2] }
-                        player2={ this.props.players[3] }
-                        performingPlayer={ this.props.performingPlayer } />
+                        player1={ players[2] }
+                        player2={ players[3] }
+                        performingPlayer={ performingPlayer } />
                 }
             </Container>
         )
