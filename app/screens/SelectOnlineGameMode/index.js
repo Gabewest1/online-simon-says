@@ -1,4 +1,5 @@
 import React from "react"
+import { Dimensions } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from  "styled-components/native"
@@ -24,6 +25,7 @@ const RulesView = styled.View`
     position: absolute;
     bottom: 0;
     padding: 10px 0px;
+    width: ${ Dimensions.get("window").width };
 `
 const Rules = styled.Text`
     font-size: 16px;
