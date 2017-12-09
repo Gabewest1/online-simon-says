@@ -51,10 +51,10 @@ class Pad extends React.Component {
         return isBetweenTheBound(minX, maxX, x) && isBetweenTheBound(minY, maxY, y)
     }
     onPressIn = () => {
-        this.setOpacityTo(.2, 100, this.onPressOut)
+        this.setOpacityTo(.2, 50, this.onPressOut)
     }
     onPressOut = () => {
-        this.setOpacityTo(1, 75)
+        this.setOpacityTo(1, 50)
         this.props.onPress()
     }
     setOpacityTo(value, duration, cb) {
