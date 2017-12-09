@@ -311,11 +311,11 @@ export const performPlayersTurn = function* () {
         let isPlayersFirstMove = movesPerformed === 0
         let timer
 
-        if (isPlayersFirstMove) {
-            timer = yield fork(startLongTimer)
-        } else {
-            timer = yield fork(startShortTimer)
-        }
+        // if (isPlayersFirstMove) {
+        //     timer = yield fork(startLongTimer)
+        // } else {
+        //     timer = yield fork(startShortTimer)
+        // }
 
         const { playersMove, timedout } = yield race({
             playersMove: take(actions.simonPadClicked),
@@ -323,12 +323,12 @@ export const performPlayersTurn = function* () {
         })
 
         if (timedout) {
-            yield put(actions.setWrongMove(0))            
+            yield put(actions.setWrongMove(0))
             yield put(actions.setCorrectMove(correctMove))
 
             return false
         } else {
-            yield cancel(timer)
+            // yield cancel(timer)
         }
 
         const isValidMove = playersMove.payload === correctMove
@@ -336,7 +336,7 @@ export const performPlayersTurn = function* () {
         if (!isValidMove) {
             yield put(actions.setWrongMove(playersMove.payload))
             yield put(actions.setCorrectMove(correctMove))
-            
+
             return false
         }
 
@@ -361,7 +361,7 @@ export const endTurn = function* (didPlayerPassTurn) {
 
 export const animateSimonPad = function* (action) {
     const pad = action.payload
-    console.log("Animating Simon Pad!!:", pad)
+    // console.log("Animating Simon Pad!!:", pad)
     yield put(actions.animateSimonPad(pad))
     yield call(delay, ANIMATION_DURATION)
     yield put(actions.animateSimonPad(0))

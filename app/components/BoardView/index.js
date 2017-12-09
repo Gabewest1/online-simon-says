@@ -73,11 +73,11 @@ class BoardView extends Component {
             },
             onPanResponderTerminationRequest: (evt, gestureState) => true,
             onPanResponderRelease: (evt, gestureState) => {
-            console.log("TOUCHES DONEEEEEEEEEEEEEEEEEEEEEEEEE")
+            // console.log("TOUCHES DONEEEEEEEEEEEEEEEEEEEEEEEEE")
                 this.setState({ activeTouch: { x: -1, y: -1 }, numTouches: 0 })
             },
             onPanResponderTerminate: (evt, gestureState) => {
-                console.log("TERMINATING")
+                // console.log("TERMINATING")
             },
             onShouldBlockNativeResponder: (evt, gestureState) => {
                 return true;
@@ -87,19 +87,34 @@ class BoardView extends Component {
     setActiveTouch(evt, gestureState) {
         const touches = evt.touchHistory.touchBank
 
-        const activeTouches = touches.filter(touch => touch.touchActive)
+        let activeTouch = touches[0]
+        let activeTouches = 0
 
-        const activeTouch = activeTouches.reduce((highest, current) => highest.startTimeStamp <= current.startTimeStamp ? current : highest, { startTimeStamp: 0 })
+        for (let i = 0; i < touches.length; i++) {
+            let touch = touches[i]
 
-        console.log("Active Touch:", activeTouch)
-        console.log(activeTouches.length, this.state.numTouches)
+            if (touch.touchActive) {
+                activeTouches++
+
+                if (activeTouch.startTimeStamp <= touch.startTimeStamp) {
+                    activeTouch = touch
+                }
+            }
+        }
+
+        // const activeTouches = touches.filter(touch => touch.touchActive)
+
+        // const activeTouch = activeTouches.reduce((highest, current) => highest.startTimeStamp <= current.startTimeStamp ? current : highest, { startTimeStamp: 0 })
+
+        // console.log("Active Touch:", activeTouch)
+        // console.log(activeTouches.length, this.state.numTouches)
 
         const { startPageX: x, startPageY: y } = activeTouch
 
         //Should reset the active touch if there is less touches now than previously.
-        if (activeTouches.length < this.state.numTouches) {
+        if (activeTouches < this.state.numTouches) {
             this.setState({ activeTouch: { x: -1, y: -1 }, numTouches: this.state.numTouches - 1 })
-        } else if (activeTouches.length > this.state.numTouches) {
+        } else if (activeTouches > this.state.numTouches) {
             this.setState({ activeTouch: { x, y }, numTouches: this.state.numTouches + 1 })
         }
     }
@@ -114,7 +129,7 @@ class BoardView extends Component {
     }
 
     render() {
-        // console.log("RENDERING BOARD VIEW!!!!!")
+        console.log("RENDERING BOARD VIEW!!!!!")
 
         return (
             <View { ...this._panResponder.panHandlers } style={ styles.container }>
@@ -165,10 +180,10 @@ class BoardView extends Component {
     }
 
     _onPress(id) {
-        playAudio(id)
-        InteractionManager.runAfterInteractions(() => {
-            this.props.onPress(id)
-        })
+        // playAudio(id)
+        // InteractionManager.runAfterInteractions(() => {
+        //     this.props.onPress(id)
+        // })
     }
 
 }

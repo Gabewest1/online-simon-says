@@ -18,6 +18,8 @@ import QuitModal from "./components/QuitModal"
 import Notification from "./components/Notification"
 import Player from "./components/player"
 
+console.disableYellowBox = true
+
 Navigation.registerComponent("StartingScreen", () => StartingScreen, store, Provider)
 Navigation.registerComponent("SignUpScreen", () => SignUpScreen, store, Provider)
 Navigation.registerComponent("Leaderboards", () => Leaderboards, store, Provider)
