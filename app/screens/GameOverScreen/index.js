@@ -35,18 +35,29 @@ const WrongMove = CorrectMove = styled.Text`
 `
 
 class GameOverScreen extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            allowButtonClicks: false
+        }
+
+    }
+    
     componentWillMount() {
         this.props.resetGame()
-
+        
         //The players array gets cleared when the game resets
         //so need to retrieve the players again.
         if (this.props.gameMode === PRIVATE_MATCH) {
             this.props.fetchPlayersInLobby()            
         }
+
+        setTimeout(() => this.setState({ allowButtonClicks: true }), 1000)
     }
     shouldComponentUpdate(nextProps) {
         return nextProps.gameMode === this.props.gameMode
-    } 
+    }
     findNextMatch() {
         this.props.navigateToScreen({
             fn: "push",
@@ -109,11 +120,11 @@ class GameOverScreen extends React.Component {
                         disabled={ false }
                         title={ playAgainText }
                         style={{ marginBottom: 35 }}
-                        onPress={ () => onPress() } />
+                        onPress={ () => this.state.allowButtonClicks && onPress() } />
                     { !isAPrivateMatch && <ListItem
                         disabled={ false }
                         title="Quit"
-                        onPress={ () => this.props.navigateToScreen({
+                        onPress={ () => this.state.allowButtonClicks && this.props.navigateToScreen({
                             fn: "resetTo",
                             navigationOptions: {
                                 screen: "SelectGameMode",
