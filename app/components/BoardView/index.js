@@ -83,14 +83,15 @@ class BoardView extends Component {
     }
     setActiveTouch(evt, gestureState) {
         const touches = evt.touchHistory.touchBank
-
-        let activeTouch = touches[0]
+        console.log(touches)
+        let activeTouch = touches[0] || touches[1]  //On IOS touches[0] returns undefined
         let activeTouches = 0
 
         for (let i = 0; i < touches.length; i++) {
             let touch = touches[i]
 
-            if (touch.touchActive) {
+            console.log("TOUCH:", touch)
+            if (touch && touch.touchActive) {
                 activeTouches++
 
                 if (activeTouch.startTimeStamp <= touch.startTimeStamp) {
