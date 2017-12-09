@@ -24,12 +24,10 @@ class Pad extends React.Component {
         )
     }
     componentWillReceiveProps(nextProps) {
-        if (this.wasPadPressed(nextProps.activeTouch) && !this.state.isAnimating) {
-            this.setState({ isAnimating: true })
+        let wasPressed = this.wasPadPressed(nextProps.activeTouch)
+
+        if (wasPressed) {
             this.onPressIn()
-        } else if (!this.wasPadPressed(nextProps.activeTouch) && this.state.isAnimating) {
-            this.setState({ isAnimating: false })
-            this.onPressOut()
         }
     }
     shouldComponentUpdate() {
@@ -52,14 +50,14 @@ class Pad extends React.Component {
 
         return isBetweenTheBound(minX, maxX, x) && isBetweenTheBound(minY, maxY, y)
     }
-    onPressIn() {
-        this.setOpacityTo(.2, 100)
+    onPressIn = () => {
+        this.setOpacityTo(.2, 100, this.onPressOut)
+    }
+    onPressOut = () => {
+        this.setOpacityTo(1, 75)
         this.props.onPress()
     }
-    onPressOut() {
-        this.setOpacityTo(1, 75)
-    }
-    setOpacityTo(value, duration) {
+    setOpacityTo(value, duration, cb) {
         Animated.timing(
             this.state.opacity,
             {
@@ -67,7 +65,7 @@ class Pad extends React.Component {
                 duration,
                 useNativeDriver: true
             }
-        ).start();
+        ).start(cb);
     }
     setCoordinates = () => {
         if (!this.state.hasLayoutBeenSet) {
