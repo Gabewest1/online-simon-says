@@ -22,7 +22,8 @@ const root = function* () {
         watchSocketDisconnected(),
         watchSocketReconnected(),
         watchShowExitMessage(),
-        kickInactivePlayerSaga()
+        kickInactivePlayerSaga(),
+        showConnectingToServerMessageSaga()
     ]
 }
 
@@ -251,6 +252,29 @@ export const navigateScreens = function* (action) {
     yield put(actions.setCurrentScreenName(nextScreenName))
 
     console.log("END OF navigateScreens* ()")
+}
+
+
+export const showConnectingToServerMessageSaga = function* () {
+    while (true) {
+        yield take(actions.showConnectingToServerMessage)
+
+        yield put(actions.showInAppNotification({
+            fn: "showInAppNotification",
+            navigationOptions: {
+                screen: "Notification",
+                passProps: { message: "Connecting to Servers" },
+                position: "bottom"
+            }
+        }))
+    
+        yield take(actions.socketConnected)
+
+        ReactNativeNavigator.dismissInAppNotification()
+        
+        yield call(showFoundInternetConnectionNotification)
+    } 
+
 }
 
 export default root

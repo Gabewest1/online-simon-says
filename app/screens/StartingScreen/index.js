@@ -11,7 +11,7 @@ import Background from "../../components/background"
 import SignInForm from "../../components/sign-in-form"
 
 import { actions as userActions, selectors as userSelectors } from "../../redux/Auth"
-import { actions as navigatorActions } from "../../redux/Navigator"
+import { actions as navigatorActions, selectors as navigatorSelectors } from "../../redux/Navigator"
 
 console.log("HEIGHT:", Dimensions.get("window").height)
 const SignInFormFlex = styled(SignInForm)`
@@ -69,7 +69,13 @@ class StartingScreen extends React.Component {
             })
 
             areEventHandlersConnected = true
+            
+            if (!this.props.isOnline) {
+                console.log("IS ONLINE:", this.props.isOnline)
+                this.props.showConnectingToServerMessage()
+            }
         }
+
     }
     handleAppStateChange = nextAppState => {
         if (nextAppState === "active") {
@@ -90,7 +96,8 @@ class StartingScreen extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        isLoading: userSelectors.isLoading(state)
+        isLoading: userSelectors.isLoading(state),
+        isOnline: navigatorSelectors.doesPlayerHaveInternet(state)
     }
 }
 
@@ -102,6 +109,7 @@ StartingScreen.propTypes = {
     appStateActive: PropTypes.func.isRequired,
     giveSagasNavigator: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
+    isOnline: PropTypes.bool.isRequired,
     navigator: PropTypes.object.isRequired,
     playAsGuest: PropTypes.func.isRequired,
     socketConnected: PropTypes.func.isRequired,
