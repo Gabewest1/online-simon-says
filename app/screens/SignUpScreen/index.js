@@ -97,8 +97,9 @@ class SignUpScreen extends React.Component {
         }
     }
     render() {
-        let { isLoading, handleSubmit } = this.props
-
+        return Platform.OS === "ios" ? this.renderIOS() : this.renderAndroid()
+    }
+    renderIOS() {
         return (
             <ScrollView scrollEnabled={ false } contentContainerStyle={{ height: "100%" }}>
                 <Background around>
@@ -132,17 +133,62 @@ class SignUpScreen extends React.Component {
                     </Form>
                     <ButtonWrapper>
                         {
-                            isLoading
+                            this.props.isLoading
                                 ? <LoadingView>
                                     <Spinner size={ 90 } type="Circle" color={ SECONDARY_COLOR } />
                                 </LoadingView>
-                                : <MenuItem onPress={ handleSubmit(this.validate) } title="Submit" />
+                                : <MenuItem onPress={ this.props.handleSubmit(this.validate) } title="Submit" />
 
                         }
 
                     </ButtonWrapper>
                 </Background>
             </ScrollView>
+        )
+    }
+    renderAndroid() {
+        return (
+            <Background around>
+                <LogoWrapper>
+                    <Logo />
+                </LogoWrapper>
+                <Form>
+                    <Field
+                        name="username"
+                        type="text"
+                        component={ Input }
+                        placeholder="username"
+                        maxLength={ 15 } />
+                    <Field
+                        name="email"
+                        type="text"
+                        component={ Input }
+                        placeholder="email" />
+                    <Field
+                        name="password"
+                        type="password"
+                        component={ Input }
+                        placeholder="password" />
+                    <Field
+                        name="re-password"
+                        type="password"
+                        component={ Input }
+                        placeholder="re-password" />
+
+                    { Platform.OS === "ios" && <KeyboardSpacer /> }
+                </Form>
+                <ButtonWrapper>
+                    {
+                        this.props.isLoading
+                            ? <LoadingView>
+                                <Spinner size={ 90 } type="Circle" color={ SECONDARY_COLOR } />
+                            </LoadingView>
+                            : <MenuItem onPress={ this.props.handleSubmit(this.validate) } title="Submit" />
+
+                    }
+
+                </ButtonWrapper>
+            </Background>
         )
     }
 }
