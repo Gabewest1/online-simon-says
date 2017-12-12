@@ -780,7 +780,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = XCWP8P845C;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1338,7 +1338,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer: gabe_west1@yahoo.com (88HP6E7AH8)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = XCWP8P845C;
@@ -1356,7 +1356,8 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = Cimon;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "2a23ef2c-3d33-4bf4-9146-b25f7b0ac48f";
+				PROVISIONING_PROFILE_SPECIFIER = "Cimon Says Online";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1367,7 +1368,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Gabriel West (XCWP8P845C)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = XCWP8P845C;
 				HEADER_SEARCH_PATHS = (
@@ -1385,8 +1386,8 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = Cimon;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "2a23ef2c-3d33-4bf4-9146-b25f7b0ac48f";
+				PROVISIONING_PROFILE_SPECIFIER = "Cimon Says Online";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

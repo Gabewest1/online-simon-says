@@ -47,6 +47,81 @@
       "idiom" : "iphone",
       "filename" : "Icon-App-60x60@3x.png",
       "scale" : "3x"
+    },
+    {
+      "idiom" : "ipad",
+      "size" : "20x20",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "size" : "20x20",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "ipad",
+      "size" : "29x29",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "size" : "29x29",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "ipad",
+      "size" : "40x40",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "size" : "40x40",
+      "scale" : "2x"
+    },
+    {
+      "size" : "76x76",
+      "idiom" : "ipad",
+      "filename" : "ic_launer_76x76.png",
+      "scale" : "1x"
+    },
+    {
+      "size" : "76x76",
+      "idiom" : "ipad",
+      "filename" : "ic_launcher_152x152.png",
+      "scale" : "2x"
+    },
+    {
+      "size" : "83.5x83.5",
+      "idiom" : "ipad",
+      "filename" : "ic_launcher_167x167.png",
+      "scale" : "2x"
+    },
+    {
+      "size" : "76x76",
+      "idiom" : "ipad",
+      "filename" : "ic_launer_76x76@2x.png",
+      "unassigned" : true,
+      "scale" : "2x"
+    },
+    {
+      "filename" : "ic_launcher_152x152@2x.png",
+      "unassigned" : true
+    },
+    {
+      "filename" : "ic_launcher_152x152@3x.png",
+      "unassigned" : true
+    },
+    {
+      "filename" : "ic_launcher_167x167@2x.png",
+      "unassigned" : true
+    },
+    {
+      "filename" : "ic_launcher_167x167@3x.png",
+      "unassigned" : true
+    },
+    {
+      "filename" : "ic_launer_76x76@3x.png",
+      "unassigned" : true
     }
   ],
   "info" : {
