@@ -1,5 +1,5 @@
 import React from "react"
-import { Keyboard } from "react-native"
+import { Keyboard, Dimensions, Platform } from "react-native"
 import { FormInput, FormValidationMessage } from "react-native-elements"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux"
 import { reduxForm, Field, SubmissionError } from "redux-form"
 import styled from "styled-components/native"
 import Spinner from "react-native-spinkit"
+import KeyboardSpacer from "react-native-keyboard-spacer"
 
 import { actions as authActions, selectors as userSelectors } from "../../redux/Auth"
 import { actions as navigatorActions } from "../../redux/Navigator"
@@ -19,6 +20,9 @@ import Input from "../../components/input"
 import Logo from "../../components/simon__logo"
 import CustomNavbar from "../CustomNavbar"
 
+const ScrollView = styled.ScrollView`
+    height: 100%;
+`
 const Form = styled.View`
     width: 80%;
     flex-grow: 1;
@@ -96,45 +100,49 @@ class SignUpScreen extends React.Component {
         let { isLoading, handleSubmit } = this.props
 
         return (
-            <Background around>
-                <LogoWrapper>
-                    <Logo />
-                </LogoWrapper>
-                <Form>
-                    <Field
-                        name="username"
-                        type="text"
-                        component={ Input }
-                        placeholder="username"
-                        maxLength={ 15 } />
-                    <Field
-                        name="email"
-                        type="text"
-                        component={ Input }
-                        placeholder="email" />
-                    <Field
-                        name="password"
-                        type="password"
-                        component={ Input }
-                        placeholder="password" />
-                    <Field
-                        name="re-password"
-                        type="password"
-                        component={ Input }
-                        placeholder="re-password" />
-                </Form>
-                <ButtonWrapper>
-                    {
-                        isLoading
-                            ? <LoadingView>
-                                <Spinner size={ 90 } type="Circle" color={ SECONDARY_COLOR } />
-                              </LoadingView>
-                            : <MenuItem onPress={ handleSubmit(this.validate) } title="Submit" />
-                     
-                    }
+            <ScrollView scrollEnabled={ false } contentContainerStyle={{ height: "100%" }}>
+                <Background around>
+                    <LogoWrapper>
+                        <Logo />
+                    </LogoWrapper>
+                    <Form>
+                        <Field
+                            name="username"
+                            type="text"
+                            component={ Input }
+                            placeholder="username"
+                            maxLength={ 15 } />
+                        <Field
+                            name="email"
+                            type="text"
+                            component={ Input }
+                            placeholder="email" />
+                        <Field
+                            name="password"
+                            type="password"
+                            component={ Input }
+                            placeholder="password" />
+                        <Field
+                            name="re-password"
+                            type="password"
+                            component={ Input }
+                            placeholder="re-password" />
 
-                </ButtonWrapper>
-            </Background>
+                        { Platform.OS === "ios" && <KeyboardSpacer /> }
+                    </Form>
+                    <ButtonWrapper>
+                        {
+                            isLoading
+                                ? <LoadingView>
+                                    <Spinner size={ 90 } type="Circle" color={ SECONDARY_COLOR } />
+                                </LoadingView>
+                                : <MenuItem onPress={ handleSubmit(this.validate) } title="Submit" />
+
+                        }
+
+                    </ButtonWrapper>
+                </Background>
+            </ScrollView>
         )
     }
 }
