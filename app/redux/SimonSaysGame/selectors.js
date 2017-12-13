@@ -7,12 +7,15 @@ export const getWinner = state => state.simonSays.game.winner
 export const getGameMode = state => state.simonSays.game.gameMode
 export const selectPerformingPlayer = state => {
     let player = state.simonSays.game.performingPlayer
+    let gameMode = getGameMode(state)
 
-    if (!player) {
-        player = getPlayers(state)[0]
-    }
-
-    if (!player) {
+    if (gameMode > 1 && !player) {
+        //Multiplayer games need to initiate with a performingPlayer prop BUT my server
+        //doesn't set that variable until after the <SimonGameScreen/> renders.
+        //
+        //Need to set the player to a mock player so an error doesn't occur.
+        player = { username: "zxddwfzafqwfa", level: "999" }
+    } else {
         player = userSelectors.getUser(state)
     }
 
