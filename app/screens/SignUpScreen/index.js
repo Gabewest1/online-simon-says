@@ -19,6 +19,7 @@ import MenuItem from "../../components/menu-item"
 import Input from "../../components/input"
 import Logo from "../../components/simon__logo"
 import CustomNavbar from "../CustomNavbar"
+import CancelKeyboard from "../../components/CancelKeyboard"
 
 const ScrollView = styled.ScrollView`
     height: 100%;
@@ -97,15 +98,16 @@ class SignUpScreen extends React.Component {
         }
     }
     render() {
-        return Platform.OS === "ios" ? this.renderIOS() : this.renderAndroid()
-    }
-    renderIOS() {
         return (
-            <ScrollView scrollEnabled={ false } contentContainerStyle={{ height: "100%" }}>
+            <CancelKeyboard>
                 <Background around>
+
                     <LogoWrapper>
                         <Logo />
                     </LogoWrapper>
+
+                    { Platform.OS === "ios" && <KeyboardSpacer /> }
+
                     <Form>
                         <Field
                             name="username"
@@ -131,6 +133,7 @@ class SignUpScreen extends React.Component {
 
                         { Platform.OS === "ios" && <KeyboardSpacer /> }
                     </Form>
+
                     <ButtonWrapper>
                         {
                             this.props.isLoading
@@ -142,53 +145,11 @@ class SignUpScreen extends React.Component {
                         }
 
                     </ButtonWrapper>
-                </Background>
-            </ScrollView>
-        )
-    }
-    renderAndroid() {
-        return (
-            <Background around>
-                <LogoWrapper>
-                    <Logo />
-                </LogoWrapper>
-                <Form>
-                    <Field
-                        name="username"
-                        type="text"
-                        component={ Input }
-                        placeholder="username"
-                        maxLength={ 15 } />
-                    <Field
-                        name="email"
-                        type="text"
-                        component={ Input }
-                        placeholder="email" />
-                    <Field
-                        name="password"
-                        type="password"
-                        component={ Input }
-                        placeholder="password" />
-                    <Field
-                        name="re-password"
-                        type="password"
-                        component={ Input }
-                        placeholder="re-password" />
 
                     { Platform.OS === "ios" && <KeyboardSpacer /> }
-                </Form>
-                <ButtonWrapper>
-                    {
-                        this.props.isLoading
-                            ? <LoadingView>
-                                <Spinner size={ 90 } type="Circle" color={ SECONDARY_COLOR } />
-                            </LoadingView>
-                            : <MenuItem onPress={ this.props.handleSubmit(this.validate) } title="Submit" />
 
-                    }
-
-                </ButtonWrapper>
-            </Background>
+                </Background>
+            </CancelKeyboard>
         )
     }
 }
