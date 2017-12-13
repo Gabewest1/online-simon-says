@@ -38,14 +38,16 @@ class FindMatchScreen extends React.Component {
     }
     handleBack({ id }) {
         if (id === "backPress") {
-            this.props.cancelSearch()
-            this.props.navigateToScreen({
-                fn: "resetTo",
-                navigationOptions: {
-                    screen: "SelectGameMode",
-                    backButtonHidden: true
-                }
-            })
+            if (!this.props.hasFoundMatch) {
+                this.props.cancelSearch()
+                this.props.navigateToScreen({
+                    fn: "resetTo",
+                    navigationOptions: {
+                        screen: "SelectGameMode",
+                        backButtonHidden: true
+                    }
+                })
+            }
         }
 
         return true

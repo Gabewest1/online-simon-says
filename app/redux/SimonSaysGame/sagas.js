@@ -104,6 +104,7 @@ export const findMatchSaga = function* () {
             }
             const payload = { fn: "push", navigationOptions }
 
+            yield delay(3000)
             yield put(navigatorActions.navigateToScreen(payload))
         }
 
