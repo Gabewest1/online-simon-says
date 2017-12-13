@@ -91,6 +91,7 @@ export const findMatchSaga = function* () {
             playerJoinedPrivateMatch: take(actions.playerAcceptedChallenge)
         })
 
+        
         if (cancelSearch || playerJoinedPrivateMatch) {
             yield put({ type: "server/CANCEL_SEARCH" })
         } else {
@@ -99,11 +100,11 @@ export const findMatchSaga = function* () {
                 title: "",
                 animated: true,
                 animationType: 'slide-horizontal',
-                passProps: { gameMode },
                 overrideBackPress: true
             }
             const payload = { fn: "push", navigationOptions }
-
+            
+            yield put(actions.setGameMode(gameMode))
             yield delay(3000)
             yield put(navigatorActions.navigateToScreen(payload))
         }
