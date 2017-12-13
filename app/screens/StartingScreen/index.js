@@ -91,9 +91,15 @@ class StartingScreen extends React.Component {
         return (
             <CancelKeyboard>
                 <Background around>
+                    
                     <SimonSaysLogoFlex />
-                    <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
+
                     { Platform.OS === "ios" && <KeyboardSpacer /> }
+                    
+                    <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
+
+                    { Platform.OS === "ios" && <KeyboardSpacer /> }
+
                 </Background>
             </CancelKeyboard>
         )
