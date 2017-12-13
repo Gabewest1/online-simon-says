@@ -103,8 +103,7 @@ export const findMatchSaga = function* () {
                 overrideBackPress: true
             }
             const payload = { fn: "push", navigationOptions }
-            
-            yield put(actions.setGameMode(gameMode))
+
             yield delay(3000)
             yield put(navigatorActions.navigateToScreen(payload))
         }
