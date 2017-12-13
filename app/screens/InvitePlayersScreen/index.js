@@ -11,6 +11,7 @@ import Player from "../../components/player"
 import Background from "../../components/background"
 import MenuItem from "../../components/menu-item"
 import Input from "../../components/input"
+import CancelKeyboard from "../../components/CancelKeyboard"
 import CustomNavbar from "../CustomNavbar"
 
 import { SECONDARY_COLOR } from "../../constants"
@@ -114,33 +115,35 @@ class InvitePlayersScreen extends React.Component {
     }
     render() {
         return (
-            <Background around>
-                <InvitePlayerForm>
-                    <Field
-                        searchBar
-                        containerStyle={{ width: styles.width }}
-                        name="username"
-                        type="text"
-                        component={ Input }
-                        placeholder="Invite user..." />
-                    <MenuItem
-                        style={{ width: styles.width }}
-                        onPress={ this.props.handleSubmit(this.validate) }>
-                        Invite
-                    </MenuItem>
-                </InvitePlayerForm>
-                <PlayersView>
-                    <Header>
-                        <View>
-                            <Text style={{ fontSize: FONT_SIZE }}>Players</Text>
-                        </View>
-                        <View>
-                            <Text style={{ fontSize: FONT_SIZE }}>Ready</Text>
-                        </View>
-                    </Header>
-                    { this.renderPlayers() }
-                </PlayersView>
-            </Background>
+            <CancelKeyboard>
+                <Background around>
+                    <InvitePlayerForm>
+                        <Field
+                            searchBar
+                            containerStyle={{ width: styles.width }}
+                            name="username"
+                            type="text"
+                            component={ Input }
+                            placeholder="Invite user..." />
+                        <MenuItem
+                            style={{ width: styles.width }}
+                            onPress={ this.props.handleSubmit(this.validate) }>
+                            Invite
+                        </MenuItem>
+                    </InvitePlayerForm>
+                    <PlayersView>
+                        <Header>
+                            <View>
+                                <Text style={{ fontSize: FONT_SIZE }}>Players</Text>
+                            </View>
+                            <View>
+                                <Text style={{ fontSize: FONT_SIZE }}>Ready</Text>
+                            </View>
+                        </Header>
+                        { this.renderPlayers() }
+                    </PlayersView>
+                </Background>
+            </CancelKeyboard>
         )
     }
     renderPlayers() {
