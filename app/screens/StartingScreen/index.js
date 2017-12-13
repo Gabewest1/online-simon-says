@@ -1,14 +1,17 @@
 import React from "react"
-import { AppState, Dimensions } from "react-native"
+import { AppState, Dimensions, Platform, Keyboard } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 import PropTypes from "prop-types"
 import socket from "../../socket"
 
+import KeyboardSpacer from "react-native-keyboard-spacer"
+
 import SimonSaysLogo from "../../components/simon__logo"
 import Background from "../../components/background"
 import SignInForm from "../../components/sign-in-form"
+import CancelKeyboard from "../../components/CancelKeyboard"
 
 import { actions as userActions, selectors as userSelectors } from "../../redux/Auth"
 import { actions as navigatorActions, selectors as navigatorSelectors } from "../../redux/Navigator"
@@ -86,10 +89,13 @@ class StartingScreen extends React.Component {
         let { isLoading, navigator, playAsGuest } = this.props
 
         return (
-            <Background around>
-                <SimonSaysLogoFlex />
-                <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
-            </Background>
+            <CancelKeyboard>
+                <Background around>
+                    <SimonSaysLogoFlex />
+                    <SignInFormFlex navigator={ navigator } playAsGuest={ playAsGuest } isLoading={ isLoading } />
+                    { Platform.OS === "ios" && <KeyboardSpacer /> }
+                </Background>
+            </CancelKeyboard>
         )
     }
 }
