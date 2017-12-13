@@ -254,8 +254,12 @@ class GameRoom {
     startLongTimer() {
         let timeTillPlayerTimesout = 15
 
+        //I have a bug where, if a player quits a match and finds a new one really quick, the DECREASE_TIMER
+        //call from the previous game affect the player in their new game.
+        const inThisLobby = (playersSocket) => playersSocket.gameRoom.id === this.id
+
         const timer = setInterval(() => {
-            this.messageGameRoom({ type: "DECREASE_TIMER" })
+            this.messageGameRoom({ type: "DECREASE_TIMER" }, inThisLobby)
             timeTillPlayerTimesout--
 
             if (timeTillPlayerTimesout === 0) {
