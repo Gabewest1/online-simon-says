@@ -7,6 +7,7 @@ class GameRoom {
         this.game = new SimonGame()
         this.playersNeededToStart = gameMode
         this.lobby = []
+        this.playersReceivingMessages = []
         this.playersReady = []
         this.playersReadyForNextTurn = []
         this.acceptPlayersReadyForNextTurn = false
@@ -35,6 +36,7 @@ class GameRoom {
         /*** Important to remeber!!! This is where i assign the clients property info about their current game room ***/
         this.lobby.push(playerSocket)
         this.game.addPlayer(playerSocket.player)
+        this.playersReceivingMessages.push(playerSocket)
 
         playerSocket.gameRoom = { id: this.id, gameMode: this.gameMode }
 
@@ -125,22 +127,31 @@ class GameRoom {
     }
     messageGameRoom(action, filterPlayers) {
         if (filterPlayers) {
-            this.lobby
+            this.playersReceivingMessages
                 .filter(filterPlayers)
                 .forEach(player => player.emit("action", action))
         } else {
-            this.lobby.forEach(player => {
+            this.playersReceivingMessages.forEach(player => {
                 player.emit("action", action)
             })
         }
     }
-    playerLostConnection(thisPlayer) {
-        this.removePlayer(thisPlayer)        
-        const isPlayerAlreadyEliminated = this.eliminatedPlayers.find(({ player }) => player === thisPlayer)
+    playerLeft(playerSocket) {
+        this.playersReceivingMessages = this.playersReceivingMessages.filter(player => player !== playerSocket)
+        playerSocket.gameRoom = undefined
+
+        if (!this.gameStarted) {
+            this.game.removePlayer(playerSocket.player)
+            this.lobby = this.lobby.filter(player => player !== playerSocket)
+        }
+    }
+    playerLostConnection(playerSocket) {
+        this.playerLeft(playerSocket)
+        const isPlayerAlreadyEliminated = this.eliminatedPlayers.find(({ player }) => player === playerSocket)
 
         if (!isPlayerAlreadyEliminated && !this.isGameOver()) {
-            this.eliminatePlayer(thisPlayer)
-            this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: thisPlayer.player })
+            this.eliminatePlayer(playerSocket)
+            this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: playerSocket.player })
         }
     }
     playerReadyForNextTurn(playerSocket) {
@@ -174,14 +185,6 @@ class GameRoom {
         this.eliminatePlayer(this.performingPlayer)
         this.endTurn()
     }
-    removePlayer(playerSocket) {
-        this.lobby = this.lobby.filter(player => player !== playerSocket)
-        playerSocket.gameRoom = undefined
-
-        if (!this.gameStarted) {
-            this.game.removePlayer(playerSocket.player)
-        }
-    }
     setNextPlayer() {
         let indexOfCurrentPlayer = this.game.players.findIndex(player => player.username === this.performingPlayer.player.username)
         let counter = 1
@@ -214,7 +217,6 @@ class GameRoom {
         this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
     startNextTurn() {
-        console.log("ERROR IS HERE".red, this.performingPlayer)
         console.log("STARTING NEXT PLAYERS TURN:".america, this.performingPlayer.player.username)
         this.currentMovesIndex = 0
         this.increaseRound()
@@ -291,14 +293,14 @@ class GameRoom {
         //Update players stats as long as they arent a guest
         if (!player.player.isAGuest) {
             console.log("ABOUT TO UPDATE:", player.player.username)
-            const gameMode = this.gameMode
+            const gameMode = this.lobby.length
             const didPlayerWin = this.winner && (this.winner.player.username === player.player.username)
 
             let numPlayersBeaten = this.eliminatedPlayers.length
             numPlayersBeaten -= didPlayerWin ? 0 : 1
 
             let xpGained = (numPlayersBeaten * 10) + this.round
-            xpGained += didPlayerWin ? ((this.gameMode * 5) + 10) : 0
+            xpGained += didPlayerWin ? ((gameMode * 5) + 10) : 0
 
             player.emit("action", { type: "server/UPDATE_MULITPLAYER_STATS", payload: { didPlayerWin, gameMode, xpGained } })
         }
