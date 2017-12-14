@@ -32,7 +32,18 @@ export const isItMyTurn = state => {
         return false
     }
 }
+export const isLastMove = state => {
+    return getMoveIndex(state) === numberOfMoves(state) - 1
+}
+export const playerFinishedTurn = state => {
+    const gameMode = getGameMode(state)
+    const movesPerformed = getMoveIndex(state)
+    const numMoves = numberOfMoves(state)
+
+    return numMoves > 0 && movesPerformed >= numMoves
+}
 export const isGameOver = state => state.simonSays.game.isGameOver
+export const isWaitingForOpponents = state => isItMyTurn(state) && isScreenDarkened(state)
 export const getCurrentRound = state => state.simonSays.game.round
 export const hasFoundMatch = state => state.simonSays.game.hasFoundMatch
 export const isScreenDarkened = state => state.simonSays.game.isScreenDarkened || !isItMyTurn(state)
@@ -48,7 +59,7 @@ export const numberOfMoves = state => {
 }
 export const getMoveIndex = state => state.simonSays.game.moveIndex
 export const disableOnPress = state =>
-    !isItMyTurn(state) || isScreenDarkened(state) || (numberOfMoves(state) > 0 && getMoveIndex(state) >= numberOfMoves(state))
+    !isItMyTurn(state) || isScreenDarkened(state) || playerFinishedTurn(state)
 export const getAnimatingPadIndex = state => state.simonSays.pads.lit
 
 const colors = ["", "Blue", "Red", "Green", "Yellow"]
