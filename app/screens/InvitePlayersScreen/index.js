@@ -78,16 +78,16 @@ class InvitePlayersScreen extends React.Component {
             })
         }
     }
-    togglePlayerReady = player => {
+    togglePlayerReady = () => {
+        const player = this.getMyPlayer()
+
         InteractionManager.runAfterInteractions(() => {
-            if (player.username === this.props.myUsername) {
-                if (!player.isReady) {
-                    this.props.playerReady()
-                    this.setState({ isReady: true })
-                } else {
-                    this.props.playerNotReady()
-                    this.setState({ isReady: false })
-                }
+            if (!player.isReady) {
+                this.props.playerReady()
+                this.setState({ isReady: true })
+            } else {
+                this.props.playerNotReady()
+                this.setState({ isReady: false })
             }
         })
     }
@@ -142,6 +142,12 @@ class InvitePlayersScreen extends React.Component {
                         </Header>
                         { this.renderPlayers() }
                     </PlayersView>
+
+                    <MenuItem
+                        onPress={ () => this.togglePlayerReady() }
+                        style={{ width: styles.width, marginBottom: FONT_SIZE }}>
+                            Ready
+                    </MenuItem>
                 </Background>
             </CancelKeyboard>
         )
@@ -151,8 +157,8 @@ class InvitePlayersScreen extends React.Component {
             (<InvitedPlayerView style={{ width: styles.width }} key={ player.username }>
                 <Player player={ player } />
                 <TouchableOpacity
-                    activeOpacity={ player.username === this.props.myUsername ? .2 : 1 }
-                    onPress={ () => this.togglePlayerReady(player) }>
+                    activeOpacity={ player.username === this.props.myUsername ? .2 : 1 }>
+
                     <Icon
                         type="material"
                         name={ player.isReady ? "done" : "clear" }
