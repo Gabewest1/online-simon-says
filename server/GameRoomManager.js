@@ -17,7 +17,7 @@ class GameRoomManager {
         const playersGameRoom = this.findPlayersGameRoom(player)
 
         if (playersGameRoom && !playersGameRoom.gameStarted) {
-            playersGameRoom.removePlayer(player)
+            playersGameRoom.playerLeft(player)
         }
     }
 
@@ -55,7 +55,7 @@ class GameRoomManager {
         const gameRoom = this.findPlayersGameRoom(socket)
 
         if (gameRoom) {
-            gameRoom.removePlayer(socket)
+            gameRoom.playerLeft(socket)
             gameRoom.syncPlayersArrayWithRedux()
         }
     }
