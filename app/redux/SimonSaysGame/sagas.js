@@ -144,7 +144,7 @@ export const multiplayerGameSaga = function* (gameMode) {
         })
 
         if (performYourTurn) {
-            yield call(performTurnSaga)
+            yield call(performMultiplayerTurnSaga)
         } else if (listenForOpponentsMove) {
             yield call(listenForOpponentsMoveSaga)
         }
@@ -174,7 +174,7 @@ export const multiplayerGameSaga = function* (gameMode) {
     yield put(navigatorActions.navigateToScreen(payload))
 }
 
-export const performTurnSaga = function* () {
+export const performMultiplayerTurnSaga = function* () {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
 
@@ -232,7 +232,7 @@ export const singlePlayerGameSaga = function* () {
     while (!(yield select(selectors.isGameOver))) {
         yield call(setNextMove)
         yield call(displayMovesToPerform)
-        const didPlayerPassTurn = yield call(performPlayersTurn)
+        const didPlayerPassTurn = yield call(performSinglePlayerTurnSaga)
         yield call(endTurn, didPlayerPassTurn)
     }
 
@@ -302,7 +302,7 @@ export const startShortTimer = function* () {
     yield put({ type: "PLAYER_TIMEDOUT" })
 }
 
-export const performPlayersTurn = function* () {
+export const performSinglePlayerTurnSaga = function* () {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
 
