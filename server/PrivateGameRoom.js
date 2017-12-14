@@ -49,14 +49,13 @@ class PrivateGameRoom extends GameRoom {
         if (!this.gameStarted) {
             this.gameStarted = true
             this.performingPlayer = this.lobby[0]
-            this.gameMode = this.lobby.length
             this.messageGameRoom({ type: "GO_TO_GAME_SCREEN", payload: this.gameMode })
             this.timer = super.startJoinMatchTimer()
         }
     }
     syncPlayersWithLobby() {
         this.game.players.forEach(player => {
-            const isPlayerStillInTheLobby = this.lobby.find(playerSocket => playerSocket.player.username === player.username)
+            const isPlayerStillInTheLobby = this.playersReceivingMessages.find(playerSocket => playerSocket.player.username === player.username)
 
             if (!isPlayerStillInTheLobby) {
                 this.game.removePlayer(player)
