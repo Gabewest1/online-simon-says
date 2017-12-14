@@ -23,7 +23,6 @@ import {
 } from "../../redux/Navigator"
 
 import { SINGLE_PLAYER_GAME, BACKGROUND_COLOR, SECONDARY_COLOR } from "../../constants"
-import { getMoveIndex, numberOfMoves } from "../../redux/SimonSaysGame/selectors";
 
 const Container = styled(Background)`
     justify-content: center;
@@ -54,7 +53,7 @@ const Timer = styled.Text`
     font-size: 24px;
     padding-bottom: 10px;
     background-color: transparent;    
-`
+    `
 const HighScoresView = styled.View`
     flex-direction: row;
     justify-content: space-between;
@@ -62,16 +61,16 @@ const HighScoresView = styled.View`
     position: absolute;
     top: 0;
     width: 100%;
-`
+    `
 const Score = styled.Text`
     color: ${({ isScreenDarkened }) => isScreenDarkened ? BACKGROUND_COLOR : SECONDARY_COLOR };
     background-color: transparent;    
     font-size: 22px;
     font-weight: 500;
-`
+    `
 const Text = styled.Text`
 
-`
+    `
 const Players = ({ player1, player2, performingPlayer, bottom }) => {
     const fontSize = Dimensions.get("window").width >= 768 ? 18 : 10
     const name = { style: { fontSize }}
@@ -167,8 +166,12 @@ class SimonGameScreen extends React.Component {
     }
 
     render() {
-        const { gameMode, numberOfMoves, performingPlayer, players, isItMyTurn, isScreenDarkened } = this.props
+        const { gameMode, performingPlayer, players, isLastMove, isItMyTurn, isScreenDarkened, waitingForOpponents } = this.props
         const isMultiplayerGame = gameMode > SINGLE_PLAYER_GAME
+        const multiplayerGameMessageForPerformingPlayer =
+            waitingForOpponents ? "Waiting for opponents..."
+                : isLastMove ? "Add a new move!"
+                    : "It's your turn!"
 
         return (
             <Container>
@@ -176,7 +179,7 @@ class SimonGameScreen extends React.Component {
                 { this.renderHUD() }
                 <Timer isScreenDarkened={ isScreenDarkened }>{ this.props.timer }</Timer>
                 <BoardView { ...this.props } onPress={ this.handlePadClick.bind(this) } />
-                { isMultiplayerGame && isItMyTurn && <Text>It's your turn!</Text> }
+                { isMultiplayerGame && isItMyTurn && <Text>{ multiplayerGameMessageForPerformingPlayer }</Text> }
                 { players.length > 2
                     && <Players
                         bottom
@@ -198,6 +201,7 @@ function mapStateToProps(state) {
         isAGuest: userSelectors.isAGuest(state),
         isGameOver: simonGameSelectors.isGameOver(state),
         isItMyTurn: simonGameSelectors.isItMyTurn(state),
+        isLastMove: simonGameSelectors.isLastMove(state),
         isScreenDarkened: simonGameSelectors.isScreenDarkened(state),
         lit: simonGameSelectors.getAnimatingPadIndex(state),
         moveIndex: simonGameSelectors.getMoveIndex(state),
@@ -207,6 +211,7 @@ function mapStateToProps(state) {
         players: simonGameSelectors.getPlayers(state),
         round: simonGameSelectors.getCurrentRound(state),
         timer: simonGameSelectors.getTimer(state),
+        waitingForOpponents: simonGameSelectors.isWaitingForOpponents(state),
         winner: simonGameSelectors.getWinner(state)
     }
 }
@@ -224,6 +229,7 @@ SimonGameScreen.propTypes = {
     highScore: PropTypes.number.isRequired,
     isItMyTurn: PropTypes.bool.isRequired,
     isGameOver: PropTypes.bool.isRequired,
+    isLastMove: PropTypes.bool.isRequired,
     isScreenDarkened: PropTypes.bool.isRequired,
     navigator: PropTypes.object.isRequired,
     numberOfMoves: PropTypes.number.isRequired,
@@ -235,6 +241,7 @@ SimonGameScreen.propTypes = {
     simonPadClicked: PropTypes.func.isRequired,
     startGame: PropTypes.func.isRequired,
     timer: PropTypes.number.isRequired,
+    waitingForOpponents: PropTypes.bool.isRequired,
     winner: PropTypes.object
 }
 
