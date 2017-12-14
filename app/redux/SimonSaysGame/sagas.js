@@ -177,6 +177,7 @@ export const multiplayerGameSaga = function* (gameMode) {
 export const performMultiplayerTurnSaga = function* () {
     const movesToPerform = yield select(selectors.getMoves)
     let movesPerformed = 0
+    yield put(actions.setMoveIndex(movesPerformed))
 
     while (movesPerformed <= movesToPerform.length) {
         yield put(actions.setIsScreenDarkened(false))
@@ -203,6 +204,7 @@ export const performMultiplayerTurnSaga = function* () {
         }
 
         movesPerformed++
+        yield put(actions.setMoveIndex(movesPerformed))
     }
 
     yield put(actions.setIsScreenDarkened(true))
