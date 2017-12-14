@@ -135,11 +135,11 @@ class GameRoom {
         }
     }
     playerLostConnection(thisPlayer) {
+        this.removePlayer(thisPlayer)        
         const isPlayerAlreadyEliminated = this.eliminatedPlayers.find(({ player }) => player === thisPlayer)
-        console.log("IS PLAYER ALREADY ELIMINATED:", isPlayerAlreadyEliminated)
-        if (!this.isGameOver() && !isPlayerAlreadyEliminated) {
+
+        if (!isPlayerAlreadyEliminated && !this.isGameOver()) {
             this.eliminatePlayer(thisPlayer)
-            this.removePlayer(thisPlayer)
             this.messageGameRoom({ type: "PLAYER_DISCONNECTED", payload: thisPlayer.player })
         }
     }
