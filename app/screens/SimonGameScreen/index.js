@@ -38,16 +38,10 @@ const PlayersView = styled.View`
 `
 const PlayerView = styled(Player)`
     ${({ isItMyTurn, player }) => {
-        if (player.isEliminated) {
-            return `backgroundColor: black; color: red;`
-        } else if (isItMyTurn) {
-            return `backgroundColor: gold; color: ${ BACKGROUND_COLOR };`
-        } else {
-            return `backgroundColor: ${ BACKGROUND_COLOR }; color: ${ SECONDARY_COLOR };`
-        }
+        
     }};
     borderRadius: 50;
-    `
+`
 const Timer = styled.Text`
     color: ${({ isScreenDarkened }) => isScreenDarkened ? BACKGROUND_COLOR : SECONDARY_COLOR };
     font-size: 24px;
@@ -73,19 +67,47 @@ const Text = styled.Text`
     `
 const Players = ({ player1, player2, performingPlayer, bottom }) => {
     const fontSize = Dimensions.get("window").width >= 768 ? 18 : 10
-    const name = { style: { fontSize }}
+    const name1 = { style: { fontSize }}
+    const name2 = { style: { fontSize }}
+    const containerStyle1 = {}
+    const containerStyle2 = {}
+
+    const getColor = player => {
+        if (player.isEliminated) {
+            return "red"
+        } else {
+            return `${ SECONDARY_COLOR }`
+        }
+    }
+
+    const getBackgroundColor = player => {
+        if (player.isEliminated) {
+            return "black"
+        } else if (performingPlayer.username === player.username) {
+            return `gold`
+        } else {
+            return `${ BACKGROUND_COLOR }`
+        }
+    }
+
+    name1.style.color = getColor(player1)
+    name2.style.color = getColor(player2)
+    containerStyle1.backgroundColor = getBackgroundColor(player1)
+    containerStyle2.backgroundColor = getBackgroundColor(player2)
 
     return (
         <PlayersView bottom={ bottom }>
             <PlayerView
                 player={ player1 }
                 isItMyTurn={ performingPlayer.username === player1.username }
-                name={ name } />
+                name={ name1 }
+                style={ containerStyle1 } />
             { player2 &&
                 <PlayerView
                     player={ player2 }
                     isItMyTurn={ performingPlayer.username === player2.username }
-                    name={ name } />
+                    name={ name2 }
+                    style={ containerStyle2 } />
             }
         </PlayersView>
     )
