@@ -91,9 +91,9 @@ const Players = ({ player1, player2, performingPlayer, bottom }) => {
     }
 
     name1.style.color = getColor(player1)
-    name2.style.color = getColor(player2)
+    name2.style.color = player2 && getColor(player2)
     containerStyle1.backgroundColor = getBackgroundColor(player1)
-    containerStyle2.backgroundColor = getBackgroundColor(player2)
+    containerStyle2.backgroundColor = player2 && getBackgroundColor(player2)
 
     return (
         <PlayersView bottom={ bottom }>
