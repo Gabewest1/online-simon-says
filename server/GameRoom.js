@@ -161,7 +161,7 @@ class GameRoom {
             this.playersReadyForNextTurn.push(playerSocket)
 
             //Check if this is the last player to ready up and end turn if so.
-            if (this.playersReadyForNextTurn.length === this.lobby.length) {
+            if (this.playersReadyForNextTurn.length === this.playersReceivingMessages.length) {
                 this.timer = clearTimeout(this.timer)
                 this.endTurn()
             }
