@@ -171,7 +171,7 @@ class GameRoom {
         if (this.playersReadyToStart.indexOf(playerSocket) === -1) {
             this.playersReadyToStart.push(playerSocket)
 
-            if (this.playersReadyToStart.length === this.lobby.length) {
+            if (this.playersReadyToStart.length === this.playersReceivingMessages.length) {
                 this.timer = clearTimeout(this.timer)
                 this.playersReadyToStart = []
                 this.startFirstTurn()
