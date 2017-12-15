@@ -12,6 +12,7 @@ import { actions as simonGameActions } from "../../redux/SimonSaysGame"
 
 const Message = styled.View`
     backgroundColor: rgba(0,0,0,.6);
+    padding-horizontal: 10;           
     width: ${ Dimensions.get("window").width };
     ${ () => {
         const width = Dimensions.get("window").width
@@ -24,7 +25,6 @@ const Message = styled.View`
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            padding-horizontal: 10;            
             padding-vertical: 10;            
         `
     }};
@@ -53,6 +53,8 @@ const Text = styled.Text`
 `
 const Buttons = styled.View`
     flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
 `
 
 class GameInvitationNotification extends React.Component {
