@@ -10,13 +10,13 @@ import Player from "../player"
 
 import { actions as simonGameActions } from "../../redux/SimonSaysGame"
 
+const width = Dimensions.get("window").width
+
 const Message = styled.View`
     backgroundColor: rgba(0,0,0,.6);
     padding-horizontal: 10;           
     width: ${ Dimensions.get("window").width };
     ${ () => {
-        const width = Dimensions.get("window").width
-
         return width < 420 ? `
             flex-direction: column;
             justify-content: center;
@@ -31,14 +31,12 @@ const Message = styled.View`
 `
 const PlayerSendingInvitationView = styled.View`
     ${ () => {
-        const width = Dimensions.get("window").width
-
         return width < 420 ? `
             flex-direction: row;
             justify-content: center;
             align-items: center;
             padding-vertical: 15;
-            width: 100%;
+            width: ${ width };
         ` : `
             flex-direction: row;
             align-items: center;
@@ -54,7 +52,7 @@ const Text = styled.Text`
 const Buttons = styled.View`
     flex-direction: row;
     justify-content: space-between;
-    width: 100%;
+    width: ${ width < 420 ? width : "auto" };
 `
 
 class GameInvitationNotification extends React.Component {
