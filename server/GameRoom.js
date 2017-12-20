@@ -71,7 +71,7 @@ class GameRoom {
     endGame() {
         this.timer = clearInterval(this.timer)
         const winner = this.game.players.find(player => !player.isEliminated)
-        this.winner = this.lobby.find(socket => socket.player.username === winner.username)
+        this.winner = this.lobby.find(socket => socket.player && socket.player.username === winner.username)
         console.log("ENDING GAME:", this.winner.player.username + " Won!".cyan)
         this.messageGameRoom({ type: "SET_WINNER", payload: this.winner.player })
         this.messageGameRoom({ type: "GAME_OVER" })
@@ -189,14 +189,13 @@ class GameRoom {
         let indexOfCurrentPlayer = this.game.players.findIndex(player => player.username === this.performingPlayer.player.username)
         let counter = 1
         let nextPlayerToPerform = this.game.players[(indexOfCurrentPlayer + counter) % this.game.players.length]
-        console.log("PLAYERS:".red, this.game.players)
-        console.log("About to set the next player...", this.game.players.filter(player => !player.isEliminated).length)
+
         while (nextPlayerToPerform.isEliminated) {
             counter++
             nextPlayerToPerform = this.game.players[(indexOfCurrentPlayer + counter) % this.game.players.length]
         }
-        console.log("NEXT PLAYER:".blue, nextPlayerToPerform)
-        this.performingPlayer = this.lobby.find(({ player }) => player.username === nextPlayerToPerform.username)
+
+        this.performingPlayer = this.lobby.find(({ player }) => player && player.username === nextPlayerToPerform.username)
         console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.username)
     }
     startGame() {
@@ -217,7 +216,6 @@ class GameRoom {
         this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
     startNextTurn() {
-        console.log("STARTING NEXT PLAYERS TURN:".america, this.performingPlayer.player.username)
         this.currentMovesIndex = 0
         this.increaseRound()
         this.messageGameRoom({ type: "RESET_TIMER" })
@@ -231,7 +229,7 @@ class GameRoom {
         this.performingPlayer.emit("action", { type: "PERFORM_YOUR_TURN" })
     }
     startJoinMatchTimer() {
-        const timeTillPlayerTimesout = 15000
+        const timeTillPlayerTimesout = 18000
         const notReady = ({ player }) =>
             !this.playersReadyToStart.find(socket => socket.player.username === player.username)
 
