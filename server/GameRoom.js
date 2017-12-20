@@ -71,7 +71,7 @@ class GameRoom {
     endGame() {
         this.timer = clearInterval(this.timer)
         const winner = this.game.players.find(player => !player.isEliminated)
-        this.winner = this.lobby.find(socket => socket.player && socket.player.username === winner.username)
+        this.winner = this.lobby.find(socket => socket.player.username === winner.username)
         console.log("ENDING GAME:", this.winner.player.username + " Won!".cyan)
         this.messageGameRoom({ type: "SET_WINNER", payload: this.winner.player })
         this.messageGameRoom({ type: "GAME_OVER" })
@@ -195,7 +195,7 @@ class GameRoom {
             nextPlayerToPerform = this.game.players[(indexOfCurrentPlayer + counter) % this.game.players.length]
         }
 
-        this.performingPlayer = this.lobby.find(({ player }) => player && player.username === nextPlayerToPerform.username)
+        this.performingPlayer = this.lobby.find(({ player }) => player.username === nextPlayerToPerform.username)
         console.log("NEXT PLAYER TO PERFORM: ", nextPlayerToPerform.username)
     }
     startGame() {

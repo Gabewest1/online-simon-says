@@ -51,16 +51,13 @@ io.on("connection", socket => {
             socket.gameRoom = undefined
         }
 
-        //Logout the player if they are logged in and remove the player property
-        //from the socket. Users playing as guests should keep their socket.player.
+        //Logout the player if they are logged in
         if (socket.player && socket.player.loggedIn) {
             User.findOneAndUpdate({ username: socket.player.username }, { loggedIn: false }, (err, user) => {
                 if (err) {
                     console.log(err)
                 }
             })
-
-            socket.player = undefined
         }
     })
 
