@@ -267,7 +267,6 @@ function createRouteHandlers(socket) {
                         console.log(err)
                     }
 
-                    console.log("SAVED SINGLE PLAYER STATS:")
                     socket.player = user
                     socket.emit("action", { type: "UPDATE_STATS", payload: user })
                 })
